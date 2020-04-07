@@ -18,29 +18,58 @@ const routes = [{
             import ("layouts/MainLayout.vue"),
         children: [{
                 path: "",
+                name: 'home',
                 component: () =>
                     import ("pages/HomePage.vue")
             },
             {
                 path: "account",
+                name: 'account',
                 component: () =>
                     import ("pages/AccountPage.vue")
             },
             {
                 path: "notif",
+                name: 'notif',
                 component: () =>
                     import ("pages/NotifPage.vue")
             },
             {
-                path: "add",
+                path: "create",
+                name: 'create',
                 component: () =>
-                    import ("pages/AddPage.vue")
+                    import ("pages/CreatePage.vue")
             }, {
-                path: 'search',
+                path: 'build',
+                name: 'build',
                 component: () =>
-                    import ('pages/SearchPage.vue')
+                    import ('pages/BuildPage.vue')
             }
         ]
+    },
+    {
+        path: '/comment/:assigmentId',
+        name: 'comment',
+        beforeEnter: multiguard([auth]),
+        component: () =>
+            import ('pages/CommentPage.vue'),
+        props: true
+    },
+    {
+        path: '/knowledgetest/:assigmentId',
+        name: 'knowledgetest',
+        beforeEnter: multiguard([auth]),
+        component: () =>
+            import ('pages/KnowledgeTestPage.vue'),
+        props: true
+    },
+    {
+        path: '/knowledgeresult',
+        name: 'knowledgeresult',
+        beforeEnter: multiguard([auth]),
+        component: () =>
+            import ('pages/KnowledgeResultPage.vue'),
+        props: true
     },
     {
         path: "/login",

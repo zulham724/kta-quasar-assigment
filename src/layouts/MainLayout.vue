@@ -10,15 +10,14 @@
         v-model="tab"
         no-caps
         dense
-
         class="text-grey"
         active-color="primary"
         indicator-color="transparent"
       >
-        <q-tab name="home" icon="mail" label="Home" @click="$router.push('/')" />
-        <q-tab name="info" icon="explore" label="Search" @click="$router.push('/search')" />
-        <q-tab name="order" icon="add" label="Buat" @click="$router.push('/add')" />
-        <q-tab name="discussion" icon="message" label="Notif" @click="$router.push('/notif')" />
+        <q-tab name="home" icon="mail" label="Beranda" @click="$router.push('/')" />
+        <q-tab name="build" icon="explore" label="Rakit" @click="$router.push('/build')" />
+        <q-tab name="create" icon="add" label="Buat" @click="$router.push('/create')" />
+        <q-tab name="notif" icon="message" label="Notif" @click="$router.push('/notif')" />
         <q-tab name="account" icon="person" label="Akun" @click="$router.push('/account')" />
       </q-tabs>
     </q-footer>
@@ -26,12 +25,19 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default {
   name: "MainLayout",
   data() {
     return {
-      tab: null
+      tab: this.$route.name
     };
+  },
+  computed:{
+    ...mapState(['Setting']),
+
+  },
+  mounted(){
   }
 };
 </script>

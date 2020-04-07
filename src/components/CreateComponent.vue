@@ -1,18 +1,5 @@
 <template>
   <div>
-    <q-header
-      elevated
-      style="background-image:url(https://images.unsplash.com/photo-1563942190238-434071aed45d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1049&q=80);background-size:cover;"
-    >
-      <q-toolbar>
-        <q-icon name="home" style="font-size:1.5em" />
-        <q-toolbar-title>
-          Buat Soal
-        </q-toolbar-title>
-        <q-space />
-      </q-toolbar>
-    </q-header>
-    
     <q-form class="q-gutter-sm" ref="form">
       <q-stepper v-model="step" color="primary" style="width:100vw" animated>
         <q-step :name="1" title="Isian Wajib" icon="settings" :done="step > 1">
@@ -510,7 +497,6 @@
         </q-step>
       </q-stepper>
     </q-form>
-
   </div>
 </template>
 

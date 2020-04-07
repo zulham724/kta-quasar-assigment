@@ -20,7 +20,7 @@ const mutations = {
     },
     logout(state) {
         state.token = {}
-        state.user = ''
+        state.auth = ''
     },
 };
 
@@ -74,10 +74,10 @@ const actions = {
             axios
                 .get(`${this.state.Setting.url}/api/user`)
                 .then(res => {
-                    const user = res.data
+                    const auth = res.data
                         // Add the following line:
                     const payload = {
-                        user: user
+                        auth: auth
                     }
                     commit("setAuth", payload)
                     resolve(res)
@@ -92,7 +92,8 @@ const actions = {
 // Getter functions
 const getters = {
     isLoggedIn: state => !!state.token.access_token,
-    auth: state => state.auth
+    auth: state => state.auth,
+    token: state => state.token
 };
 
 export default {
