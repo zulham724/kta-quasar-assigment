@@ -2,87 +2,130 @@
   <div>
     <q-header
       elevated
-      :style="`background-image:url(${Setting.assets.bgToolbar});background-size:cover;`"
+      :style="
+        `background-image:url(${Setting.assets.bgToolbar});background-size:cover;`
+      "
     >
       <q-toolbar>
         <q-icon name="home" style="font-size: 1.5em;" />
         <q-toolbar-title>
-          Prof Dr. Zulham Azwar Achmad
+          {{ Auth.auth.name }}
         </q-toolbar-title>
-        <q-btn flat round icon="close" @click="logout()" />
+        <q-btn flat icon="logout" @click="logout()" />
       </q-toolbar>
     </q-header>
-    <div style="height: 100vh">
-      <div class="row full-height">
-        <div class="col-12 self-center">
+
+    <q-pull-to-refresh @refresh="onRefresh">
+      <div class="q-pa-md">
+        <div class="row">
+          <div class="col-3">
+            <div class="row justify-start align-center">
+              <q-avatar size="20vw" @click="zoom(Auth.auth.avatar)">
+                <q-img
+                  :src="`${Setting.storageUrl}/${Auth.auth.avatar}`"
+                  no-default-spinner
+                />
+              </q-avatar>
+            </div>
+          </div>
+          <div class="col-3 self-center">
+            <div class="row justify-center">
+              <div class="text-body1 text-bold">
+                {{ Auth.auth.assigments.length }}
+              </div>
+            </div>
+            <div class="row justify-center">
+              <div class="text-caption">Paket Soal</div>
+            </div>
+          </div>
+          <div class="col-3 self-center">
+            <div class="row justify-center">
+              <div class="text-body1 text-bold">
+                {{ Auth.auth.count_sessions }}
+              </div>
+            </div>
+            <div class="row justify-center">
+              <div class="text-caption">Dikerjakan</div>
+            </div>
+          </div>
+          <div class="col-3 self-center">
+            <div class="row justify-center">
+              <div class="text-body1 text-bold">
+                {{ Auth.auth.count_question_lists }}
+              </div>
+            </div>
+            <div class="row justify-center">
+              <div class="text-caption">Butir Soal</div>
+            </div>
+          </div>
+        </div>
+        <div class="row q-pt-md">
+          <div class="text-body2 text-teal q-pb-sm" v-if="Auth.auth.kta_id">
+            No Anggota: {{ Auth.auth.kta_id }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="text-caption q-pb-sm">
+            {{ Auth.auth.email }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="text-caption">
+            {{ Auth.auth.profile.long_bio }}
+          </div>
+        </div>
+      </div>
+
+      <!-- list item -->
+      <div
+        class="row justify-center q-mt-lg"
+        style="opacity:0.5"
+        v-if="
+          Auth.auth.assigments.length == 0
+        "
+      >
+        <div class="col">
           <center>
-            <div class="text-body1">Dalam kontruksi</div>
-            <q-btn @click="logout()" color="white" text-color="black" label="Atau Logout" />
+            <q-icon name="rate_review" size="40vw" color="grey" />
+            <div class="text-body1 text-bold text-grey q-mb-lg">Kosong</div>
           </center>
         </div>
       </div>
-    </div>
-    <!-- <q-btn @click="logout()" color="white" text-color="black" label="Logout" /> -->
-
-    <!-- <q-pull-to-refresh @refresh="onRefresh">
-      <div class="q-pa-sm">
-        <div class="row full-height">
-          <div class="col-3 self-center">
-            <q-avatar style="height: 20vw; width: 20vw;">
-              <img :src="`${Setting.storageUrl}/${Auth.auth.avatar}`" />
-            </q-avatar>
-          </div>
-          <div class="col-9">
-            <div class="row">
-              <div class="col-4">
-                <div class="text-body1">Halo</div>
-              </div>
-              <div class="col-4">
-                <div class="text-body1">Halo</div>
-              </div>
-              <div class="col-4">
-                <div class="text-body1">Halo</div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-4">
-                <div class="text-body1">Halo</div>
-              </div>
-              <div class="col-4">
-                <div class="text-body1">Halo</div>
-              </div>
-              <div class="col-4">
-                <div class="text-body1">Halo</div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="row q-gutter-sm">
+        <q-intersection
+          v-for="assigment in Auth.auth.assigments"
+          :key="assigment.id"
+          :style="`min-height: 30vh;width: 100vw`"
+        >
+          <item-component :assigment="assigment"></item-component>
+        </q-intersection>
       </div>
-      <div>
-
-      </div>
-    </q-pull-to-refresh> -->
+      <!-- end list item  -->
+    </q-pull-to-refresh>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 export default {
+  components:{
+    // ItemComponent: ()=> import('components/assigment/ItemComponent.vue')
+  },
   computed: {
-    ...mapState(["Setting", "Auth"]),
+    ...mapState(["Setting", "Auth"])
   },
   methods: {
     logout() {
-      this.$store.dispatch("Auth/logout").then((res) => {
+      this.$store.dispatch("Auth/logout").then(res => {
         this.$router.push("/login");
       });
     },
     onRefresh(done) {
-      this.$store.dispatch("Auth/getAuth").then((res) => {
+      this.$store.dispatch("Auth/getAuth").then(res => {
         done();
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

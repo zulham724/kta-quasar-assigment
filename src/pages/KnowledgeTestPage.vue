@@ -1,5 +1,5 @@
 <template>
-  <div v-if="assigment != null">
+  <div>
     <q-layout view="lHh Lpr lFf">
       <q-header
         elevated
@@ -13,7 +13,7 @@
           <q-space />
         </q-toolbar>
       </q-header>
-      <q-page-container style="height: 100vh;">
+      <q-page-container v-if="assigment != null">
         <q-form @submit="onSubmit" ref="form" class="full-height">
           <q-stepper
             v-model="step"

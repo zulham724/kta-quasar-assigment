@@ -41,7 +41,7 @@ const actions = {
                     axios.defaults.headers.common.Accept = "application/json";
                     axios.defaults.headers.common.Authorization = `${token.token_type} ${token.access_token}`;
                     axios
-                        .get(`${this.state.Setting.url}/api/user`)
+                        .get(`${this.state.Setting.url}/api/v1/auth/assigment`)
                         .then(res => {
                             const auth = res.data;
                             // Add the following line:
@@ -72,7 +72,7 @@ const actions = {
     getAuth({ commit }) {
         return new Promise((resolve, reject) => {
             axios
-                .get(`${this.state.Setting.url}/api/user`)
+                .get(`${this.state.Setting.url}/api/v1/auth/assigment`)
                 .then(res => {
                     const auth = res.data
                         // Add the following line:

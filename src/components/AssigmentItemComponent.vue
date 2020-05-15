@@ -13,7 +13,7 @@
           </div>
           <div class="col-2 self-center">
             <q-fab flat icon="more_vert" direction="left">
-              <q-fab-action color="red" icon="delete" @click="destroy()" />
+              <q-fab-action v-if="assigment.user.id == Auth.auth.id" color="red" icon="delete" @click="destroy()" />
               <q-fab-action color="secondary" icon="cloud_download" />
             </q-fab>
           </div>
@@ -94,7 +94,7 @@ export default {
     assigment: null
   },
   computed: {
-    ...mapState(["Setting"])
+    ...mapState(["Setting",'Auth'])
   },
   data() {
     return {

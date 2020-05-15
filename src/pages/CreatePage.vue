@@ -2,7 +2,7 @@
   <div>
     <q-header
       elevated
-      style="background-image:url(https://images.unsplash.com/photo-1563942190238-434071aed45d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1049&q=80);background-size:cover;"
+      :style="`background-image:url(${Setting.assets.bgToolbar});background-size:cover;`"
     >
       <q-toolbar>
         <q-icon name="home" style="font-size:1.5em" />
@@ -15,7 +15,7 @@
 
     <q-form class="q-gutter-sm" ref="form">
       <q-stepper v-model="step" color="primary" style="width:100vw;" animated>
-        <q-step :name="1" title="Isian Wajib" icon="settings" :done="step > 1">
+        <q-step :name="1" title="Isian" icon="settings" :done="step > 1">
           <q-select
             rounded
             outlined
@@ -90,10 +90,10 @@
 
         <q-step
           :name="2"
-          title="Buat Butir Soal dan Jawaban"
+          title="Rakit soal"
           icon="create_new_folder"
           :done="step > 2"
-          style="min-height:50vh"
+          style="margin-bottom:30vh"
         >
           <div
             v-for="(question_list, ql) in assigment.question_lists"
@@ -404,7 +404,19 @@
           </q-stepper-navigation>
         </q-step>
 
-        <q-step :name="3" title="Finish" icon="add_comment">
+        <q-step :name="3" title="Selesai" icon="add_comment">
+          <q-toggle v-model="assigment.isTimer" label="Aktifkan untuk set timer ketika mengerjakan soal"></q-toggle>
+          <q-input
+            v-if="assigment.isTimer"
+            type="number"
+            rounded
+            outlined
+            dense
+            lazy-rules
+            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+            label="Timer dalam menit"
+            v-model="assigment.timer"
+          />
           <q-toggle
             v-model="assigment.isExpire"
             label="Aktifkan tanggal berlaku untuk soal? Seperti ketika anda ingin membuat soal ujian yang hanya bisa diisi/dibuka pada hari dan jam tertentu"
@@ -552,12 +564,13 @@ export default {
       assigment: {
         isExpire: false,
         isPassword: false,
+        isTimer: false,
         grade_id: null
       }
     };
   },
   computed: {
-    ...mapState(["Grade", "Auth", "AssigmentCategory"])
+    ...mapState(["Grade", "Auth", "AssigmentCategory",'Setting'])
   },
   created() {
     if (this.Grade.grades.length == 0) this.$store.dispatch("Grade/index");

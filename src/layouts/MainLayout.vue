@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh Lpr fFf">
 
     <q-page-container>
       <router-view />
@@ -14,11 +14,11 @@
         active-color="primary"
         indicator-color="transparent"
       >
-        <q-tab name="home" icon="mail" label="Beranda" @click="$router.push('/')" />
-        <q-tab name="build" icon="explore" label="Rakit" @click="$router.push('/build')" />
-        <q-tab name="create" icon="add" label="Buat" @click="$router.push('/create')" />
-        <q-tab name="notif" icon="message" label="Notif" @click="$router.push('/notif')" />
-        <q-tab name="account" icon="person" label="Akun" @click="$router.push('/account')" />
+        <q-tab name="home" icon="mail" label="Beranda" @click="$route.name == 'home' ? null : $router.push('/')" />
+        <q-tab name="build" icon="explore" label="Rakit" @click="$route.name == 'build' ? null : $router.push('/build')" />
+        <q-tab name="create" icon="add" label="Buat" @click="$route.name == 'create' ? null : $router.push('/create')" />
+        <q-tab name="notif" icon="message" label="Notif" @click="$route.name == 'notif' ? null : $router.push('/notif')" />
+        <q-tab name="account" icon="person" label="Akun" @click="$route.name == 'account' ? null : $router.push('/account')" />
       </q-tabs>
     </q-footer>
   </q-layout>

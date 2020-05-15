@@ -1,5 +1,5 @@
 <template>
-  <div v-if="assigment != null">
+  <div>
     <q-layout view="lHh Lpr lFf">
       <q-header
         elevated
@@ -13,7 +13,7 @@
           <q-space />
         </q-toolbar>
       </q-header>
-      <q-page-container style="height: 100vh;">
+      <q-page-container v-if="assigment != null">
         <div
           class="q-pa-md"
           v-for="(question_list, ql) in assigment.question_lists"
@@ -28,7 +28,7 @@
             "
             class="q-pt-md"
           >
-            <div class="text-caption">Jawaban anda</div>
+            <q-badge outline :color="`${question_list.answer == question_list.answer_lists.find(item=>item.value).id ? 'green' : 'red'}`">Jawaban anda {{question_list.answer == question_list.answer_lists.find(item=>item.value).id ? 'benar' : 'salah'}}</q-badge>
             <q-input
               disable
               class="q-pa-sm"
@@ -36,6 +36,7 @@
               outlined
               dense
               v-for="(answer_list,al) in question_list.answer_lists"
+              :bg-color="answer_list.value ? 'green-4' : question_list.answer == answer_list.id ? 'red-4' : null"
               :key="`value-${ql}-${al}`"
               v-model="answer_list.name"
               :rules="[(val) => !!val || 'Harus diisi']"
@@ -48,30 +49,6 @@
                     v-if="question_list.answer == answer_list.id"
                     :icon="answer_list.value ? 'check' : 'close'"
                     :color="answer_list.value ? 'green-4' : 'red-4'"
-                  />
-                </div>
-              </template>
-            </q-input>
-            <div class="text-caption">Jawaban benar</div>
-            <q-input
-              disable
-              class="q-pa-sm"
-              rounded
-              outlined
-              dense
-              v-for="(answer_list,al) in question_list.answer_lists"
-              :key="`key-${ql}-${al}`"
-              v-model="answer_list.name"
-              :rules="[(val) => !!val || 'Harus diisi']"
-            >
-              <template v-slot:after>
-                <div>
-                  <q-btn
-                    round
-                    :icon="answer_list.value ? 'check' : 'close'"
-                    v-if="answer_list.value"
-                    disable
-                    :color="answer_list.value ? 'green-4' : null"
                   />
                 </div>
               </template>

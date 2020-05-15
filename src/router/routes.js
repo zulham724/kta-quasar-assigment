@@ -11,9 +11,36 @@ const auth = function(to, from, next) {
     }
 }
 
+// cek apakah user sudah bayar apa belum dan jika lebih dari 6 bulan
+const actived = function(to, from, next) {
+    const monthDifference = moment(new Date()).diff(
+        new Date(store().getters["Auth/auth"].user_activated_at),
+        "months",
+        true
+    );
+    if (
+        store().getters["Auth/auth"] &&
+        store().getters["Auth/auth"].user_activated_at != null &&
+        monthDifference < 6
+    ) {
+        next();
+    } else {
+        next("/payment");
+    }
+};
+
+const checkProfile = function(to, from, next) {
+    let hasEducationallevel = store().getters['Auth/auth'].profile.educational_level_id
+    if (!hasEducationallevel) {
+
+    } else {
+        next()
+    }
+}
+
 const routes = [{
         path: "/",
-        beforeEnter: multiguard([auth]),
+        beforeEnter: multiguard([auth, checkProfile]),
         component: () =>
             import ("layouts/MainLayout.vue"),
         children: [{

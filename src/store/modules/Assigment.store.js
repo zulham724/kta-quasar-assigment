@@ -37,11 +37,12 @@ const mutations = {
         state.assigments.data = [payload.assigment, ...state.assigments.data];
     },
     next(state, payload) {
-        let new_array = removeDuplicates([...state.assigments.data, ...payload.assigments.data], 'id')
+        // let new_array = removeDuplicates([...state.assigments.data, ...payload.assigments.data], 'id')
         state.assigments = {
             ...payload.assigments,
             data: [
-                ...new_array
+                ...state.assigments.data,
+                ...payload.assigments.data
             ]
         }
     }

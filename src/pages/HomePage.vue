@@ -2,22 +2,19 @@
   <div>
     <q-header
       elevated
-      style="
-        background-image: url(https://images.unsplash.com/photo-1563942190238-434071aed45d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1049&q=80);
-        background-size: cover;
-      "
+      :style="`background-image:url(${Setting.assets.bgToolbar});background-size:cover;`"
     >
       <q-toolbar>
         <q-icon name="home" style="font-size: 1.5em;" />
         <q-space />
 
-        <q-btn
+        <!-- <q-btn
           flat
           round
           icon="send"
           style="transform: rotate(-20deg);"
           @click="$router.push('/globalchat')"
-        />
+        /> -->
       </q-toolbar>
       <q-toolbar inset>
         <q-toolbar-title>
@@ -25,15 +22,20 @@
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
-
+    <div id="top"></div>
     <q-pull-to-refresh @refresh="refresh">
       <q-infinite-scroll @load="onLoad" :offset="250">
         <div class="q-pt-md row items-start q-gutter-md">
-          <assigment-item-component
-            v-for="assigment in Assigment.assigments.data"
+          <q-intersection
+            v-for="(assigment) in Assigment.assigments.data"
             :key="assigment.id"
-            :assigment="assigment"
-          ></assigment-item-component>
+            transition="scale"
+            :style="`min-height: 45vh;width: 100vw`"
+          >
+            <assigment-item-component
+              :assigment="assigment"
+            ></assigment-item-component>
+          </q-intersection>
         </div>
         <template v-slot:loading>
           <div class="row justify-center q-my-md">
@@ -47,22 +49,27 @@
 
 <script>
 import { mapState } from "vuex";
+
 export default {
   components: {
     AssigmentItemComponent: () =>
       import("components/AssigmentItemComponent.vue"),
   },
   data() {
-    return {};
+    return {
+      assigments: [],
+    };
   },
   computed: {
-    ...mapState(["Assigment"]),
+    ...mapState(["Assigment",'Setting']),
   },
   created() {
     if (!this.Assigment.assigments.data)
       this.$store.dispatch("Assigment/index");
   },
-  mounted() {},
+  mounted() {
+
+  },
   methods: {
     onLoad(index, done) {
       this.Assigment.assigments.next_page_url
