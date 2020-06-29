@@ -7,7 +7,7 @@
       <q-toolbar>
         <q-icon name="home" style="font-size:1.5em" />
         <q-toolbar-title>
-          Notifikasi
+          <div class="text-body1">Notifikasi</div>
         </q-toolbar-title>
         <q-space />
       </q-toolbar>

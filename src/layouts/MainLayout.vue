@@ -1,6 +1,5 @@
 <template>
   <q-layout view="hHh Lpr fFf">
-
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -14,18 +13,58 @@
         active-color="primary"
         indicator-color="transparent"
       >
-        <q-tab name="home" icon="mail" label="Beranda" @click="$route.name == 'home' ? null : $router.push('/')" />
-        <q-tab name="build" icon="explore" label="Rakit" @click="$route.name == 'build' ? null : $router.push('/build')" />
-        <q-tab name="create" icon="add" label="Buat" @click="$route.name == 'create' ? null : $router.push('/create')" />
-        <q-tab name="notif" icon="message" label="Notif" @click="$route.name == 'notif' ? null : $router.push('/notif')" />
-        <q-tab name="account" icon="person" label="Akun" @click="$route.name == 'account' ? null : $router.push('/account')" />
+        <q-tab
+          class="q-pa-xs"
+          name="home"
+          @click="$route.name == 'home' ? null : $router.push('/')"
+        >
+          <q-icon name="mail" size="xs"></q-icon>
+          <div class="text-caption">Beranda</div>
+        </q-tab>
+        <q-tab
+          class="q-pa-xs"
+          name="create"
+          @click="$route.name == 'create' ? null : $router.push('/create')"
+        >
+          <q-icon name="add" size="xs"></q-icon>
+          <div class="text-caption">Buat</div>
+        </q-tab>
+        <q-tab
+          class="q-pa-xs"
+          name="build"
+          @click="$route.name == 'build' ? null : $router.push('/build')"
+        >
+          <q-btn flat icon="explore" size="sm">
+            <q-badge
+              floating
+              v-if="Assigment.build"
+            >{{Assigment.build.question_lists ? Assigment.build.question_lists.length : 0}}</q-badge>
+          </q-btn>
+          <div class="text-caption">Rakit</div>
+        </q-tab>
+        <q-tab
+          class="q-pa-xs"
+          name="notif"
+          @click="$route.name == 'notif' ? null : $router.push('/notif')"
+        >
+          <q-icon name="message" size="xs"></q-icon>
+          <div class="text-caption">Notif</div>
+        </q-tab>
+        <q-tab
+          class="q-pa-xs"
+          name="account"
+          @click="$route.name == 'account' ? null : $router.push('/account')"
+        >
+          <q-icon name="person" size="xs"></q-icon>
+          <div class="text-caption">Akun</div>
+        </q-tab>
       </q-tabs>
     </q-footer>
   </q-layout>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from "vuex";
 export default {
   name: "MainLayout",
   data() {
@@ -33,11 +72,9 @@ export default {
       tab: this.$route.name
     };
   },
-  computed:{
-    ...mapState(['Setting']),
-
+  computed: {
+    ...mapState(["Setting", "Assigment"])
   },
-  mounted(){
-  }
+  mounted() {}
 };
 </script>

@@ -9,12 +9,15 @@
             </q-avatar>
           </div>
           <div class="col-8 self-center">
-            {{ assigment.user.name }}
+            <div class="text-caption q-ml-md">
+              {{ assigment.user.name }}
+            </div>
           </div>
           <div class="col-2 self-center">
             <q-fab flat icon="more_vert" direction="left">
               <q-fab-action v-if="assigment.user.id == Auth.auth.id" color="red" icon="delete" @click="destroy()" />
               <q-fab-action color="secondary" icon="cloud_download" />
+              <q-fab-action color="indigo" icon="edit" />
             </q-fab>
           </div>
         </div>

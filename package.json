@@ -17,7 +17,10 @@
         "@quasar/extras": "^1.0.0",
         "axios": "^0.18.1",
         "js-cookie": "^2.2.1",
+        "moment": "^2.27.0",
         "quasar": "^1.0.0",
+        "vue-linkify": "^1.0.1",
+        "vue-moment": "^4.1.0",
         "vue-router-multiguard": "^1.0.3",
         "vuex-persist": "^2.2.0"
     },

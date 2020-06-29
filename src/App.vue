@@ -22,4 +22,8 @@ export default {
   font-weight: normal;
   background-color:#F5F5F5;
 }
+a {
+    text-decoration: none;
+    color: rgb(47, 27, 61);
+  }
 </style>

@@ -6,43 +6,33 @@
     >
       <q-toolbar>
         <q-icon name="home" style="font-size: 1.5em;" />
-        <q-space />
-
-        <!-- <q-btn
-          flat
-          round
-          icon="send"
-          style="transform: rotate(-20deg);"
-          @click="$router.push('/globalchat')"
-        /> -->
       </q-toolbar>
       <q-toolbar inset>
         <q-toolbar-title>
-          Home
+          <div class="text-body1">Home</div>
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
     <div id="top"></div>
-    <q-pull-to-refresh @refresh="refresh">
-      <q-infinite-scroll @load="onLoad" :offset="250">
-        <div class="q-pt-md row items-start q-gutter-md">
-          <q-intersection
-            v-for="(assigment) in Assigment.assigments.data"
-            :key="assigment.id"
-            transition="scale"
-            :style="`min-height: 45vh;width: 100vw`"
-          >
-            <assigment-item-component
-              :assigment="assigment"
-            ></assigment-item-component>
-          </q-intersection>
-        </div>
-        <template v-slot:loading>
-          <div class="row justify-center q-my-md">
-            <q-spinner-dots color="primary" size="40px" />
-          </div>
-        </template>
-      </q-infinite-scroll>
+    <q-pull-to-refresh @refresh="init">
+    <q-tabs v-model="tab" dense class="q-mt-sm text-grey-10">
+      <q-tab name="unpublish">
+        <q-icon name="description"></q-icon>
+        <div class="text-caption">Butir Soal</div>
+      </q-tab>
+      <q-tab name="publish">
+        <q-icon name="bookmarks"></q-icon>
+        <div class="text-caption">Paket Soal</div>
+      </q-tab>
+    </q-tabs>
+    <q-tab-panels v-model="tab" animated>
+      <q-tab-panel name="publish" class="q-pa-none">
+        <list-publish-component></list-publish-component>
+      </q-tab-panel>
+      <q-tab-panel name="unpublish" class="q-pa-none">
+        <list-unpublish-component></list-unpublish-component>
+      </q-tab-panel>
+    </q-tab-panels>
     </q-pull-to-refresh>
   </div>
 </template>
@@ -52,36 +42,32 @@ import { mapState } from "vuex";
 
 export default {
   components: {
-    AssigmentItemComponent: () =>
-      import("components/AssigmentItemComponent.vue"),
+    ListPublishComponent: () =>
+      import("components/assigment/ListPublishComponent.vue"),
+    ListUnpublishComponent: () =>
+      import("components/assigment/ListUnpublishComponent.vue")
   },
   data() {
     return {
       assigments: [],
+      tab: "unpublish"
     };
   },
   computed: {
-    ...mapState(["Assigment",'Setting']),
+    ...mapState(["Assigment", "Setting"])
   },
-  created() {
-    if (!this.Assigment.assigments.data)
-      this.$store.dispatch("Assigment/index");
-  },
-  mounted() {
-
-  },
+  created() {},
+  mounted() {},
   methods: {
-    onLoad(index, done) {
-      this.Assigment.assigments.next_page_url
-        ? this.$store.dispatch("Assigment/next").then((res) => done())
-        : done();
-    },
-    refresh(done) {
-      this.$store.dispatch("Assigment/index").then(res=>{
-        done()
-      })
-    },
-  },
+    init(done) {
+      Promise.all([
+        this.$store.dispatch("Assigment/getPublish"),
+        this.$store.dispatch("Assigment/getUnpublish")
+      ]).then(res => {
+        if (done) done();
+      });
+    }
+  }
 };
 </script>
 

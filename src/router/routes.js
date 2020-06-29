@@ -97,6 +97,12 @@ const routes = [{
         component: () =>
             import ('pages/KnowledgeResultPage.vue'),
         props: true
+    }, {
+        path: '/assigment/:assigmentId/edit',
+        name: 'assigmentedit',
+        component: () =>
+            import ('pages/Assigment/EditPage.vue'),
+        props: true
     },
     {
         path: "/login",

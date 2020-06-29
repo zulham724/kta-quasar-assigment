@@ -7,7 +7,7 @@
       <q-toolbar>
         <q-icon name="home" style="font-size: 1.5em;" />
         <q-toolbar-title>
-          Rakit Soal
+          <div class="text-body1">Rakit Soal</div>
         </q-toolbar-title>
         <q-space />
       </q-toolbar>
@@ -49,26 +49,18 @@
             rounded
             outlined
             dense
-            label="Kompetensi Dasar"
-            v-model="assigment.topic"
+            label="Tahun pelajaran"
+            v-model="assigment.education_year"
             lazy-rules
             :rules="[val => (val && val.length > 0) || 'Harus diisi']"
           />
+
           <q-input
             rounded
             outlined
             dense
-            label="Materi"
-            v-model="assigment.subject"
-            lazy-rules
-            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
-          />
-          <q-input
-            rounded
-            outlined
-            dense
-            label="Indikator"
-            v-model="assigment.indicator"
+            label="Semester"
+            v-model="assigment.semester"
             lazy-rules
             :rules="[val => (val && val.length > 0) || 'Harus diisi']"
           />
@@ -95,10 +87,7 @@
           :done="step > 2"
           style="margin-bottom:30vh"
         >
-          <div
-            v-for="(question_list, ql) in assigment.question_lists"
-            :key="ql"
-          >
+          <div v-for="(question_list, ql) in assigment.question_lists" :key="ql">
             <div
               v-if="
                 question_list.pivot.assigment_type.description == 'textfield'
@@ -291,9 +280,7 @@
             >
               <q-card class="q-mb-md">
                 <q-card-section>
-                  <div class="text-body1 text-grey">
-                    Soal nomor {{ ql + 1 }}
-                  </div>
+                  <div class="text-body1 text-grey">Soal nomor {{ ql + 1 }}</div>
                   <q-input
                     :disable="question_list.pivot.creator_id != Auth.auth.id"
                     v-model="question_list.name"
@@ -374,14 +361,7 @@
 
           <q-stepper-navigation>
             <div class="row justify-between">
-              <q-btn
-                flat
-                dense
-                @click="step = 1"
-                color="primary"
-                label="Back"
-                class="q-ml-sm"
-              />
+              <q-btn flat dense @click="step = 1" color="primary" label="Back" class="q-ml-sm" />
               <q-fab
                 flat
                 color="secondary"
@@ -401,15 +381,6 @@
                       $forceUpdate();
                     }
                   "
-                />
-                <q-fab-action
-                  color="secondary"
-                  v-for="assigment_type in assigment.assigment_category
-                    .assigment_types"
-                  :key="assigment_type.id"
-                  icon="list"
-                  :label="assigment_type.name"
-                  @click="addQuestionList(assigment_type)"
                 />
               </q-fab>
               <q-btn
@@ -431,6 +402,18 @@
         </q-step>
 
         <q-step :name="3" title="Selesai" icon="add_comment">
+          <q-toggle v-model="assigment.isTimer" label="Aktifkan untuk set timer ketika mengerjakan soal"></q-toggle>
+          <q-input
+            v-if="assigment.isTimer"
+            type="number"
+            rounded
+            outlined
+            dense
+            lazy-rules
+            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+            label="Timer dalam menit"
+            v-model="assigment.timer"
+          />
           <q-toggle
             v-model="assigment.isExpire"
             label="Aktifkan tanggal berlaku untuk soal? Seperti ketika anda ingin membuat soal ujian yang hanya bisa diisi/dibuka pada hari dan jam tertentu"
@@ -449,10 +432,7 @@
             <template v-slot:prepend>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-date
-                    v-model="assigment.start_at"
-                    mask="YYYY-MM-DD HH:mm"
-                  />
+                  <q-date v-model="assigment.start_at" mask="YYYY-MM-DD HH:mm" />
                 </q-popup-proxy>
               </q-icon>
             </template>
@@ -460,11 +440,7 @@
             <template v-slot:append>
               <q-icon name="access_time" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-time
-                    v-model="assigment.start_at"
-                    mask="YYYY-MM-DD HH:mm"
-                    format24h
-                  />
+                  <q-time v-model="assigment.start_at" mask="YYYY-MM-DD HH:mm" format24h />
                 </q-popup-proxy>
               </q-icon>
             </template>
@@ -491,19 +467,12 @@
             <template v-slot:append>
               <q-icon name="access_time" class="cursor-pointer">
                 <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-time
-                    v-model="assigment.end_at"
-                    mask="YYYY-MM-DD HH:mm"
-                    format24h
-                  />
+                  <q-time v-model="assigment.end_at" mask="YYYY-MM-DD HH:mm" format24h />
                 </q-popup-proxy>
               </q-icon>
             </template>
           </q-input>
-          <q-toggle
-            v-model="assigment.isPassword"
-            label="Aktifkan untuk mengunci soal"
-          />
+          <q-toggle v-model="assigment.isPassword" label="Aktifkan untuk mengunci soal" />
           <q-input
             v-if="assigment.isPassword"
             v-model="assigment.password"
@@ -542,13 +511,7 @@
 
           <q-stepper-navigation>
             <div class="row justify-between">
-              <q-btn
-                flat
-                @click="step = 2"
-                color="primary"
-                label="Back"
-                class="q-ml-sm"
-              />
+              <q-btn flat @click="step = 2" color="primary" label="Back" class="q-ml-sm" />
               <q-btn
                 :loading="loading"
                 :disabled="loading"
@@ -605,27 +568,25 @@
                     </q-avatar>
                   </q-item-section>
 
-                  <q-item-section>
-                    {{ opt.name }}
-                  </q-item-section>
+                  <q-item-section>{{ opt.name }}</q-item-section>
                   <q-item-section side v-if="opt.assigments.length">
                     {{
-                      opt.assigments[0].pivot.assigment_type.description ==
-                      "selectoptions"
-                        ? "Pilihan ganda"
-                        : null
+                    opt.assigments[0].pivot.assigment_type.description ==
+                    "selectoptions"
+                    ? "Pilihan ganda"
+                    : null
                     }}
                     {{
-                      opt.assigments[0].pivot.assigment_type.description ==
-                      "textarea"
-                        ? "Uraian"
-                        : null
+                    opt.assigments[0].pivot.assigment_type.description ==
+                    "textarea"
+                    ? "Uraian"
+                    : null
                     }}
                     {{
-                      opt.assigments[0].pivot.assigment_type.description ==
-                      "textfield"
-                        ? "Isian singkat"
-                        : null
+                    opt.assigments[0].pivot.assigment_type.description ==
+                    "textfield"
+                    ? "Isian singkat"
+                    : null
                     }}
                   </q-item-section>
                 </q-item>
@@ -661,6 +622,8 @@ export default {
       loading: false,
       step: 1,
       assigment: {
+        is_publish: true,
+        isTimer: false,
         isExpire: false,
         isPassword: false,
         grade_id: null
@@ -673,9 +636,18 @@ export default {
     };
   },
   computed: {
-    ...mapState(["Grade", "Auth", "AssigmentCategory", "Setting"])
+    ...mapState(["Grade", "Auth", "AssigmentCategory", "Setting", "Assigment"])
+  },
+  watch: {
+    assigment: {
+      handler: function() {
+        this.$store.commit("Assigment/setBuild", { build: this.assigment });
+      },
+      deep: true
+    }
   },
   created() {
+    if (this.Assigment.build) this.assigment = {...this.Assigment.build};
     if (this.Grade.grades.length == 0) this.$store.dispatch("Grade/index");
     this.$store.dispatch("AssigmentCategory/index");
 
@@ -698,7 +670,7 @@ export default {
         answer_lists: [
           {
             name: "",
-            value: null
+            value: 100
           }
         ]
       });
@@ -726,20 +698,24 @@ export default {
         },
         answer_lists: question_list.answer_lists
       });
+      this.$store.commit("Assigment/setBuild", { build: this.assigment });
       this.$forceUpdate();
     },
     storeAssigment() {
       this.$refs.form.validate().then(success => {
         if (success) {
           this.loading = true;
+          this.$q.notify('Tunggu')
+          this.$router.back();
           this.$store
             .dispatch("Assigment/store", this.assigment)
             .then(res => {
-              this.$q.notify("Berhasil menerbitkan soal");
-              this.$router.push("/");
+              // this.$store.commit('Assigment/addPublish',{publish:res.data})
+              this.$store.commit('Assigment/resetBuild')
+              this.$q.notify("Berhasil menerbitkan Paket Soal");
             })
             .catch(err => {
-              // this.$q.notify("Terjadi kesalahan");
+              this.$q.notify("Terjadi kesalahan");
             })
             .finally(() => {
               this.loading = false;

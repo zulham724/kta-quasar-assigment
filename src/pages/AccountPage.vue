@@ -9,13 +9,13 @@
       <q-toolbar>
         <q-icon name="home" style="font-size: 1.5em;" />
         <q-toolbar-title>
-          {{ Auth.auth.name }}
+          <div class="text-body1">{{ Auth.auth.name }}</div>
         </q-toolbar-title>
         <q-btn flat icon="logout" @click="logout()" />
       </q-toolbar>
     </q-header>
 
-    <q-pull-to-refresh @refresh="onRefresh">
+    <q-pull-to-refresh @refresh="onRefresh" v-if="Auth.auth">
       <div class="q-pa-md">
         <div class="row">
           <div class="col-3">
@@ -70,7 +70,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="text-caption">
+          <div class="text-caption" v-linkified>
             {{ Auth.auth.profile.long_bio }}
           </div>
         </div>
@@ -109,7 +109,7 @@
 import { mapState } from "vuex";
 export default {
   components:{
-    // ItemComponent: ()=> import('components/assigment/ItemComponent.vue')
+    ItemComponent: ()=> import('components/assigment/ItemComponent.vue')
   },
   computed: {
     ...mapState(["Setting", "Auth"])

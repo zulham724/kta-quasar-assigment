@@ -1,13 +1,13 @@
 <template>
-  <div>
+  <q-layout>
     <q-header
       elevated
       :style="`background-image:url(${Setting.assets.bgToolbar});background-size:cover;`"
     >
       <q-toolbar>
-        <q-icon name="home" style="font-size:1.5em" />
+        <q-btn flat dense icon="arrow_back" @click="$router.back()" />
         <q-toolbar-title>
-          <div class="text-body1">Buat Soal</div>
+          <div class="text-body1">Edit</div>
         </q-toolbar-title>
         <q-space />
       </q-toolbar>
@@ -111,7 +111,7 @@
                     rounded
                     outlined
                     dense
-                    :label="`Soal ${ql + 1}`"
+                    :label="`Soal nomor ${ql + 1}`"
                     lazy-rules
                     :rules="[val => (val && val.length > 0) || 'Harus diisi']"
                     @input="() => $forceUpdate()"
@@ -190,7 +190,7 @@
                     rounded
                     outlined
                     dense
-                    :label="`Soal ${ql + 1}`"
+                    :label="`Soal nomor ${ql + 1}`"
                     hint="Pilihan ganda"
                     lazy-rules
                     :rules="[val => (val && val.length > 0) || 'Harus diisi']"
@@ -283,14 +283,14 @@
               <q-card class="q-mb-md">
                 <q-card-section>
                   <div class="text-body1 text-grey">
-                    Soal {{ ql + 1 }}
+                    Soal nomor {{ ql + 1 }}
                   </div>
                   <q-input
                     v-model="question_list.name"
                     rounded
                     outlined
                     dense
-                    :label="`Soal ${ql + 1}`"
+                    :label="`Soal nomor ${ql + 1}`"
                     lazy-rules
                     :rules="[val => (val && val.length > 0) || 'Harus diisi']"
                     @input="() => $forceUpdate()"
@@ -405,6 +405,103 @@
         </q-step>
 
         <q-step :name="3" title="Selesai" icon="add_comment">
+          <q-toggle v-model="assigment.isTimer" label="Aktifkan untuk set timer ketika mengerjakan soal"></q-toggle>
+          <q-input
+            v-if="assigment.isTimer"
+            type="number"
+            rounded
+            outlined
+            dense
+            lazy-rules
+            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+            label="Timer dalam menit"
+            v-model="assigment.timer"
+          />
+          <q-toggle
+            v-model="assigment.isExpire"
+            label="Aktifkan tanggal berlaku untuk soal? Seperti ketika anda ingin membuat soal ujian yang hanya bisa diisi/dibuka pada hari dan jam tertentu"
+          />
+          <q-input
+            v-if="assigment.isExpire"
+            rounded
+            outlined
+            dense
+            lazy-rules
+            v-model="assigment.start_at"
+            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+            label="Dari"
+            disabled
+          >
+            <template v-slot:prepend>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy transition-show="scale" transition-hide="scale">
+                  <q-date
+                    v-model="assigment.start_at"
+                    mask="YYYY-MM-DD HH:mm"
+                  />
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+
+            <template v-slot:append>
+              <q-icon name="access_time" class="cursor-pointer">
+                <q-popup-proxy transition-show="scale" transition-hide="scale">
+                  <q-time
+                    v-model="assigment.start_at"
+                    mask="YYYY-MM-DD HH:mm"
+                    format24h
+                  />
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+          <q-input
+            v-if="assigment.isExpire"
+            rounded
+            outlined
+            dense
+            lazy-rules
+            v-model="assigment.end_at"
+            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+            label="Sampai"
+            disabled
+          >
+            <template v-slot:prepend>
+              <q-icon name="event" class="cursor-pointer">
+                <q-popup-proxy transition-show="scale" transition-hide="scale">
+                  <q-date v-model="assigment.end_at" mask="YYYY-MM-DD HH:mm" />
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+
+            <template v-slot:append>
+              <q-icon name="access_time" class="cursor-pointer">
+                <q-popup-proxy transition-show="scale" transition-hide="scale">
+                  <q-time
+                    v-model="assigment.end_at"
+                    mask="YYYY-MM-DD HH:mm"
+                    format24h
+                  />
+                </q-popup-proxy>
+              </q-icon>
+            </template>
+          </q-input>
+          <q-toggle
+            v-model="assigment.isPassword"
+            label="Aktifkan untuk mengunci soal"
+          />
+          <q-input
+            v-if="assigment.isPassword"
+            v-model="assigment.password"
+            type="password"
+            rounded
+            outlined
+            dense
+            lazy-rules
+            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+            label="Kunci Penilaian"
+          />
+
           <q-input
             class="q-mb-lg"
             type="textarea"
@@ -446,7 +543,7 @@
                 rounded
                 type="submit"
                 color="primary"
-                @click="storeAssigment()"
+                @click="updateAssigment()"
               />
             </div>
           </q-stepper-navigation>
@@ -454,12 +551,15 @@
       </q-stepper>
     </q-form>
 
-  </div>
+  </q-layout>
 </template>
 
 <script>
 import { mapGetters, mapState } from "vuex";
 export default {
+  props:{
+    assigmentId: null
+  },
   data() {
     return {
       loading: false,
@@ -472,6 +572,9 @@ export default {
       }
     };
   },
+  mounted(){
+    this.init();
+  },
   computed: {
     ...mapState(["Grade", "Auth", "AssigmentCategory",'Setting'])
   },
@@ -480,6 +583,11 @@ export default {
     this.$store.dispatch("AssigmentCategory/index");
   },
   methods: {
+    init(){
+      this.$store.dispatch('Assigment/show',this.assigmentId).then(res=>{
+        this.assigment = res.data
+      })
+    },
     addQuestionList(assigment_type) {
       if (!this.assigment.question_lists) this.assigment.question_lists = [];
 
@@ -500,21 +608,19 @@ export default {
         ]
       });
       this.$forceUpdate();
-      // console.log(this.assigment);
     },
-    storeAssigment() {
+    updateAssigment() {
       this.$refs.form.validate().then(success => {
         if (success) {
           this.loading = true;
           this.$q.notify('Tunggu')
-          this.$router.back();
+          this.$router.push('/')
           this.$store
-            .dispatch("Assigment/store", this.assigment)
+            .dispatch("Assigment/update", this.assigment)
             .then(res => {
-              // this.$store.commit('Assigment/addUnpublish',{unPublish:res.data})
-              this.$q.notify("Berhasil menerbitkan soal");
-            }).catch(err=>{
-              this.$q.notify("Terjadi kesalahan")
+              this.$store.dispatch('Auth/getAuth').then(res=>{
+                this.$q.notify("Berhasil memperbarui soal");
+              })
             })
         }
       });

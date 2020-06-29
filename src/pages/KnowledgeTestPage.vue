@@ -8,9 +8,8 @@
         <q-toolbar>
           <q-btn round flat dense icon="arrow_back" @click="$router.back()" />
           <q-toolbar-title>
-            Coba Kerjakan
+            <div class="text-body1">Review Soal</div>
           </q-toolbar-title>
-          <q-space />
         </q-toolbar>
       </q-header>
       <q-page-container v-if="assigment != null">
@@ -21,16 +20,17 @@
             color="primary"
             animated
             class="full-height"
+            header-nav
           >
             <q-step
               v-for="(question_list, ql) in assigment.question_lists"
               :key="question_list.id"
               :name="ql + 1"
-              :title="`Soal nomor ${ql + 1}`"
+              :title="`Soal ${ql + 1}`"
               icon="settings"
               :done="step > 1"
             >
-              <div class="text-body1">{{ question_list.name }}</div>
+              <div class="text-body2">{{ question_list.name }}</div>
 
               <div
                 v-if="
@@ -150,7 +150,7 @@ export default {
   data() {
     return {
       assigment: null,
-      step: 1,
+      step: 0,
       loading: false,
     };
   },
