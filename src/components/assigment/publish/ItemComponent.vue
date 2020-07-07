@@ -27,8 +27,13 @@
                 icon="delete"
                 @click="destroy()"
               />
-              <q-fab-action color="secondary" icon="cloud_download" />
               <q-fab-action
+                color="secondary"
+                icon="cloud_download"
+                @click="$q.notify('Dalam kontruksi')"
+              />
+              <q-fab-action
+                v-if="assigment.user.id == Auth.auth.id"
                 color="indigo"
                 icon="edit"
                 @click="$router.push(`/assigment/${assigment.id}/edit`)"
@@ -134,17 +139,14 @@ export default {
           cancel: true
         })
         .onOk(() => {
-          this.$q.loadingBar.start();
           this.$store
-            .dispatch("Assigment/destroy", this.assigment.id)
+            .dispatch("Publish/destroy", this.assigment.id)
             .then(res => {
+              this.$store.dispatch("Auth/getAuth");
               this.$q.notify("Berhasil menghapus soal");
             })
             .catch(err => {
               this.$q.notify("Terjadi kesalahan");
-            })
-            .finally(() => {
-              this.$q.loadingBar.stop();
             });
         });
     },

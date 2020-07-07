@@ -1,37 +1,34 @@
 /* Module1.store.js */
-import axios from 'axios'
+import axios from "axios";
 // State object
-const state = {
-	
-}
+const state = {};
 
 // Mutations
-const mutations = {
-
-}
+const mutations = {};
 
 // Actions
 const actions = {
-    index(){
-        return new Promise((resolve,reject)=>{
-
-        })
+    index() {
+        return new Promise((resolve, reject) => {});
     },
-    search({commit},key){
-        return new Promise((resolve,reject)=>{
-            axios.get(`${this.state.Setting.url}/api/v1/assigmentquestionlists/search/${key}`).then(res=>{
-                resolve(res)
-            }).catch(err=>{
-                reject(err)
-            })
-        })
-    }
-}
-    
-// Getter functions
-const getters = {
+    search({ commit }, key) {
+        return new Promise((resolve, reject) => {
+            axios
+                .get(
+                    `${this.state.Setting.url}/api/v1/assigmentquestionlists/search/${key}`
+                )
+                .then(res => {
+                    resolve(res);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+    },
+};
 
-}
+// Getter functions
+const getters = {};
 
 export default {
     namespaced: true,
@@ -39,4 +36,4 @@ export default {
     getters,
     actions,
     mutations
-}
+};

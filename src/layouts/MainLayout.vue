@@ -10,7 +10,7 @@
         no-caps
         dense
         class="text-grey"
-        active-color="primary"
+        active-color="cyan-7"
         indicator-color="transparent"
       >
         <q-tab
@@ -37,6 +37,7 @@
           <q-btn flat icon="explore" size="sm">
             <q-badge
               floating
+              color="cyan-7"
               v-if="Assigment.build"
             >{{Assigment.build.question_lists ? Assigment.build.question_lists.length : 0}}</q-badge>
           </q-btn>
@@ -48,7 +49,7 @@
           @click="$route.name == 'notif' ? null : $router.push('/notif')"
         >
           <q-icon name="message" size="xs"></q-icon>
-          <div class="text-caption">Notif</div>
+          <div class="text-caption">Hasil</div>
         </q-tab>
         <q-tab
           class="q-pa-xs"

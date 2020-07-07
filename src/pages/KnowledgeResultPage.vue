@@ -3,9 +3,8 @@
     <q-layout view="lHh Lpr lFf">
       <q-header
         elevated
-        :style="`background-image:url(${Setting.assets.bgToolbar});background-size:cover;`"
       >
-        <q-toolbar>
+        <q-toolbar class="bg-cyan-7">
           <q-btn round flat dense icon="arrow_back" @click="$router.back()" />
           <q-toolbar-title>Hasil</q-toolbar-title>
           <q-space />

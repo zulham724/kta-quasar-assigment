@@ -1,24 +1,35 @@
 /* Module1.store.js */
 import axios from "axios";
+import moment from "moment";
 
-function removeDuplicates(originalArray, prop) {
-    var newArray = [];
-    var lookupObject = {};
+// function removeDuplicates(originalArray, prop) {
+//     var newArray = [];
+//     var lookupObject = {};
 
-    for (var i in originalArray) {
-        lookupObject[originalArray[i][prop]] = originalArray[i];
-    }
+//     for (var i in originalArray) {
+//         lookupObject[originalArray[i][prop]] = originalArray[i];
+//     }
 
-    for (i in lookupObject) {
-        newArray.push(lookupObject[i]);
-    }
-    return newArray;
-}
+//     for (i in lookupObject) {
+//         newArray.push(lookupObject[i]);
+//     }
+//     return newArray;
+// }
 
 // State object
 const state = {
     assigments: {},
-    build: null,
+    build: {
+        is_publish: true,
+        isTimer: false,
+        isExpire: false,
+        isPassword: false,
+        grade_id: null,
+        question_lists: [],
+        education_year: `${moment().format("YYYY")}/${moment()
+      .add(1, "years")
+      .format("YYYY")}`
+    },
     create: null,
     publish: {},
     unpublish: {}
@@ -52,43 +63,23 @@ const mutations = {
         };
     },
     resetBuild(state) {
-        state.build = null
+        state.build = null;
     },
-    addPublish(state, payload) {
-        state.publish.data = [payload.publish, ...state.publish.data];
+    resetBuildQuestionLists(state) {
+        state.build.question_lists = [];
     },
-    setPublish(state, payload) {
-        state.publish = payload.publish;
-    },
-    removePublish(state, payload) {
-        const index = state.publish.data.findIndex(
-            item => item.id == payload.id
-        );
-        state.publish.data.splice(index, 1);
-    },
-    nextPublish(state, payload) {
-        state.publish = {
-            ...payload.publish,
-            data: [...state.publish.data, ...payload.publish.data]
-        };
-    },
-    addUnpublish(state, payload) {
-        state.unpublish.data = [payload.unpublish, ...state.unpublish.data];
-    },
-    setUnpublish(state, payload) {
-        state.unpublish = payload.unpublish;
-    },
-    removeUnpublish(state, payload) {
-        const index = state.unpublish.data.findIndex(
-            item => item.id == payload.id
-        );
-        state.unpublish.data.splice(index, 1);
-    },
-    nextUnpublish(state, payload) {
-        state.unpublish = {
-            ...payload.unpublish,
-            data: [...state.unpublish.data, ...payload.unpublish.data]
-        };
+    addQuestionList(state, payload) {
+        console.log(payload);
+        if (!state.build.question_lists) state.build = { question_lists: [] };
+        state.build.question_lists.push({
+            name: payload.question_list.name,
+            description: payload.question_list.description,
+            pivot: {
+                ...payload.question_list.pivot
+            },
+            answer_lists: payload.question_list.answer_lists
+        });
+        console.log(state.build);
     },
 };
 
@@ -107,38 +98,12 @@ const actions = {
                 });
         });
     },
-    getPublish({ commit }) {
-        return new Promise((resolve, reject) => {
-            axios
-                .get(`${this.state.Setting.url}/api/v1/assigments/publish`)
-                .then(res => {
-                    commit("setPublish", { publish: res.data });
-                    resolve(res);
-                })
-                .catch(err => {
-                    reject(err);
-                });
-        });
-    },
-    getUnpublish({ commit }) {
-        return new Promise((resolve, reject) => {
-            axios
-                .get(`${this.state.Setting.url}/api/v1/assigments/unpublish`)
-                .then(res => {
-                    commit("setUnpublish", { unpublish: res.data });
-                    resolve(res);
-                })
-                .catch(err => {
-                    reject(err);
-                });
-        });
-    },
     store({ commit }, access) {
         return new Promise((resolve, reject) => {
             axios
                 .post(`${this.state.Setting.url}/api/v1/assigment`, access)
                 .then(res => {
-                    commit("add", { assigment: res.data });
+                    // commit("add", { assigment: res.data });
                     resolve(res);
                 })
                 .catch(err => {
@@ -188,34 +153,6 @@ const actions = {
                 });
         });
     },
-    nextPublish({ commit, state }) {
-        return new Promise((resolve, reject) => {
-            console.log(state.publish.next_page_url);
-            axios
-                .get(`${state.publish.next_page_url}`)
-                .then(res => {
-                    commit("nextPublish", { publish: res.data });
-                    resolve(res);
-                })
-                .catch(err => {
-                    reject(err);
-                });
-        });
-    },
-    nextUnpublish({ commit, state }) {
-        return new Promise((resolve, reject) => {
-            console.log(state.unpublish.next_page_url);
-            axios
-                .get(`${state.unpublish.next_page_url}`)
-                .then(res => {
-                    commit("nextPublish", { unpublish: res.data });
-                    resolve(res);
-                })
-                .catch(err => {
-                    reject(err);
-                });
-        });
-    },
     prev() {},
     page() {},
     destroy({ commit }, id) {
@@ -226,7 +163,6 @@ const actions = {
             axios
                 .post(`${this.state.Setting.url}/api/v1/assigment/${id}`, access)
                 .then(res => {
-                    commit("remove", { id: id });
                     resolve(res);
                 })
                 .catch(err => {

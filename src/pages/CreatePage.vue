@@ -2,9 +2,8 @@
   <div>
     <q-header
       elevated
-      :style="`background-image:url(${Setting.assets.bgToolbar});background-size:cover;`"
     >
-      <q-toolbar>
+      <q-toolbar class="bg-cyan-7">
         <q-icon name="home" style="font-size:1.5em" />
         <q-toolbar-title>
           <div class="text-body1">Buat Soal</div>
@@ -14,12 +13,13 @@
     </q-header>
 
     <q-form class="q-gutter-sm" ref="form">
-      <q-stepper v-model="step" color="primary" style="width:100vw;" animated>
-        <q-step :name="1" title="Isian" icon="settings" :done="step > 1">
+      <q-stepper v-model="step" color="cyan-7" style="width:100vw;" animated>
+        <q-step :name="1" title="Isi" color="cyan-7" icon="settings" :done="step > 1">
           <q-select
             rounded
             outlined
             dense
+            color="cyan-7"
             :options="Grade.grades"
             v-model="assigment.grade"
             option-value="id"
@@ -30,12 +30,13 @@
           />
           <q-select
             rounded
+            color="cyan-7"
             outlined
             dense
             option-label="name"
             :option-value="item => item"
             v-model="assigment.assigment_category"
-            :options="AssigmentCategory.assigment_categories"
+            :options="AssigmentCategory.assigment_categories.filter(item=>item.id != 9)"
             label="Kompetensi"
             :rules="[val => !!val || 'Harus diisi']"
             @input="
@@ -47,6 +48,7 @@
           />
           <q-input
             rounded
+            color="cyan-7"
             outlined
             dense
             label="Kompetensi Dasar"
@@ -56,6 +58,7 @@
           />
           <q-input
             rounded
+            color="cyan-7"
             outlined
             dense
             label="Materi"
@@ -65,6 +68,7 @@
           />
           <q-input
             rounded
+            color="cyan-7"
             outlined
             dense
             label="Indikator"
@@ -82,7 +86,7 @@
                     .validate()
                     .then(success => (success ? (step = 2) : null))
               "
-              color="primary"
+              color="cyan-7"
               label="Lanjut"
             />
           </q-stepper-navigation>
@@ -90,10 +94,11 @@
 
         <q-step
           :name="2"
-          title="Rakit soal"
+          title="Buat"
           icon="create_new_folder"
           :done="step > 2"
           style="margin-bottom:30vh"
+          color="cyan-7"
         >
           <div
             v-for="(question_list, ql) in assigment.question_lists"
@@ -109,6 +114,7 @@
                   <q-input
                     v-model="question_list.name"
                     rounded
+                    color="cyan-7"
                     outlined
                     dense
                     :label="`Soal ${ql + 1}`"
@@ -136,12 +142,13 @@
                     :key="al"
                     v-model="answer_list.name"
                     rounded
+                    color="cyan-7"
                     outlined
                     dense
                     lazy-rules
                     :rules="[val => (val && val.length > 0) || 'Harus diisi']"
                     @input="() => $forceUpdate()"
-                    :label="`Kisi-kisi jawaban ${al + 1}`"
+                    :label="`Kunci jawaban ${al + 1}`"
                   >
                     <template v-slot:after>
                       <q-btn
@@ -163,7 +170,7 @@
                     color="secondary"
                     outline
                     rounded
-                    label="Tambah Kisi-kisi jawaban"
+                    label="Tambah Kunci jawaban"
                     @click="
                       () => {
                         question_list.answer_lists.push({
@@ -188,6 +195,7 @@
                   <q-input
                     v-model="question_list.name"
                     rounded
+                    color="cyan-7"
                     outlined
                     dense
                     :label="`Soal ${ql + 1}`"
@@ -216,6 +224,7 @@
                     :key="al"
                     v-model="answer_list.name"
                     rounded
+                    color="cyan-7"
                     outlined
                     dense
                     :label="String.fromCharCode('A'.charCodeAt() + al)"
@@ -288,6 +297,7 @@
                   <q-input
                     v-model="question_list.name"
                     rounded
+                    color="cyan-7"
                     outlined
                     dense
                     :label="`Soal ${ql + 1}`"
@@ -316,12 +326,13 @@
                     :key="al"
                     v-model="answer_list.name"
                     rounded
+                    color="cyan-7"
                     outlined
                     dense
                     lazy-rules
                     :rules="[val => (val && val.length > 0) || 'Harus diisi']"
                     @input="() => $forceUpdate()"
-                    :label="`Kisi-kisi jawaban ${al + 1}`"
+                    :label="`Kunci jawaban ${al + 1}`"
                   >
                     <template v-slot:after>
                       <q-btn
@@ -343,7 +354,7 @@
                     color="secondary"
                     outline
                     rounded
-                    label="Tambah Kisi-kisi jawaban"
+                    label="Tambah Kunci jawaban"
                     @click="
                       () => {
                         question_list.answer_lists.push({
@@ -365,7 +376,7 @@
                 flat
                 dense
                 @click="step = 1"
-                color="primary"
+                color="cyan-7"
                 label="Back"
                 class="q-ml-sm"
               />
@@ -397,21 +408,22 @@
                       .validate()
                       .then(success => (success ? (step = 3) : null))
                 "
-                color="primary"
+                color="cyan-7"
                 label="Lanjut"
               />
             </div>
           </q-stepper-navigation>
         </q-step>
 
-        <q-step :name="3" title="Selesai" icon="add_comment">
+        <q-step :name="3" title="Finish" color="cyan-7" icon="add_comment">
           <q-input
             class="q-mb-lg"
             type="textarea"
             outlined
+            color="cyan-7"
             rounded
             v-model="assigment.description"
-            label="Tulis sesuatu untuk disampaikan kepada guru"
+            label="Tulis sesuatu untuk guru"
             hint="contoh: Silahkan dilihat jangan lupa like dan komentarnya"
             lazy-rules
             :rules="[val => (val && val.length > 0) || 'Harus diisi']"
@@ -421,9 +433,10 @@
             class="q-mb-lg"
             type="textarea"
             outlined
+            color="cyan-7"
             rounded
             v-model="assigment.note"
-            label="Tulis sesuatu untuk disampaikan kepada murid"
+            label="Tulis sesuatu untuk murid"
             hint="contoh: Perhatikan soal dengan baik dan juga jangan sampai telat mengerjakan karena ada batas waktu"
             lazy-rules
             :rules="[val => (val && val.length > 0) || 'Harus diisi']"
@@ -434,7 +447,7 @@
               <q-btn
                 flat
                 @click="step = 2"
-                color="primary"
+                color="cyan-7"
                 label="Back"
                 class="q-ml-sm"
               />
@@ -445,7 +458,7 @@
                 outline
                 rounded
                 type="submit"
-                color="primary"
+                color="cyan-7"
                 @click="storeAssigment()"
               />
             </div>
@@ -507,7 +520,7 @@ export default {
         if (success) {
           this.loading = true;
           this.$q.notify('Tunggu')
-          this.$router.back();
+          this.$router.push('/');
           this.$store
             .dispatch("Assigment/store", this.assigment)
             .then(res => {

@@ -2,9 +2,8 @@
   <q-layout>
     <q-header
       elevated
-      :style="`background-image:url(${Setting.assets.bgToolbar});background-size:cover;`"
     >
-      <q-toolbar>
+      <q-toolbar class="bg-cyan-7">
         <q-btn flat dense icon="arrow_back" @click="$router.back()" />
         <q-toolbar-title>
           <div class="text-body1">Edit</div>
