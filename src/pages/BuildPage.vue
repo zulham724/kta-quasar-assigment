@@ -617,7 +617,9 @@ export default {
         "Penilaian Harian",
         "Penilaian Tengah Semester",
         "Penilaian Akhir Semester",
-        "Penilaian Akhir Tahun"
+        "Penilaian Akhir Tahun",
+        "Ujian Sekolah",
+        "Try Out"
       ]
     };
   },

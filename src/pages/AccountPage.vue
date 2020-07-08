@@ -88,7 +88,7 @@
         </q-tab-panel>
         <q-tab-panel name="unpublish" class="q-pa-none">
           <div class="q-pa-none">
-            <q-intersection v-for="(assigment) in Auth.auth.unpublish_assigments" :key="assigment.id">
+            <q-intersection v-for="(assigment) in Auth.auth.unpublish_assigments" :key="assigment.id" :style="`min-height: 10vh;width: 100vw`">
               <unpublish-item-component :assigment="assigment"></unpublish-item-component>
             </q-intersection>
           </div>

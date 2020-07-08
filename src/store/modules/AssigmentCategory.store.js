@@ -17,7 +17,14 @@ const actions = {
     index({ commit }) {
         return new Promise((resolve, reject) => {
             axios.get(`${this.state.Setting.url}/api/v1/assigmentcategory`).then(res => {
-                commit('setassigment_categories', { assigment_categories: res.data })
+                commit('setassigment_categories', {
+                    assigment_categories: res.data.map(item => {
+                        item.assigment_types.forEach(item => {
+                            item.display = true
+                        })
+                        return item
+                    })
+                })
                 resolve(res)
             }).catch(err => {
                 reject(err)

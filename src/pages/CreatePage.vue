@@ -1,8 +1,6 @@
 <template>
   <div>
-    <q-header
-      elevated
-    >
+    <q-header elevated>
       <q-toolbar class="bg-cyan-7">
         <q-icon name="home" style="font-size:1.5em" />
         <q-toolbar-title>
@@ -100,10 +98,7 @@
           style="margin-bottom:30vh"
           color="cyan-7"
         >
-          <div
-            v-for="(question_list, ql) in assigment.question_lists"
-            :key="ql"
-          >
+          <div v-for="(question_list, ql) in assigment.question_lists" :key="ql">
             <div
               v-if="
                 question_list.pivot.assigment_type.description == 'textfield'
@@ -291,9 +286,7 @@
             >
               <q-card class="q-mb-md">
                 <q-card-section>
-                  <div class="text-body1 text-grey">
-                    Soal {{ ql + 1 }}
-                  </div>
+                  <div class="text-body1 text-grey">Soal {{ ql + 1 }}</div>
                   <q-input
                     v-model="question_list.name"
                     rounded
@@ -372,14 +365,7 @@
 
           <q-stepper-navigation>
             <div class="row justify-between">
-              <q-btn
-                flat
-                dense
-                @click="step = 1"
-                color="cyan-7"
-                label="Back"
-                class="q-ml-sm"
-              />
+              <q-btn flat dense @click="step = 1" color="cyan-7" label="Back" class="q-ml-sm" />
               <q-fab
                 flat
                 color="secondary"
@@ -389,15 +375,19 @@
                 direction="down"
                 v-if="assigment.assigment_category"
               >
-                <q-fab-action
-                  color="secondary"
+                <div
                   v-for="assigment_type in assigment.assigment_category
                     .assigment_types"
                   :key="assigment_type.id"
-                  icon="list"
-                  :label="assigment_type.name"
-                  @click="addQuestionList(assigment_type)"
-                />
+                >
+                  <q-fab-action
+                    v-if="assigment_type.display"
+                    color="secondary"
+                    icon="list"
+                    :label="assigment_type.name"
+                    @click="addQuestionList(assigment_type)"
+                  />
+                </div>
               </q-fab>
               <q-btn
                 v-if="assigment.question_lists && assigment.question_lists.length"
@@ -444,13 +434,7 @@
 
           <q-stepper-navigation>
             <div class="row justify-between">
-              <q-btn
-                flat
-                @click="step = 2"
-                color="cyan-7"
-                label="Back"
-                class="q-ml-sm"
-              />
+              <q-btn flat @click="step = 2" color="cyan-7" label="Back" class="q-ml-sm" />
               <q-btn
                 :loading="loading"
                 :disabled="loading"
@@ -466,7 +450,6 @@
         </q-step>
       </q-stepper>
     </q-form>
-
   </div>
 </template>
 
@@ -482,11 +465,11 @@ export default {
         isPassword: false,
         isTimer: false,
         grade_id: null
-      }
+      },
     };
   },
   computed: {
-    ...mapState(["Grade", "Auth", "AssigmentCategory",'Setting'])
+    ...mapState(["Grade", "Auth", "AssigmentCategory", "Setting"])
   },
   created() {
     if (this.Grade.grades.length == 0) this.$store.dispatch("Grade/index");
@@ -495,7 +478,14 @@ export default {
   methods: {
     addQuestionList(assigment_type) {
       if (!this.assigment.question_lists) this.assigment.question_lists = [];
-
+      this.assigment.assigment_category.assigment_types.map(item => {
+        if (assigment_type.id == item.id) {
+          item.display = true;
+        } else {
+          item.display = false;
+        }
+      });
+      console.log(this.assigment.assigment_category)
       this.assigment.question_lists.push({
         name: "",
         description: "",
@@ -519,16 +509,17 @@ export default {
       this.$refs.form.validate().then(success => {
         if (success) {
           this.loading = true;
-          this.$q.notify('Tunggu')
-          this.$router.push('/');
+          this.$q.notify("Tunggu");
+          this.$router.push("/");
           this.$store
             .dispatch("Assigment/store", this.assigment)
             .then(res => {
               // this.$store.commit('Assigment/addUnpublish',{unPublish:res.data})
               this.$q.notify("Berhasil menerbitkan soal");
-            }).catch(err=>{
-              this.$q.notify("Terjadi kesalahan")
             })
+            .catch(err => {
+              this.$q.notify("Terjadi kesalahan");
+            });
         }
       });
     }

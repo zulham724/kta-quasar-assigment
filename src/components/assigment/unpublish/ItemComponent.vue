@@ -10,7 +10,12 @@
           </q-item-section>
           <q-item-section>
             <q-item-label>{{assigment.user.name}}</q-item-label>
-            <q-item-label>{{assigment.grade.description}} | {{assigment.assigment_category.description}}</q-item-label>
+            <q-item-label>
+              {{assigment.grade.description}} | {{assigment.assigment_category.description}} |
+              <q-badge
+                color="blue"
+              >{{assigment.question_lists[0] ? assigment.question_lists[0].pivot.assigment_type ? assigment.question_lists[0].pivot.assigment_type.name : null : null}}</q-badge>
+            </q-item-label>
             <q-item-label caption>{{assigment.subject}}</q-item-label>
           </q-item-section>
         </template>
@@ -55,6 +60,9 @@ export default {
   computed: {
     ...mapState(["Auth", "Setting", "Assigment"])
   },
+  mounted() {
+
+  },
   methods: {
     addQuestionList(question_list) {
       this.$q.notify({
@@ -76,7 +84,7 @@ export default {
           this.$store
             .dispatch("Unpublish/destroy", this.assigment.id)
             .then(res => {
-              this.$store.dispatch('Auth/getAuth')
+              this.$store.dispatch("Auth/getAuth");
               this.$q.notify("Berhasil menghapus soal");
             })
             .catch(err => {
