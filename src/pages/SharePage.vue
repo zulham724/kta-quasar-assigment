@@ -10,100 +10,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-form class="q-gutter-sm" ref="form">
-      <q-stepper v-model="step" color="cyan-7" style="width: 100vw;" animated keep-alive>
-        <q-step :name="1" color="cyan-7" title="Isi" icon="settings" :done="step > 1">
-          <q-select
-            rounded
-            color="cyan-7"
-            outlined
-            dense
-            :options="Grade.grades"
-            v-model="assigment.grade"
-            option-value="id"
-            option-label="description"
-            label="Kelas"
-            :rules="[val => !!val || 'Harus diisi']"
-            @input="item => (assigment.grade_id = item.id)"
-          />
-          <q-select
-            rounded
-            color="cyan-7"
-            outlined
-            dense
-            option-label="name"
-            :option-value="item => item"
-            v-model="assigment.assigment_category"
-            :options="AssigmentCategory.assigment_categories.filter(item=>{
-              if(item.id == 4 || item.id == 6 || item.id == 9 ){
-                return item
-              }
-            })"
-            label="Kompetensi"
-            :rules="[val => !!val || 'Harus diisi']"
-            @input="
-              item => {
-                assigment.question_lists = []
-                $store.commit('Assigment/resetBuildQuestionLists')
-                assigment.assigment_category_id = item.id;
-              }
-            "
-          />
-          <q-select
-            v-if="assigment.assigment_category_id == 9"
-            rounded
-            color="cyan-7"
-            outlined
-            dense
-            label="Nama Kegiatan Penilaian"
-            :options="names"
-            v-model="assigment.name"
-            lazy-rules
-            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
-          />
-          <q-input
-            v-else
-            rounded
-            color="cyan-7"
-            outlined
-            dense
-            label="Nama Kegiatan Penilaian"
-            v-model="assigment.name"
-            lazy-rules
-            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
-          />
-
-          <q-input
-            rounded
-            color="cyan-7"
-            outlined
-            dense
-            label="Tahun pelajaran"
-            v-model="assigment.education_year"
-            lazy-rules
-            disable
-            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
-          />
-
-          <q-select
-            rounded
-            color="cyan-7"
-            outlined
-            dense
-            label="Semester"
-            :options="semesters"
-            v-model="assigment.semester"
-            lazy-rules
-            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
-          />
-
-          <q-stepper-navigation>
-            <q-btn flat @click="step2()" color="cyan-7" label="Lanjut" />
-          </q-stepper-navigation>
-        </q-step>
-
-
-        <q-step :name="2" color="cyan-7" title="Finish" icon="add_comment">
+    <q-form class="q-gutter-sm q-pa-md" ref="form">
           <q-toggle
             v-model="assigment.isTimer"
             label="Aktifkan untuk set timer ketika mengerjakan soal"
@@ -218,8 +125,6 @@
             :rules="[val => (val && val.length > 0) || 'Harus diisi']"
           />
             
-
-          <q-stepper-navigation>
             <div class="row justify-between">
               <q-btn flat @click="step = 1" color="cyan-7" label="Back" class="q-ml-sm" />
               <q-btn
@@ -233,9 +138,6 @@
                 @click="shareAssigment()"
               />
             </div>
-          </q-stepper-navigation>
-        </q-step>
-      </q-stepper>
     </q-form>
 
     <q-dialog v-model="search.display" full-width full-height>
@@ -326,26 +228,13 @@ props: {
   },
   methods: {
     debounce,
-    step2() {
-        this.step=2
-        // this.$refs.form
-        //     .validate()
-        //     .then(success => {
-        //        if(success){
-        //            console.log('asu')
-        //            this.step=2
-        //        }
-        //        else console.log('asda')
-        //     });
-        // this.$forceUpdate();
-        // console.log(this.assigment);
-    },
     init() {
       this.assigment = {
           id:this.assigmentId,
         ...this.Assigment.build
       };
       delete this.assigment.question_lists;
+      delete this.assigment.grade_id;
       console.log(this.assigment)
       if (this.Grade.grades.length == 0) this.$store.dispatch("Grade/index");
       this.$forceUpdate();
@@ -402,6 +291,7 @@ props: {
           this.loading = true;
           this.$q.notify("Tunggu");
           //this.$router.push("/");
+          delete this.assigment.grade_id;
           this.$store.dispatch("Assigment/share", this.assigment)
             .then(res => {
               // this.$store.commit('Assigment/addPublish',{publish:res.data})
