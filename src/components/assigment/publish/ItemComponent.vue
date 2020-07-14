@@ -12,10 +12,11 @@
             <div class="row">
               <div class="col">
                 <div class="text-caption q-ml-md">{{ assigment.user.name }}</div>
-                <div
+                <!-- <div
                   class="text-caption text-grey-9 q-ml-md"
                   v-if="assigment.is_publish"
                 >Kode Soal [{{ assigment.code }}]</div>
+                -->
               </div>
             </div>
           </div>
@@ -38,13 +39,19 @@
                 icon="edit"
                 @click="$router.push(`/assigment/${assigment.id}/edit`)"
               />
+               <q-fab-action
+                color="orange"
+                icon="share"
+                @click="$router.push({name:'share',params:{assigmentId:assigment.id}})"
+              />
             </q-fab>
+            
           </div>
         </div>
       </q-card-section>
       <q-card-section style="padding-bottom:0">
         <!-- <div class="text-caption">{{assigment.description}}</div> -->
-        <div v-if="assigment.is_publish" class="text-caption">{{assigment.name}}</div>
+        <div v-if="assigment.is_publish" class="text-caption">{{assigment.grade.description}} | Semester {{assigment.semester}} | {{assigment.name}}</div>
         <div v-else class="text-caption">{{assigment.grade.description}} | {{assigment.subject}}</div>
         <q-carousel
           @click="

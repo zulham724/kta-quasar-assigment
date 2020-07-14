@@ -23,4 +23,5 @@
         <allow-intent href="itms-apps:*" />
     </platform>
     <allow-navigation href="about:*" />
+    <allow-navigation href="http://192.168.137.1:8080" />
 </widget>

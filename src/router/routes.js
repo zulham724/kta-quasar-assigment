@@ -71,6 +71,12 @@ const routes = [{
                 name: 'build',
                 component: () =>
                     import ('pages/BuildPage.vue')
+            },
+            {
+                path: 'share',
+                name: 'share',
+                component: () => import ('pages/SharePage.vue'),
+                props: true,
             }
         ]
     },

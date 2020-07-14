@@ -106,7 +106,7 @@ export default {
         ? this.$store.dispatch("Publish/next").then(res => done())
         : done();
     },
-    onLoadUnpublish(index, done) {
+    onLoadUnpublish(index, done) {  
       this.Unpublish.items.next_page_url
         ? this.$store.dispatch("Unpublish/next").then(res => done())
         : done();

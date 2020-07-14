@@ -153,6 +153,19 @@ const actions = {
                 });
         });
     },
+    share({ commit }, access) {
+        return new Promise((resolve, reject) => {
+            axios
+                .post(`${this.state.Setting.url}/api/v1/assigments/share`, access)
+                .then(res => {
+                    // commit("add", { assigment: res.data });
+                    resolve(res);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+    },
     prev() {},
     page() {},
     destroy({ commit }, id) {
