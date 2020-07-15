@@ -87,6 +87,27 @@ const actions = {
                 })
         })
     },
+    updateProfile({ commit, dispatch }, user) {
+        return new Promise((resolve, reject) => {
+            const access = {
+                _method: "put",
+                ...user
+            };
+            axios
+                .post(
+                    `${this.state.Setting.url}/api/v1/user/${this.state.Auth.auth.id}`,
+                    access
+                )
+                .then(res => {
+                    // commit("setProfile", { profile: res.data.profile });
+                    dispatch('getAuth')
+                    resolve(res);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+    }
 };
 
 // Getter functions

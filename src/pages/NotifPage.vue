@@ -12,69 +12,99 @@
       </q-toolbar>
     </q-header>
 
-    <q-tabs
-      v-model="tab"
-      class="text-grey"
-      active-color="primary"
-      indicator-color="primary"
-      align="justify"
-      narrow-indicator
-    >
-      <q-tab name="teacher" class="q-pa-sm">
-        <div class="text-caption">Kegiatan Penilaian</div>
-      </q-tab>
-      <q-tab name="grade" class="q-pa-sm">
-        <div class="text-caption">Kelas</div>
-      </q-tab>
-      <q-tab name="students_count" class="q-pa-sm">
-        <div class="text-caption">Jumlah Siswa</div>
-      </q-tab>
-      <q-tab name="download" class="q-pa-sm">
-        <div class="text-caption">Download</div>
-      </q-tab>
-    </q-tabs>
+    <q-infinite-scroll @load="onLoad" :offset="100">
+    <q-intersection class="q-pa-xs" v-for="(assigment, id) in assigments.data" :key="id">
+     <q-card class="my-card" style="background:url('statics/bg-list.png');background-size:cover" @click="$router.push({name:'studentassigment',params:{assigment:assigment}})">
+      <q-card-section>
+        <div class="text-weight-bold">{{assigment.name}}</div>
+        <div class="text-weight-light">Kelas: {{assigment.grade.description}}</div>
+        <div class="text-weight-light">Kode kelas: {{assigment.grade_code}}</div>
+        <div class="text-weight-light">Semester: {{assigment.semester}}</div>
+        
+      </q-card-section>
 
-    <q-separator />
+      <q-card-actions>
+         <div id="rcorners1">
+          <div class="row">
+            <div class="col-6">
+                  Kode Soal<br>
+              <div class="text-weight-bold"> {{assigment.code}}</div>
+            </div>
+            <div class="col-3 offset-2">
+                  <q-btn flat round color="black" icon="content_copy" />
 
-    <q-tab-panels v-model="tab" animated>
-      <q-tab-panel name="teacher">
-        <div class="text-h6">Untuk Kegiatan</div>
-        Dalam kontruksi
-      </q-tab-panel>
+            </div>
+          </div>
+          
+        </div>
+      </q-card-actions>
+     
+    </q-card>
+    </q-intersection>
+    <template v-slot:loading>
+        <div class="row justify-center q-my-md">
+          <q-spinner-dots color="primary" size="40px" />
+        </div>
+      </template>
+    </q-infinite-scroll>
+  
+   
 
-      <q-tab-panel name="grade">
-        <div class="text-h6">Untuk Kelas</div>
-        Dalam kontruksi
-      </q-tab-panel>
-
-      <q-tab-panel name="students_count">
-        <div class="text-h6">Untuk Jumlah Siswa</div>
-        Dalam kontruksi
-      </q-tab-panel>
-
-      <q-tab-panel name="download">
-        <div class="text-h6">Untuk Download</div>
-        Dalam kontruksi
-      </q-tab-panel>
-
-    </q-tab-panels>
   </div>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapGetters, mapState } from "vuex";
+
 export default {
   data(){
     return {
+      assigments:[],
       tab: 'teacher'
     }
   },
   computed:{
-    ...mapState(['Setting'])
+    ...mapState(['Setting','Assigment'])
+  },
+  created(){
+    this.init();
   },
   mounted(){
+  },
+  methods:{
+    init(){
+      this.loading=true;
+      this.$store.dispatch("Assigment/getSharedPublish").then(res=>{
+        //console.log(res.data)
+        this.assigments = res.data
+      }).catch(res=>{
+        
+      }).finally(res=>{
+
+      });
+
+    },
+    onLoad(index, done){
+      //console.log(this.assigments);
+      this.assigments.next_page_url
+        ? this.$store.dispatch("Assigment/nextSharedPublish", this.assigments.next_page_url).then(res =>{
+          this.assigments.data = [...this.assigments.data, ...res.data.data];
+          this.assigments.next_page_url = res.data.next_page_url;
+          done();
+
+          //console.log(this.assigments);
+        })
+        : done();
+    }
   }
 };
 </script>
 
-<style></style>
+<style>
+#rcorners1 {
+  border-radius: 8px;
+  background: #bae7e7;
+  padding-left: 10px;
+  width: 150px;
+}
+</style>

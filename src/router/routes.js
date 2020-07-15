@@ -1,6 +1,6 @@
 import multiguard from 'vue-router-multiguard'
 import store from './../store'
-
+import moment from "moment";
 // cek auth apakah sudah login atau belum
 const auth = function(to, from, next) {
     let isLoggedIn = store().getters['Auth/isLoggedIn']
@@ -32,7 +32,7 @@ const actived = function(to, from, next) {
 const checkProfile = function(to, from, next) {
     let hasEducationallevel = store().getters['Auth/auth'].profile.educational_level_id
     if (!hasEducationallevel) {
-
+        next('/account/edit');
     } else {
         next()
     }
@@ -77,6 +77,12 @@ const routes = [{
                 name: 'share',
                 component: () => import ('pages/SharePage.vue'),
                 props: true,
+            },
+            {
+                path: 'studentassigment',
+                name: 'studentassigment',
+                component: () => import ('pages/StudentAssigmentPage.vue'),
+                props: true,
             }
         ]
     },
@@ -98,6 +104,7 @@ const routes = [{
     },
     {
         path: '/knowledgeresult',
+        beforeEnter: multiguard([auth, actived]),
         name: 'knowledgeresult',
         beforeEnter: multiguard([auth]),
         component: () =>
@@ -105,6 +112,7 @@ const routes = [{
         props: true
     }, {
         path: '/assigment/:assigmentId/edit',
+        beforeEnter: multiguard([auth, actived]),
         name: 'assigmentedit',
         component: () =>
             import ('pages/Assigment/EditPage.vue'),
@@ -115,6 +123,13 @@ const routes = [{
         name: "login",
         component: () =>
             import ("layouts/LoginLayout.vue")
+    },
+    {
+        path: "/account/edit",
+        beforeEnter: multiguard([auth, actived]),
+        name: "accountedit",
+        component: () =>
+            import ("pages/account/EditPage.vue")
     }
 ];
 

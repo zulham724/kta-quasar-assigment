@@ -140,46 +140,13 @@
             </div>
     </q-form>
 
-    <q-dialog v-model="search.display" full-width full-height>
-      <q-card>
-        <q-card-section>
-          <q-infinite-scroll @load="onLoad" :offset="250">
-            <div class="q-pa-none">
-              <div class="row justify-between">
-                <div class="text-body1 text-cyan-7">Soal terkait</div>
-                <q-btn
-                  icon="close"
-                  color="cyan-7"
-                  flat
-                  @click="()=>{
-                search.display = false
-                init()
-              }"
-                />
-              </div>
-              <q-intersection
-                v-for="(assigment) in SuggestedQuestionList.items.data"
-                :style="`min-height: 20vw;`"
-                :key="assigment.id"
-              >
-                <unpublish-item-component :assigment="assigment"></unpublish-item-component>
-              </q-intersection>
-            </div>
-            <template v-slot:loading>
-              <div class="row justify-center q-my-md">
-                <q-spinner-dots color="primary" size="40px" />
-              </div>
-            </template>
-          </q-infinite-scroll>
-        </q-card-section>
-      </q-card>
-    </q-dialog>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from "vuex";
 import { debounce } from "quasar";
+import axios from "axios";
 
 export default {
 props: {
@@ -207,8 +174,7 @@ props: {
     };
   },
   components: {
-    UnpublishItemComponent: () =>
-      import("components/assigment/unpublish/ItemComponent.vue")
+    
   },
   computed: {
     ...mapState(["Grade", "Auth", "AssigmentCategory", "Setting", "Assigment",'SuggestedQuestionList'])
@@ -292,30 +258,47 @@ props: {
           this.$q.notify("Tunggu");
           //this.$router.push("/");
           delete this.assigment.grade_id;
-          this.$store.dispatch("Assigment/share", this.assigment)
-            .then(res => {
-              // this.$store.commit('Assigment/addPublish',{publish:res.data})
-              //this.$store.commit("Assigment/resetBuild");
-              
-              this.$q.dialog({
-                title: 'Berhasil dibagikan',
-                message: `Silahkan salin kode soal berikut: <b>${res.data.code}</b><br><div class='text-caption'>Paket soal yang telah dibuat dapat dilihat di menu Hasil</div>`,
-                html: true
-                }).onOk(() => {
-                    this.$router.push("/");
-                }).onCancel(() => {
-                     this.$router.push("/");
-                }).onDismiss(() => {
-                    this.$router.push("/");
+          
+          axios.post(`${this.Setting.url}/api/v1/assigments/share`, this.assigment)
+                .then(res => {
+                    this.$q.dialog({
+                      title: 'Berhasil dibagikan',
+                      message: `Silahkan salin kode soal berikut: <b>${res.data.code}</b><br><div class='text-caption'>Paket soal yang telah dibuat dapat dilihat di menu Hasil</div>`,
+                      html: true
+                      }).onOk(() => {
+                          this.$router.push("/");
+                      }).onCancel(() => {
+                          this.$router.push("/");
+                      }).onDismiss(() => {
+                          this.$router.push("/");
+                    })
                 })
-              //this.$q.notify("Berhasil membagikan Paket Soal");
-            })
-            .catch(err => {
-              this.$q.notify("Terjadi kesalahan");
-            })
-            .finally(() => {
-              this.loading = false;
-            });
+                .catch(err => {
+                    this.$q.notify("Terjadi kesalahan");
+                }).finally(() => {
+                  this.loading = false;
+                });
+
+          // this.$store.dispatch("Assigment/share", this.assigment).then(res => {
+          //     this.$q.dialog({
+          //       title: 'Berhasil dibagikan',
+          //       message: `Silahkan salin kode soal berikut: <b>${res.data.code}</b><br><div class='text-caption'>Paket soal yang telah dibuat dapat dilihat di menu Hasil</div>`,
+          //       html: true
+          //       }).onOk(() => {
+          //           this.$router.push("/");
+          //       }).onCancel(() => {
+          //            this.$router.push("/");
+          //       }).onDismiss(() => {
+          //           this.$router.push("/");
+          //       })
+          //     //this.$q.notify("Berhasil membagikan Paket Soal");
+          //   })
+          //   .catch(err => {
+          //     this.$q.notify("Terjadi kesalahan");
+          //   })
+          //   .finally(() => {
+          //     this.loading = false;
+          //   });
         }
       });
     },

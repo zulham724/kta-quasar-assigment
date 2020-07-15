@@ -166,6 +166,47 @@ const actions = {
                 });
         });
     },
+    getSharedPublish({commit}){
+        return new Promise((resolve, reject) => {
+            axios
+                .get(`${this.state.Setting.url}/api/v1/assigments/getsharedpublish`)
+                .then(res => {
+                    // commit("add", { assigment: res.data });
+                    resolve(res);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+    },
+    nextSharedPublish({ commit }, next_page_url){
+        // console.log("tes");
+        // console.log(next_page_url);
+        return new Promise((resolve, reject) => {
+            axios
+                .get(`${next_page_url}`)
+                .then(res => {
+                    //commit("next", { assigments: res.data });
+                    resolve(res);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+    },
+    getStudentAssigments({commit}, assigment_id){
+        return new Promise((resolve, reject) => {
+            axios
+                .get(`${this.state.Setting.url}/api/v1/assigments/getstudentassigments/${assigment_id}`)
+                .then(res => {
+                    //commit("next", { assigments: res.data });
+                    resolve(res);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+    },
     prev() {},
     page() {},
     destroy({ commit }, id) {
