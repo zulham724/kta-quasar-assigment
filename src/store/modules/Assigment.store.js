@@ -196,9 +196,10 @@ const actions = {
     },
     getStudentAssigments({commit}, assigment_id){
         return new Promise((resolve, reject) => {
-            axios
-                .get(`${this.state.Setting.url}/api/v1/assigments/getstudentassigments/${assigment_id}`)
+            axios.get(`${this.state.Setting.url}/api/v1/assigments/getstudentassigments/${assigment_id}`)
                 .then(res => {
+                    console.log('hasi');
+                    console.log(res.data);
                     //commit("next", { assigments: res.data });
                     resolve(res);
                 })
@@ -207,6 +208,35 @@ const actions = {
                 });
         });
     },
+    ///BEGIN-SESSION///
+    getStudentSession({commit}, session_id){
+        return new Promise((resolve, reject) => {
+            axios.get(`${this.state.Setting.url}/api/v1/session/getsessionid/${session_id}`)
+                .then(res => {
+                    //console.log(res.data);
+                    //commit("next", { assigments: res.data });
+                    resolve(res);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+    },
+    saveScore({commit}, payload){
+        return new Promise((resolve, reject) => {
+            axios.post(`${this.state.Setting.url}/api/v1/session/savescore`, payload)
+                .then(res => {
+                    //console.log(res.data);
+                    //commit("next", { assigments: res.data });
+                    resolve(res);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
+    },
+
+    ///END-SESSION////
     prev() {},
     page() {},
     destroy({ commit }, id) {

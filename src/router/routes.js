@@ -79,9 +79,15 @@ const routes = [{
                 props: true,
             },
             {
-                path: 'studentassigment',
+                path: '/studentassigment/:assigmentId',
                 name: 'studentassigment',
                 component: () => import ('pages/StudentAssigmentPage.vue'),
+                props: true,
+            },
+            {
+                path: '/studentresult/:sessionId',
+                name: 'studentresult',
+                component: () => import ('pages/StudentResult.vue'),
                 props: true,
             }
         ]

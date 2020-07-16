@@ -14,7 +14,7 @@
 
     <q-infinite-scroll @load="onLoad" :offset="100">
     <q-intersection class="q-pa-xs" v-for="(assigment, id) in assigments.data" :key="id">
-     <q-card class="my-card" style="background:url('statics/bg-list.png');background-size:cover" @click="$router.push({name:'studentassigment',params:{assigment:assigment}})">
+     <q-card class="my-card" style="background:url('statics/bg-list.png');background-size:cover" @click="$router.push({name:'studentassigment',params:{assigmentId :assigment.id}})">
       <q-card-section>
         <div class="text-weight-bold">{{assigment.name}}</div>
         <div class="text-weight-light">Kelas: {{assigment.grade.description}}</div>
@@ -23,7 +23,7 @@
         
       </q-card-section>
 
-      <q-card-actions>
+      <q-card-actions @click.stop="copyCode(assigment.code)">
          <div id="rcorners1">
           <div class="row">
             <div class="col-6">
@@ -31,7 +31,7 @@
               <div class="text-weight-bold"> {{assigment.code}}</div>
             </div>
             <div class="col-3 offset-2">
-                  <q-btn flat round color="black" icon="content_copy" />
+                  <q-btn @click.stop="copyCode(assigment.code)" flat round color="black" icon="content_copy" />
 
             </div>
           </div>
@@ -83,6 +83,14 @@ export default {
 
       });
 
+    },
+    copyCode(value){
+      var tempInput = document.createElement("input");
+      tempInput.value = value;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand("copy");
+      document.body.removeChild(tempInput);
     },
     onLoad(index, done){
       //console.log(this.assigments);
