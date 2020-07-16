@@ -11,7 +11,6 @@
         <q-btn flat rounded dense style="transform: rotate(-20deg);" icon="send" />
       </q-toolbar>
     </q-header>
-    <div id="top"></div>
     <q-pull-to-refresh @refresh="init">
       <q-carousel animated v-model="slide" :arrows="false" :navigation="false" infinite autoplay height="30vh">
         <q-carousel-slide :name="1" img-src="~assets/images/cover3.jpg" />
@@ -26,14 +25,13 @@
           <div class="text-caption">Paket Soal</div>
         </q-tab>
       </q-tabs>
-      <q-tab-panels v-model="tab" animated>
-        <q-tab-panel name="publish" class="q-pa-none">
-          <q-infinite-scroll @load="onLoadPublish" :offset="250">
+          <q-infinite-scroll v-if="tab == 'publish'" @load="onLoadPublish" :offset="250">
             <div class="q-pa-none row items-start q-gutter-md" v-if="Publish.items.data">
               <q-intersection
                 v-for="(assigment) in Publish.items.data"
                 :key="assigment.id"
-                :style="`min-height: 45vh;width: 100vw`"
+                style="min-height:20vh;width:100vw"
+              
               >
                 <publish-item-component :assigment="assigment"></publish-item-component>
               </q-intersection>
@@ -44,11 +42,9 @@
               </div>
             </template>
           </q-infinite-scroll>
-        </q-tab-panel>
-        <q-tab-panel name="unpublish" class="q-pa-none">
-          <q-infinite-scroll @load="onLoadUnpublish" :offset="250">
+          <q-infinite-scroll v-if="tab == 'unpublish'" @load="onLoadUnpublish" :offset="250">
             <div class="q-pa-none" v-if="Unpublish.items.data">
-              <q-intersection v-for="(assigment) in Unpublish.items.data" :style="`min-height: 20vw;width: 100vw`" :key="assigment.id">
+              <q-intersection v-for="(assigment) in Unpublish.items.data" :key="assigment.id" style="min-height:10vh;width:100vw">
                 <unpublish-item-component :assigment="assigment"></unpublish-item-component>
               </q-intersection>
             </div>
@@ -58,8 +54,6 @@
               </div>
             </template>
           </q-infinite-scroll>
-        </q-tab-panel>
-      </q-tab-panels>
     </q-pull-to-refresh>
   </div>
 </template>
