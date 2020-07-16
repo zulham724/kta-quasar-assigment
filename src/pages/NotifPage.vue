@@ -12,7 +12,16 @@
       </q-toolbar>
     </q-header>
 
-    <q-infinite-scroll @load="onLoad" :offset="100">
+    <div v-if="assigments.data.length==0 && !loading">
+      <div class="row">
+        <div class="col-12 q-pa-lg text-center">
+          <div class="text-h5 text-black">
+            Assigment masih kosong
+          </div>
+        </div>
+      </div>
+    </div>
+    <q-infinite-scroll @load="onLoad" :offset="100" v-if="assigments.data.length>0">
     <q-intersection class="q-pa-xs" v-for="(assigment, id) in assigments.data" :key="id">
      <q-card class="my-card" style="background:url('statics/bg-list.png');background-size:cover" @click="$router.push({name:'studentassigment',params:{assigmentId :assigment.id}})">
       <q-card-section>
@@ -59,8 +68,11 @@ import { mapGetters, mapState } from "vuex";
 export default {
   data(){
     return {
-      assigments:[],
-      tab: 'teacher'
+      assigments:{
+        data:[]
+      },
+      tab: 'teacher',
+      loading:false,
     }
   },
   computed:{
@@ -70,17 +82,19 @@ export default {
     this.init();
   },
   mounted(){
+   
   },
   methods:{
     init(){
+     
       this.loading=true;
       this.$store.dispatch("Assigment/getSharedPublish").then(res=>{
         //console.log(res.data)
         this.assigments = res.data
-      }).catch(res=>{
-        
+      }).catch(res=>{ 
+        this.loading=false;
       }).finally(res=>{
-
+        this.loading=false;
       });
 
     },

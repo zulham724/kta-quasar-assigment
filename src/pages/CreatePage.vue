@@ -406,45 +406,26 @@
         </q-step>
 
         <q-step :name="3" title="Finish" color="cyan-7" icon="add_comment">
-          <q-input
-            class="q-mb-lg"
-            type="textarea"
-            outlined
-            color="cyan-7"
-            rounded
-            v-model="assigment.description"
-            label="Tulis sesuatu untuk guru"
-            hint="contoh: Silahkan dilihat jangan lupa like dan komentarnya"
-            lazy-rules
-            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
-          />
 
-          <q-input
-            class="q-mb-lg"
-            type="textarea"
-            outlined
-            color="cyan-7"
-            rounded
-            v-model="assigment.note"
-            label="Tulis sesuatu untuk murid"
-            hint="contoh: Perhatikan soal dengan baik dan juga jangan sampai telat mengerjakan karena ada batas waktu"
-            lazy-rules
-            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
-          />
+        <div class="row justify-center">
+        <q-btn
+        :loading="loading"
+          :disabled="loading"
+          outline
+          rounded
+          size="35px"
+          color="cyan-7"
+          icon="publish"
+          label="Terbitkan"
+          type="submit"
+          @click="storeAssigment()"
+        />
+        </div>
+        
 
           <q-stepper-navigation>
             <div class="row justify-between">
               <q-btn flat @click="step = 2" color="cyan-7" label="Back" class="q-ml-sm" />
-              <q-btn
-                :loading="loading"
-                :disabled="loading"
-                label="Terbitkan"
-                outline
-                rounded
-                type="submit"
-                color="cyan-7"
-                @click="storeAssigment()"
-              />
             </div>
           </q-stepper-navigation>
         </q-step>
