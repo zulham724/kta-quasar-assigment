@@ -10,6 +10,7 @@
       Sorry, nothing here...<strong>(404)</strong>
     </p>
     <q-btn
+      @click="$router.back()"
       color="secondary"
       style="width:200px;"
       to="/"

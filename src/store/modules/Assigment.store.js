@@ -30,6 +30,7 @@ const state = {
       .add(1, "years")
       .format("YYYY")}`
     },
+    studentResultSession:[],
     create: null,
     publish: {},
     unpublish: {}
@@ -81,6 +82,10 @@ const mutations = {
         });
         console.log(state.build);
     },
+    setStudentResultSession(state, payload){
+       state.studentResultSession = payload;
+       console.log(state.studentResultSession)
+    }
 };
 
 // Actions

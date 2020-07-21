@@ -45,10 +45,11 @@
         </q-tab>
         <q-tab
           class="q-pa-xs"
-          name="notif"
-          @click="$route.name == 'notif' ? null : $router.push('/notif')"
+          name="studentresultlist"
+          @click="$route.name == 'studentresultlist' ? null : $router.push('/studentresultlist')"
         >
           <q-icon name="message" size="xs"></q-icon>
+          
           <div class="text-caption">Hasil</div>
         </q-tab>
         <q-tab

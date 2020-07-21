@@ -56,10 +56,10 @@ const routes = [{
                     import ("pages/AccountPage.vue")
             },
             {
-                path: "notif",
-                name: 'notif',
+                path: "studentresultlist",
+                name: 'studentresultlist',
                 component: () =>
-                    import ("pages/NotifPage.vue")
+                    import ("pages/StudentResultListPage.vue")
             },
             {
                 path: "create",

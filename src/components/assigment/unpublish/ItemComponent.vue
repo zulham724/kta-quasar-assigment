@@ -5,7 +5,10 @@
         <template v-slot:header>
           <q-item-section avatar>
             <q-avatar>
-              <q-img :src="`${Setting.storageUrl}/${assigment.user.avatar}`"></q-img>
+              <q-img :src="`${Setting.storageUrl}/${assigment.user.avatar}`">
+                <template v-slot:loading>
+                </template>
+              </q-img>
             </q-avatar>
           </q-item-section>
           <q-item-section>

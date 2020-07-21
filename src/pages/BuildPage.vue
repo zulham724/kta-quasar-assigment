@@ -508,6 +508,8 @@
             :rules="[val => (val && val.length > 0) || 'Harus diisi']"
             label="Kunci Penilaian"
           />
+          <q-toggle v-model="assigment.is_public" label="Publikasikan ke siswa secara umum" />
+      
 
           <q-input
             class="q-mb-lg"
@@ -605,6 +607,7 @@ export default {
         isTimer: false,
         isExpire: false,
         isPassword: false,
+        is_public:true,
         grade_id: null
       },
       search: {
@@ -707,6 +710,7 @@ export default {
       this.$forceUpdate();
     },
     storeAssigment() {
+      //console.log(this.assigment);return;
       this.$refs.form.validate().then(success => {
         if (success) {
           this.loading = true;
