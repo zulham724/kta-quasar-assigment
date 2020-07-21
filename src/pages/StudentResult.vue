@@ -256,8 +256,8 @@ export default {
 
     },
     getPoint(question){
-        if(question.answer.value==100)return "Point: 10/10";
-        else return "Point: "+(question.score==null?0:question.score) +"/10";
+        if(question.answer.value==100)return "Point: 100/100";
+        else return "Point: "+(question.score==null?0:question.score) +"/100";
     },
     submitScore(){
         this.loading=true;

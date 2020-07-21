@@ -149,8 +149,8 @@ export default {
   },
   methods:{
     init(){
-      this.loading=true;
-      this.$store.dispatch("Assigment/getStudentAssigments", this.assigmentId).then(res=>{
+      this.loading=true;      this.$store.dispatch("Assigment/getStudentAssigments", this.assigmentId).then(res=>{
+
         //console.log(res.data)
         this.assigment = res.data
       }).catch(res=>{
