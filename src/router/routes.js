@@ -77,6 +77,12 @@ const routes = [{
                 name: 'share',
                 component: () => import ('pages/SharePage.vue'),
                 props: true,
+             }, 
+             {
+                path: 'sharefortraining',
+                name: 'sharefortraining',
+                component: () => import ('pages/ShareForTrainingPage.vue'),
+                props: true,
             },
             {
                 path: '/studentassigment/:assigmentId',

@@ -11,8 +11,20 @@
     </q-header>
 
     <q-form class="q-gutter-sm" ref="form">
-      <q-stepper v-model="step" color="cyan-7" style="width: 100vw;" animated keep-alive>
-        <q-step :name="1" color="cyan-7" title="Isi" icon="settings" :done="step > 1">
+      <q-stepper
+        v-model="step"
+        color="cyan-7"
+        style="width: 100vw;"
+        animated
+        keep-alive
+      >
+        <q-step
+          :name="1"
+          color="cyan-7"
+          title="Isi"
+          icon="settings"
+          :done="step > 1"
+        >
           <q-select
             rounded
             color="cyan-7"
@@ -34,17 +46,19 @@
             option-label="name"
             :option-value="item => item"
             v-model="assigment.assigment_category"
-            :options="AssigmentCategory.assigment_categories.filter(item=>{
-              if(item.id == 4 || item.id == 6 || item.id == 9 ){
-                return item
-              }
-            })"
+            :options="
+              AssigmentCategory.assigment_categories.filter(item => {
+                if (item.id == 4 || item.id == 6 || item.id == 9) {
+                  return item;
+                }
+              })
+            "
             label="Kompetensi"
             :rules="[val => !!val || 'Harus diisi']"
             @input="
               item => {
-                assigment.question_lists = []
-                $store.commit('Assigment/resetBuildQuestionLists')
+                assigment.question_lists = [];
+                $store.commit('Assigment/resetBuildQuestionLists');
                 assigment.assigment_category_id = item.id;
               }
             "
@@ -110,7 +124,10 @@
           color="cyan-7"
           style="margin-bottom:30vh"
         >
-          <div v-for="(question_list, ql) in assigment.question_lists" :key="ql">
+          <div
+            v-for="(question_list, ql) in assigment.question_lists"
+            :key="ql"
+          >
             <div
               v-if="
                 question_list.pivot.assigment_type.description == 'textfield'
@@ -161,7 +178,9 @@
                   >
                     <template v-slot:after>
                       <q-btn
-                        :disable="question_list.pivot.creator_id != Auth.auth.id"
+                        :disable="
+                          question_list.pivot.creator_id != Auth.auth.id
+                        "
                         v-if="al != 0"
                         round
                         dense
@@ -248,7 +267,9 @@
                   >
                     <template v-slot:after>
                       <q-btn
-                        :disable="question_list.pivot.creator_id != Auth.auth.id"
+                        :disable="
+                          question_list.pivot.creator_id != Auth.auth.id
+                        "
                         round
                         dense
                         :flat="answer_list.value == null ? true : false"
@@ -266,7 +287,9 @@
                         "
                       />
                       <q-btn
-                        :disable="question_list.pivot.creator_id != Auth.auth.id"
+                        :disable="
+                          question_list.pivot.creator_id != Auth.auth.id
+                        "
                         v-if="al != 0"
                         round
                         dense
@@ -307,7 +330,9 @@
             >
               <q-card class="q-mb-md">
                 <q-card-section>
-                  <div class="text-body1 text-grey">Soal nomor {{ ql + 1 }}</div>
+                  <div class="text-body1 text-grey">
+                    Soal nomor {{ ql + 1 }}
+                  </div>
                   <q-input
                     :disable="question_list.pivot.creator_id != Auth.auth.id"
                     v-model="question_list.name"
@@ -352,7 +377,9 @@
                   >
                     <template v-slot:after>
                       <q-btn
-                        :disable="question_list.pivot.creator_id != Auth.auth.id"
+                        :disable="
+                          question_list.pivot.creator_id != Auth.auth.id
+                        "
                         v-if="al != 0"
                         round
                         dense
@@ -390,15 +417,24 @@
 
           <q-stepper-navigation>
             <div class="row justify-between">
-              <q-btn flat dense @click="step = 1" color="cyan-7" label="Back" class="q-ml-sm" />
+              <q-btn
+                flat
+                dense
+                @click="step = 1"
+                color="cyan-7"
+                label="Back"
+                class="q-ml-sm"
+              />
               <q-btn
                 color="cyan-7"
                 rounded
                 label="Tambah Soal"
-                @click="()=>{
-                search.display = true
-                $forceUpdate()
-              }"
+                @click="
+                  () => {
+                    search.display = true;
+                    $forceUpdate();
+                  }
+                "
               />
               <q-btn
                 v-if="
@@ -419,139 +455,27 @@
         </q-step>
 
         <q-step :name="3" color="cyan-7" title="Finish" icon="add_comment">
-          <q-toggle
-            v-model="assigment.isTimer"
-            label="Aktifkan untuk set timer ketika mengerjakan soal"
-          ></q-toggle>
-          <q-input
-            v-if="assigment.isTimer"
-            type="number"
-            rounded
-            color="cyan-7"
-            outlined
-            dense
-            lazy-rules
-            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
-            label="Timer dalam menit"
-            v-model="assigment.timer"
-          />
-          <q-toggle
-            v-model="assigment.isExpire"
-            label="Aktifkan tanggal berlaku untuk soal? Seperti ketika anda ingin membuat soal ujian yang hanya bisa diisi/dibuka pada hari dan jam tertentu"
-          />
-          <q-input
-            v-if="assigment.isExpire"
-            rounded
-            color="cyan-7"
-            outlined
-            dense
-            lazy-rules
-            v-model="assigment.start_at"
-            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
-            label="Dari"
-            disabled
-          >
-            <template v-slot:prepend>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-date v-model="assigment.start_at" mask="YYYY-MM-DD HH:mm" />
-                </q-popup-proxy>
-              </q-icon>
-            </template>
+          <div class="row justify-center">
+            <q-btn
+              :loading="loading"
+              :disabled="loading"
+              outline
+              rounded
+              size="35px"
+              color="cyan-7"
+              icon="publish"
+              label="Terbitkan"
+              type="submit"
+              @click="storeAssigment()"
+            />
+          </div>
 
-            <template v-slot:append>
-              <q-icon name="access_time" class="cursor-pointer">
-                <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-time v-model="assigment.start_at" mask="YYYY-MM-DD HH:mm" format24h />
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
-          <q-input
-            v-if="assigment.isExpire"
-            rounded
-            color="cyan-7"
-            outlined
-            dense
-            lazy-rules
-            v-model="assigment.end_at"
-            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
-            label="Sampai"
-            disabled
-          >
-            <template v-slot:prepend>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-date v-model="assigment.end_at" mask="YYYY-MM-DD HH:mm" />
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-
-            <template v-slot:append>
-              <q-icon name="access_time" class="cursor-pointer">
-                <q-popup-proxy transition-show="scale" transition-hide="scale">
-                  <q-time v-model="assigment.end_at" mask="YYYY-MM-DD HH:mm" format24h />
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
-          <q-toggle v-model="assigment.isPassword" label="Aktifkan untuk mengunci soal" />
-          <q-input
-            v-if="assigment.isPassword"
-            v-model="assigment.password"
-            type="password"
-            rounded
-            color="cyan-7"
-            outlined
-            dense
-            lazy-rules
-            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
-            label="Kunci Penilaian"
-          />
-          <q-toggle v-model="assigment.is_public" label="Publikasikan ke siswa secara umum" />
-      
-
-          <q-input
-            class="q-mb-lg"
-            type="textarea"
-            outlined
-            rounded
-            color="cyan-7"
-            v-model="assigment.description"
-            label="Tulis sesuatu untuk guru"
-            hint="contoh: Silahkan dilihat jangan lupa like dan komentarnya"
-            lazy-rules
-            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
-          />
-
-          <q-input
-            class="q-mb-lg"
-            type="textarea"
-            outlined
-            rounded
-            color="cyan-7"
-            v-model="assigment.note"
-            label="Tulis sesuatu untuk murid"
-            hint="contoh: Perhatikan soal dengan baik dan juga jangan sampai telat mengerjakan karena ada batas waktu"
-            lazy-rules
-            :rules="[val => (val && val.length > 0) || 'Harus diisi']"
-          />
-
-          <q-stepper-navigation>
+        <q-stepper-navigation>
             <div class="row justify-between">
               <q-btn flat @click="step = 2" color="cyan-7" label="Back" class="q-ml-sm" />
-              <q-btn
-                :loading="loading"
-                :disabled="loading"
-                label="Terbitkan"
-                outline
-                rounded
-                type="submit"
-                color="cyan-7"
-                @click="storeAssigment()"
-              />
             </div>
           </q-stepper-navigation>
+
         </q-step>
       </q-stepper>
     </q-form>
@@ -567,18 +491,22 @@
                   icon="close"
                   color="cyan-7"
                   flat
-                  @click="()=>{
-                search.display = false
-                init()
-              }"
+                  @click="
+                    () => {
+                      search.display = false;
+                      init();
+                    }
+                  "
                 />
               </div>
               <q-intersection
-                v-for="(assigment) in SuggestedQuestionList.items.data"
+                v-for="assigment in SuggestedQuestionList.items.data"
                 :style="`min-height: 20vw;`"
                 :key="assigment.id"
               >
-                <unpublish-item-component :assigment="assigment"></unpublish-item-component>
+                <unpublish-item-component
+                  :assigment="assigment"
+                ></unpublish-item-component>
               </q-intersection>
             </div>
             <template v-slot:loading>
@@ -607,7 +535,7 @@ export default {
         isTimer: false,
         isExpire: false,
         isPassword: false,
-        is_public:true,
+        is_public: true,
         grade_id: null
       },
       search: {
@@ -631,7 +559,14 @@ export default {
       import("components/assigment/unpublish/ItemComponent.vue")
   },
   computed: {
-    ...mapState(["Grade", "Auth", "AssigmentCategory", "Setting", "Assigment",'SuggestedQuestionList'])
+    ...mapState([
+      "Grade",
+      "Auth",
+      "AssigmentCategory",
+      "Setting",
+      "Assigment",
+      "SuggestedQuestionList"
+    ])
   },
   watch: {
     assigment: {
@@ -721,7 +656,7 @@ export default {
             .then(res => {
               // this.$store.commit('Assigment/addPublish',{publish:res.data})
               this.$store.commit("Assigment/resetBuild");
-              this.$q.notify("Berhasil menerbitkan Paket Soal");
+              this.$q.notify("Berhasil menerbitkan Paket Soal.");
             })
             .catch(err => {
               this.$q.notify("Terjadi kesalahan");
@@ -741,17 +676,16 @@ export default {
       this.$forceUpdate();
     },
     getSuggestedQuestionLists() {
-      this.$store
-        .dispatch("SuggestedQuestionList/index", {
-          assigment_category_id: this.assigment.assigment_category_id,
-          educational_level_id: this.Auth.auth.profile.educational_level_id
-        })
+      this.$store.dispatch("SuggestedQuestionList/index", {
+        assigment_category_id: this.assigment.assigment_category_id,
+        educational_level_id: this.Auth.auth.profile.educational_level_id
+      });
     },
-    onLoad(index,done){
+    onLoad(index, done) {
       this.SuggestedQuestionList.items.next_page_url
         ? this.$store.dispatch("SuggestedQuestionList/next").then(res => done())
         : done();
-    },
+    }
   }
 };
 </script>

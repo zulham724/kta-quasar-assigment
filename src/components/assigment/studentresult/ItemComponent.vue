@@ -23,7 +23,7 @@
         </div>
       </q-card-section>
 
-      <q-card-actions @click.stop="copyCode(assigment.code)">
+      <q-card-actions >
          <div id="rcorners1">
           <div class="row">
             <div class="col-6">
@@ -39,7 +39,7 @@
         </div>
       </q-card-actions>
       <div style="top:0;right:0;position:absolute">
-        <div class="text-caption">Dibuat: {{assigment.created_at}}</div>
+        <div class="text-caption">{{moment(assigment.created_at).format('LLLL')}}</div>
      </div>
     </q-card>
 </template>
@@ -47,7 +47,7 @@
 <script>
 import { mapState } from "vuex";
 import { copyToClipboard } from 'quasar'
-
+import moment from 'moment';
 export default {
   props: {
     assigment: null
@@ -59,6 +59,7 @@ export default {
 
   },
   methods: {
+    moment,
     copyCode(value){
      copyToClipboard(value)
       .then(() => {

@@ -76,13 +76,15 @@ export default {
     };
   },
   computed: {
-    ...mapState(["Assigment", "Setting",'Publish','Unpublish'])
+    ...mapState(["Assigment", "Setting",'Publish','Unpublish','StudentResult'])
   },
   created() {
     if (!this.Publish.items.data)
       this.$store.dispatch("Publish/index");
     if (!this.Unpublish.items.data)
       this.$store.dispatch("Unpublish/index");
+    if (!this.StudentResult.items.data)
+       this.$store.dispatch("StudentResult/index");
   },
   mounted() {},
   methods: {
@@ -90,7 +92,8 @@ export default {
       Promise.all([
         this.$store.dispatch("Auth/getAuth"),
         this.$store.dispatch("Publish/index"),
-        this.$store.dispatch("Unpublish/index")
+        this.$store.dispatch("Unpublish/index"),
+        this.$store.dispatch("StudentResult/index")
       ]).then(res => {
         if (done) done();
       });

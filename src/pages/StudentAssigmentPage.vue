@@ -44,10 +44,10 @@
               <div class="text-white justify-center">Sesi</div>
             </div>
           </div>
-          <div class="col-3">
+          <div class="col-3  self-center">
             <div class="row justify-center">
               <div class="text-body1 text-bold text-white justify-center">
-                {{ assigment.max_score ? assigment.max_score : "" }}
+                {{ assigment.max_score ? assigment.max_score : "-" }}
               </div>
             </div>
             <div class="row justify-center">
@@ -57,7 +57,7 @@
           <div class="col-3 self-center">
             <div class="row justify-center">
               <div class="text-body1 text-bold text-white ">
-                {{ assigment.avg_score ? assigment.avg_score : "" }}
+                {{ assigment.avg_score ? assigment.avg_score : "-" }}
               </div>
             </div>
             <div class="row justify-center">

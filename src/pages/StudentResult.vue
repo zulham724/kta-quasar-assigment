@@ -110,12 +110,14 @@
                 "
               >
                 <q-input
+                  v-for="(answer_list, key) in question.answer_lists"
+                  :key="key"
                   class="q-pa-sm"
                   outlined
                   dense
                   disable
-                  label="Kunci Jawaban"
-                  v-model="question.answer_lists[0].name"
+                   :label="`Kunci Jawaban ${key+1}`"
+                  v-model="answer_list.name"
                 />
                 <q-input
                   class="q-pa-sm"
@@ -133,13 +135,15 @@
                 "
               >
                 <q-input
+                 v-for="(answer_list, key) in question.answer_lists"
+                  :key="key"
                   class="q-pa-sm"
                   outlined
                   dense
                   disable
                   type="textarea"
-                  label="Kunci Jawaban"
-                  v-model="question.answer_lists[0].name"
+                  :label="`Kunci Jawaban ${key+1}`"
+                v-model="answer_list.name"
                 />
                 <q-input
                   class="q-pa-sm"
@@ -155,7 +159,7 @@
                 <q-separator />
                 <div class="row q-pt-sm">
                     <div class="col-8 column q-pt-md" >
-                         <q-slider label :label-value="'Nilai: ' + question.score " label-always v-model="question.score" :step="0.1" :min="0" :max="100" v-if="question.assigment_question_list.assigment_type.description!='selectoptions'"/>
+                         <q-slider label :label-value="'Nilai: ' + question.score " label-always v-model="question.score" :step="5" :min="0" :max="100" v-if="question.assigment_question_list.assigment_type.description!='selectoptions'"/>
                     </div>
                     <div class="col-4 q-pl-sm column">
                         <q-btn
