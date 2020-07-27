@@ -9,56 +9,79 @@
         v-model="tab"
         no-caps
         dense
-        class="text-grey"
-        active-color="cyan-7"
-        indicator-color="transparent"
+        class="text-white bg-primary"
+        active-color="white"
+        inline-label
       >
         <q-tab
-          class="q-pa-xs"
           name="home"
+          class="q-pa-xs"
           @click="$route.name == 'home' ? null : $router.push('/')"
         >
-          <q-icon name="mail" size="xs"></q-icon>
-          <div class="text-caption">Beranda</div>
+          <q-icon name="home" size="md"></q-icon>
+            <div v-if="$route.name == 'home'" class="text-weight-bold">
+              Beranda
+            </div>
         </q-tab>
         <q-tab
           class="q-pa-xs"
           name="create"
           @click="$route.name == 'create' ? null : $router.push('/create')"
         >
-          <q-icon name="add" size="xs"></q-icon>
-          <div class="text-caption">Buat</div>
+          <q-icon name="add" size="md"></q-icon>
+          <div v-if="$route.name == 'create'" class="text-weight-bold">
+            Buat Soal
+          </div>
         </q-tab>
+
         <q-tab
           class="q-pa-xs"
           name="build"
           @click="$route.name == 'build' ? null : $router.push('/build')"
         >
-          <q-btn flat icon="explore" size="sm">
-            <q-badge
-              floating
-              color="cyan-7"
-              v-if="Assigment.build"
-            >{{Assigment.build.question_lists ? Assigment.build.question_lists.length : 0}}</q-badge>
-          </q-btn>
-          <div class="text-caption">Rakit</div>
+          <q-icon name="home" size="md"></q-icon>
+          <div v-if="$route.name == 'build'" class="text-weight-bold q-pr-sm">
+            Rakit
+          </div>
+          <q-badge floating color="cyan-7" v-if="Assigment.build">{{
+            Assigment.build.question_lists
+              ? Assigment.build.question_lists.length
+              : 0
+          }}</q-badge>
         </q-tab>
+
         <q-tab
-          class="q-pa-xs"
           name="studentresultlist"
-          @click="$route.name == 'studentresultlist' ? null : $router.push('/studentresultlist')"
+          @click="
+            $route.name == 'studentresultlist'
+              ? null
+              : $router.push('/studentresultlist')
+          "
         >
-          <q-icon name="message" size="xs"></q-icon>
-          
-          <div class="text-caption">Hasil</div>
+          <q-icon name="message" size="md"></q-icon>
+
+
+          <div
+            v-if="$route.name == 'studentresultlist'"
+            class="text-weight-bold"
+          >
+            Hasil
+          </div>
         </q-tab>
         <q-tab
           class="q-pa-xs"
           name="account"
           @click="$route.name == 'account' ? null : $router.push('/account')"
         >
-          <q-icon name="person" size="xs"></q-icon>
-          <div class="text-caption">Akun</div>
+          <q-avatar size="35px">
+            <q-img
+              :src="`${Setting.storageUrl}/${Auth.auth.avatar}`"
+              no-default-spinner
+            />
+          </q-avatar>
+          <div v-if="$route.name == 'account'" class="text-weight-bold q-pl-sm">
+            Profile
+          </div>
         </q-tab>
       </q-tabs>
     </q-footer>
@@ -75,7 +98,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["Setting", "Assigment"])
+    ...mapState(["Setting", "Assigment", "Auth"])
   },
   mounted() {}
 };
