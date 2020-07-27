@@ -11,7 +11,7 @@
         <q-space />
       </q-toolbar>
     </q-header>
-  <q-pull-to-refresh @refresh="init">
+  <q-pull-to-refresh @refresh="onRefresh">
     <div id="corner1" style="margin-top:10px;">
       <div class="q-pt-sm q-pl-md">
         <div class="text-h5 text-white">
@@ -133,30 +133,39 @@ export default {
     }
   },
   created() {
-    //console.log(this.StudentAssigment.assigment==null)
-    this.$store
-      .dispatch("StudentAssigment/getAssigment", this.assigmentId)
-      .then(res => {
-        this.assigment = res;
-      });
-    this.$store
-      .dispatch("StudentAssigment/index", this.assigmentId)
-      .then(res => {
-        this.sessions=res.sessions.data;
-        //console.log(res.sessions);
-        //console.log(res)
-        //alert(this.sessions)
-      });
+    this.init();
   },
   mounted() {
-    //console.log(this.sessions);
+    console.log('sssss');
+    console.log(this.StudentAssigment.items);
   },
   methods: {
-    init(done) {
+    init() {
+      this.$store
+        .dispatch("StudentAssigment/getAssigment", {assigment_id:this.assigmentId, isRefresh:false})
+        .then(res => {
+          this.assigment = res;
+        });
+      this.$store
+        .dispatch("StudentAssigment/index", {assigment_id:this.assigmentId, isRefresh:false})
+        .then(res => {
+          this.sessions=res.sessions.data;
+          //console.log(res.sessions);
+          //console.log(res)
+          //alert(this.sessions)
+        });
+    },
+    onRefresh(done){
       Promise.all([
         this.$store.dispatch("Auth/getAuth"),
-        this.$store.dispatch("StudentAssigment/index")
+        this.$store.dispatch("StudentAssigment/getAssigment", {assigment_id:this.assigmentId, isRefresh:true}),
+        this.$store.dispatch("StudentAssigment/index", {assigment_id:this.assigmentId, isRefresh:true})
       ]).then(res => {
+        console.log(res)
+        this.assigment = res[1];
+        this.sessions = res[2].sessions.data;
+        console.log("aa")
+        console.log(res[2].sessions)
         if (done) done();
       });
     },
@@ -171,7 +180,6 @@ export default {
      onLoad(index, done){
        let current_session=this.StudentAssigment.items.find(e=>e.assigment_id==this.assigmentId);
        if(current_session){
-         //alert('as')
          current_session.sessions.next_page_url
         ? this.$store.dispatch("StudentAssigment/next", current_session).then(res =>{
             this.sessions=this.StudentAssigment.items.find(e=>e.assigment_id==this.assigmentId).sessions.data;

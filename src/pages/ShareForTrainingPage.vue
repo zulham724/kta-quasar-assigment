@@ -65,7 +65,6 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { debounce } from "quasar";
 import axios from "axios";
 
 export default {
@@ -91,7 +90,9 @@ export default {
   },
   components: {},
   mounted(){
-      console.log(this.assigment)
+    
+
+      // console.log(this.Auth.auth);
   },
   computed: {
     ...mapState([
@@ -109,19 +110,18 @@ export default {
   //     }
   //   },
   created() {
-    this.init();
+    if(this.assigment==null){
+      this.$router.back();
+      return;
+    }
+    this.assigmentUpdate={...this.assigment, isTimer:this.assigment.isTimer?true:false, is_public:this.assigment.is_public?true:false};
+     console.log(this.assigmentUpdate)
     //this.$store.dispatch("AssigmentCategory/index");
     //this.getQuestionLists = debounce(this.getQuestionLists, 500);
   },
   methods: {
-    debounce,
-    init() {
-    //   this.assigment = {
-    //     id: this.assigmentId,
-    //     ...this.Assigment.build
-    //   };
-    },
     setAssigmentToPublic() {
+      return "as";
       this.$refs.form.validate().then(success => {
         if (success) {
           this.loading = true;
@@ -134,7 +134,7 @@ export default {
               {id:this.assigment.id,...this.assigmentUpdate}
             )
             .then(res => {
-              console.log(res.data);
+              this.$store.dispatch("Auth/getAuth")
               this.$q.notify("Berhasil mempublikasikan paket soal ke siswa");
               this.$router.back();
               this.loading = false;

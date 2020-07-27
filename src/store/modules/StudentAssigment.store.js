@@ -9,11 +9,26 @@ const state = {
 // Mutations
 const mutations = {
     set(state, payload) {
-        state.items = [...state.items, payload.items];
+        let index=state.items.findIndex(e=>e.assigment_id==payload.assigment_id);
+        if(index>-1){
+            state.items[index] = payload.items;
+        }else{
+            state.items = [...state.items, payload.items];
+        }
+      
     },
     setAssigment(state, payload){
       
         state.assigments = [...state.assigments, payload.assigment];
+    },
+    setSessionById(state, payload){
+        let index=state.items.findIndex(e=>e.assigment_id==payload.assigment_id);
+        //alert(index)
+        if(index>-1){
+            
+            let sessionIndex = state.items[index].sessions.data.findIndex(e=>e.id==payload.session_id);
+            state.items[index].sessions.data[sessionIndex] = payload.session;
+        }
     },
     remove() {
         const index = state.items.data.findIndex(item => item.id == payload.id);
@@ -34,19 +49,21 @@ const mutations = {
 };
 // Actions
 const actions = {
-    getAssigment({commit, state}, assigment_id){
+    getAssigment({commit, state}, payload){
         return new Promise((resolve, reject) => {
 
-            let cek=state.assigments.find(e=>e.id==assigment_id);
-            if(cek){
+            let cek=state.assigments.find(e=>e.id==payload.assigment_id);
+            //console.log(payload.isRefresh);
+            if(cek && !payload.isRefresh){
                 resolve(cek)
             }
             else{
                 // console.log("cek");
                 // console.log(state.assigments);
                 axios
-                    .get(`${this.state.Setting.url}/api/v1/assigments/getassigmentinfo/${assigment_id}`)
+                    .get(`${this.state.Setting.url}/api/v1/assigments/getassigmentinfo/${payload.assigment_id}`)
                     .then(res => {
+                        //if(isRefresh)
                         commit("setAssigment", { assigment: res.data });
                         resolve(res.data);
                     })
@@ -56,19 +73,22 @@ const actions = {
             }
         });
     },
-    index({ commit, state }, assigment_id) {
+    index({ commit, state }, payload) {
         return new Promise((resolve, reject) => {
-            let cek=state.items.find(e=>e.assigment_id==assigment_id);
+            let cek=state.items.find(e=>e.assigment_id==payload.assigment_id);
             
-            if(cek){
+
+            // console.log('a')
+            // console.log(state.items)
+            if(cek && !payload.isRefresh){
                 resolve(cek);
             }else{
                 axios
-                    .get(`${this.state.Setting.url}/api/v1/assigments/getstudentassigments/${assigment_id}`)
+                    .get(`${this.state.Setting.url}/api/v1/assigments/getstudentassigments/${payload.assigment_id}`)
                     .then(res => {
-                        let items={assigment_id:assigment_id,sessions:res.data}
+                        let items={assigment_id:payload.assigment_id,sessions:res.data}
                         //console.log(items);
-                        commit("set", {items:items});
+                        commit("set", {items:items, assigment_id:payload.assigment_id, isRefresh:payload.isRefresh});
                         resolve(items);
                     })
                     .catch(err => {
@@ -135,6 +155,12 @@ const actions = {
                 .catch(err => {
                     reject(err);
                 });
+        });
+    },
+    setSessionById({commit}, payload){
+        return new Promise((resolve, reject) => {
+            commit("setSessionById",{assigment_id:payload.assigment_id, session_id:payload.session.id, session:payload.session})
+            resolve(payload.session)
         });
     }
 };

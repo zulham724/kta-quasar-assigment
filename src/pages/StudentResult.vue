@@ -208,7 +208,8 @@ import { mapGetters, mapState } from "vuex";
 
 export default {
     props:{
-        sessionId:null
+        sessionId:null,
+        assigmentId:null,
     },
   data(){
     return {
@@ -224,7 +225,7 @@ export default {
     }
   },
   computed:{
-    ...mapState(['Setting','Assigment']),
+    ...mapState(['Setting','Assigment','StudentAssigment']),
     scoreConvertion(){
         let score=0;
         this.session.questions.map(function(e){
@@ -266,9 +267,13 @@ export default {
     submitScore(){
         this.loading=true;
         this.$store.dispatch("Assigment/saveScore", this.session).then(res=>{
-            this.$q.notify("Berhasil menyimpan nilai");
-            this.$router.back();
-
+            let payload={ assigment_id:this.session.assigment_session.assigment_id, session_id:this.session.id, session:res.data}
+            this.$store.dispatch("StudentAssigment/setSessionById", payload).then(res=>{
+               this.$q.notify("Berhasil menyimpan nilai");
+                this.$router.back();
+            })
+           
+            
         }).catch(res=>{
             this.$q.notify("Terjadi kesalahan");
         }).finally(res=>{

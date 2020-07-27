@@ -145,7 +145,6 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { debounce } from "quasar";
 import axios from "axios";
 
 export default {
@@ -177,7 +176,7 @@ props: {
     
   },
   computed: {
-    ...mapState(["Grade", "Auth", "AssigmentCategory", "Setting", "Assigment",'SuggestedQuestionList'])
+    ...mapState(["Grade", "Auth", "Setting", "Assigment"])
   },
 //   watch: {
 //     assigment: {
@@ -193,7 +192,6 @@ props: {
     //this.getQuestionLists = debounce(this.getQuestionLists, 500);
   },
   methods: {
-    debounce,
     init() {
       this.assigment = {
           id:this.assigmentId,
@@ -203,53 +201,7 @@ props: {
       delete this.assigment.grade_id;
       console.log(this.assigment)
       if (this.Grade.grades.length == 0) this.$store.dispatch("Grade/index");
-      this.$forceUpdate();
-    },
-    // addQuestionList(assigment_type) {
-    //   if (!this.assigment.question_lists) this.assigment.question_lists = [];
-
-    //   this.assigment.question_lists.push({
-    //     name: "",
-    //     description: "",
-    //     pivot: {
-    //       creator_id: this.Auth.auth.id,
-    //       user_id: this.Auth.auth.id,
-    //       assigment_type: assigment_type,
-    //       assigment_type_id: assigment_type.id
-    //     },
-    //     answer_lists: [
-    //       {
-    //         name: "",
-    //         value: 100
-    //       }
-    //     ]
-    //   });
-    //   this.$forceUpdate();
-    // },
-    addSelectedQuestionList(question_list) {
-      if (!this.assigment.question_lists) this.assigment.question_lists = [];
-
-      this.assigment.question_lists.push({
-        name: question_list.name,
-        description: question_list.description,
-        pivot: {
-          creator_id: question_list.assigments.length
-            ? question_list.assigments[0].pivot.creator_id
-            : null,
-          user_id: question_list.assigments.length
-            ? question_list.assigments[0].pivot.user_id
-            : null,
-          assigment_type: question_list.assigments.length
-            ? question_list.assigments[0].pivot.assigment_type
-            : null,
-          assigment_type_id: question_list.assigments.length
-            ? question_list.assigments[0].pivot.assigment_type_id
-            : null
-        },
-        answer_lists: question_list.answer_lists
-      });
-      this.$store.commit("Assigment/setBuild", { build: this.assigment });
-      this.$forceUpdate();
+      //this.$forceUpdate();
     },
     shareAssigment() {
       this.$refs.form.validate().then(success => {
@@ -278,44 +230,8 @@ props: {
                 }).finally(() => {
                   this.loading = false;
                 });
-
-          // this.$store.dispatch("Assigment/share", this.assigment).then(res => {
-          //     this.$q.dialog({
-          //       title: 'Berhasil dibagikan',
-          //       message: `Silahkan salin kode soal berikut: <b>${res.data.code}</b><br><div class='text-caption'>Paket soal yang telah dibuat dapat dilihat di menu Hasil</div>`,
-          //       html: true
-          //       }).onOk(() => {
-          //           this.$router.push("/");
-          //       }).onCancel(() => {
-          //            this.$router.push("/");
-          //       }).onDismiss(() => {
-          //           this.$router.push("/");
-          //       })
-          //     //this.$q.notify("Berhasil membagikan Paket Soal");
-          //   })
-          //   .catch(err => {
-          //     this.$q.notify("Terjadi kesalahan");
-          //   })
-          //   .finally(() => {
-          //     this.loading = false;
-          //   });
         }
       });
-    },
-    getQuestionLists(key) {
-      if (key)
-        this.$store.dispatch(`QuestionList/search`, key).then(res => {
-          this.question_lists = res.data;
-        });
-
-      this.$forceUpdate();
-    },
-    getSuggestedQuestionLists() {
-      this.$store
-        .dispatch("SuggestedQuestionList/index", {
-          assigment_category_id: this.assigment.assigment_category_id,
-          educational_level_id: this.Auth.auth.profile.educational_level_id
-        })
     },
     onLoad(index,done){
       this.SuggestedQuestionList.items.next_page_url

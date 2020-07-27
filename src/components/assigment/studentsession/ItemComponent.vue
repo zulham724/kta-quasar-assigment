@@ -47,7 +47,8 @@ export default {
   computed: {
     ...mapState(["Auth", "Setting", "Assigment"])
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {
     copyCode(value) {
       copyToClipboard(value)
