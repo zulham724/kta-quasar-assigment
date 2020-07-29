@@ -1,23 +1,18 @@
 <template>
-  <div style="height:100vh;background-image:url('statics/splash.jpg');background-size:cover">
-    <div class="q-pa-md full-height">
-      <div class="row justify-center align-center content-center full-height full-width">
-        <div class="col-12" style="margin-top:-30vh">
-          <div class="row justify-center">
-            <q-img src="statics/agpaii-logo-black.png" style="opacity:0.8" width="30vw"></q-img>
-          </div>
-          <div class="row justify-center q-mt-sm">
-            <div class="text-body2">Silahkan login dengan akun KTA anda</div>
+  <div style="height:100vh;background-image:url('statics/bg-login-2.png');background-size:cover;">
+    <div class="q-pa-md">
+      <div class="row justify-center" style="margin-top:60%">
+        <div class="col-12" >
+          <div class="row">
+            <q-img src="statics/logo-login.png" width="50vw"></q-img>
           </div>
         </div>
-        <div class="col-12">
+        <div class="col-12" style="margin-top:20%">
           <q-form @submit="onSubmit" ref="form" class="q-gutter-md">
             <q-input
-              style="opacity:0.8"
-              bg-color="white"
-              rounded
-              outlined
-              color="cyan-7"
+              color="white"
+              dark
+              dense
               label="Email anda"
               v-model="credential.username"
               lazy-rules
@@ -30,11 +25,9 @@
               </template>
             </q-input>
             <q-input
-              style="opacity:0.8"
-              bg-color="white"
-              rounded
-              outlined
-              color="cyan-7"
+               color="white"
+              dark
+              dense
               label="Password"
               v-model="credential.password"
               type="password"
@@ -56,8 +49,10 @@
               @click="onSubmit()"
               rounded
               outline
+              flat
+              class="bg-light-blue"
               type="submit"
-              color="cyan-7"
+              color="white"
               :loading="loading"
               :disable="loading"
             />

@@ -259,7 +259,7 @@ const actions = {
                 });
         });
     },
-    like({ commit }, id) {
+    like({ commit, dispatch }, id) {
         return new Promise((resolve, reject) => {
             const access = {
                 assigment_id: id

@@ -1,8 +1,8 @@
 <template>
   <div>
     <q-header elevated>
-      <q-toolbar class="bg-cyan-7">
-        <q-icon name="home" style="font-size: 1.5em;" />
+      <q-toolbar class="bg-blue">
+        <q-icon name="build_circle" style="font-size: 1.5em;" />
         <q-toolbar-title>
           <div class="text-body1">Rakit Soal</div>
         </q-toolbar-title>
@@ -13,21 +13,21 @@
     <q-form class="q-gutter-sm" ref="form">
       <q-stepper
         v-model="step"
-        color="cyan-7"
+        color="blue"
         style="width: 100vw;"
         animated
         keep-alive
       >
         <q-step
           :name="1"
-          color="cyan-7"
+          color="blue"
           title="Isi"
           icon="settings"
           :done="step > 1"
         >
           <q-select
             rounded
-            color="cyan-7"
+            color="blue"
             outlined
             dense
             :options="Grade.grades"
@@ -40,7 +40,7 @@
           />
           <q-select
             rounded
-            color="cyan-7"
+            color="blue"
             outlined
             dense
             option-label="name"
@@ -66,7 +66,7 @@
           <q-select
             v-if="assigment.assigment_category_id == 9"
             rounded
-            color="cyan-7"
+            color="blue"
             outlined
             dense
             label="Nama Kegiatan Penilaian"
@@ -78,7 +78,7 @@
           <q-input
             v-else
             rounded
-            color="cyan-7"
+            color="blue"
             outlined
             dense
             label="Nama Kegiatan Penilaian"
@@ -89,7 +89,7 @@
 
           <q-input
             rounded
-            color="cyan-7"
+            color="blue"
             outlined
             dense
             label="Tahun pelajaran"
@@ -101,7 +101,7 @@
 
           <q-select
             rounded
-            color="cyan-7"
+            color="blue"
             outlined
             dense
             label="Semester"
@@ -112,7 +112,7 @@
           />
 
           <q-stepper-navigation>
-            <q-btn flat @click="step2()" color="cyan-7" label="Lanjut" />
+            <q-btn flat @click="step2()" color="blue" label="Lanjut" />
           </q-stepper-navigation>
         </q-step>
 
@@ -121,7 +121,7 @@
           title="Rakit"
           icon="create_new_folder"
           :done="step > 2"
-          color="cyan-7"
+          color="blue"
           style="margin-bottom:30vh"
         >
           <div
@@ -139,7 +139,7 @@
                     :disable="question_list.pivot.creator_id != Auth.auth.id"
                     v-model="question_list.name"
                     rounded
-                    color="cyan-7"
+                    color="blue"
                     outlined
                     dense
                     :label="`Soal nomor ${ql + 1}`"
@@ -168,7 +168,7 @@
                     :key="al"
                     v-model="answer_list.name"
                     rounded
-                    color="cyan-7"
+                    color="blue"
                     outlined
                     dense
                     lazy-rules
@@ -197,7 +197,7 @@
                   </q-input>
                   <q-btn
                     :disable="question_list.pivot.creator_id != Auth.auth.id"
-                    color="secondary"
+                    color="primary"
                     outline
                     rounded
                     label="Tambah Kunci jawaban"
@@ -226,7 +226,7 @@
                     :disable="question_list.pivot.creator_id != Auth.auth.id"
                     v-model="question_list.name"
                     rounded
-                    color="cyan-7"
+                    color="blue"
                     outlined
                     dense
                     :label="`Soal nomor ${ql + 1}`"
@@ -256,7 +256,7 @@
                     :key="al"
                     v-model="answer_list.name"
                     rounded
-                    color="cyan-7"
+                    color="blue"
                     outlined
                     dense
                     :label="String.fromCharCode('A'.charCodeAt() + al)"
@@ -306,7 +306,7 @@
                   </q-input>
                   <q-btn
                     :disable="question_list.pivot.creator_id != Auth.auth.id"
-                    color="secondary"
+                    color="primary"
                     outline
                     rounded
                     label="Tambah butir jawaban"
@@ -337,7 +337,7 @@
                     :disable="question_list.pivot.creator_id != Auth.auth.id"
                     v-model="question_list.name"
                     rounded
-                    color="cyan-7"
+                    color="blue"
                     outlined
                     dense
                     :label="`Soal nomor ${ql + 1}`"
@@ -367,7 +367,7 @@
                     :key="al"
                     v-model="answer_list.name"
                     rounded
-                    color="cyan-7"
+                    color="blue"
                     outlined
                     dense
                     lazy-rules
@@ -396,7 +396,7 @@
                   </q-input>
                   <q-btn
                     :disable="question_list.pivot.creator_id != Auth.auth.id"
-                    color="secondary"
+                    color="primary"
                     outline
                     rounded
                     label="Tambah Kunci jawaban"
@@ -421,12 +421,12 @@
                 flat
                 dense
                 @click="step = 1"
-                color="cyan-7"
+                color="blue"
                 label="Back"
                 class="q-ml-sm"
               />
               <q-btn
-                color="cyan-7"
+                color="blue"
                 rounded
                 label="Tambah Soal"
                 @click="
@@ -447,35 +447,50 @@
                       .validate()
                       .then(success => (success ? (step = 3) : null))
                 "
-                color="cyan-7"
+                color="blue"
                 label="Lanjut"
               />
             </div>
           </q-stepper-navigation>
         </q-step>
 
-        <q-step :name="3" color="cyan-7" title="Finish" icon="add_comment">
+        <q-step :name="3" color="blue" title="Finish" icon="add_comment">
           <div class="row justify-center">
-            <q-btn
-              :loading="loading"
-              :disabled="loading"
-              outline
-              rounded
-              size="35px"
-              color="cyan-7"
-              icon="publish"
-              label="Terbitkan"
-              type="submit"
-              @click="storeAssigment()"
-            />
+            <div class="row">
+              <div class="col-12">
+                <div class="text-h6 text-primary text-center">Apakah Anda yakin diterbitkan?</div>
+                <div class="text-body text-grey text-center">Pastikan soal yang Anda buat sudah benar</div>
+              </div>
+            </div>
+            <div class="row q-pa-md">
+              <div class="col-12">
+                <q-btn
+                  :loading="loading"
+                  :disabled="loading"
+                  outline
+                  rounded
+                  size="20px"
+                  color="blue"
+                  icon="publish"
+                  label="Terbitkan"
+                  type="submit"
+                  @click="storeAssigment()"
+                />
+              </div>
+            </div>
           </div>
 
-        <q-stepper-navigation>
+          <q-stepper-navigation>
             <div class="row justify-between">
-              <q-btn flat @click="step = 2" color="cyan-7" label="Back" class="q-ml-sm" />
+              <q-btn
+                flat
+                @click="step = 2"
+                color="blue"
+                label="Back"
+                class="q-ml-sm"
+              />
             </div>
           </q-stepper-navigation>
-
         </q-step>
       </q-stepper>
     </q-form>
@@ -484,12 +499,12 @@
       <q-card>
         <q-card-section>
           <q-infinite-scroll @load="onLoad" :offset="250">
-            <div class="q-pa-none">
+            <div class="q-pa-none q-gutter-y-xs">
               <div class="row justify-between">
-                <div class="text-body1 text-cyan-7">Soal terkait</div>
+                <div class="text-body1 text-blue">Soal terkait</div>
                 <q-btn
                   icon="close"
-                  color="cyan-7"
+                  color="blue"
                   flat
                   @click="
                     () => {

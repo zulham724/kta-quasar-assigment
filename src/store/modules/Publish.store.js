@@ -14,6 +14,13 @@ const mutations = {
         const index = state.items.data.findIndex(item => item.id == payload.id);
         state.items.data.splice(index, 1);
     },
+    setAssigment(state, payload){
+        const index = state.items.data.findIndex(item => item.id == payload.assigment.id);
+        payload.field.forEach(v=>{
+            state.items.data[index][v] = payload.assigment[v]
+        })
+       
+    },
     add() {
         state.items.data = [payload.items, ...state.items.data];
     },
@@ -96,6 +103,11 @@ const actions = {
                 .catch(err => {
                     reject(err);
                 });
+        });
+    },
+    setAssigment({commit}, payload){
+        return new Promise((resolve, reject) => {
+            commit("setAssigment", {assigment:payload.assigment, field:payload.field});
         });
     }
 };

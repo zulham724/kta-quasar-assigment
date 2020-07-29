@@ -115,7 +115,7 @@ export default {
         .dispatch("Comment/store", payload)
         .then(res => {
             this.assigment.comments.splice(0, 0, res.data);
-            this.assigment.comments_like += 1;
+            this.assigment.comments_like += 1; //apa fungsi ini?
             this.comment.value = ''
         })
         .catch(err => {})

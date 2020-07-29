@@ -15,13 +15,20 @@
       >
         <q-tab
           name="home"
+          transition="slide-left"
           class="q-pa-xs"
           @click="$route.name == 'home' ? null : $router.push('/')"
         >
           <q-icon name="home" size="md"></q-icon>
-            <div v-if="$route.name == 'home'" class="text-weight-bold">
+          <transition
+            appear
+            enter-active-class="animated fadeInLeft"
+            leave-active-class="animated fadeOutLeft"
+          >
+            <div v-show="$route.name == 'home'" class="text-weight-bold">
               Beranda
             </div>
+          </transition>
         </q-tab>
         <q-tab
           class="q-pa-xs"
@@ -29,9 +36,15 @@
           @click="$route.name == 'create' ? null : $router.push('/create')"
         >
           <q-icon name="add" size="md"></q-icon>
-          <div v-if="$route.name == 'create'" class="text-weight-bold">
-            Buat Soal
-          </div>
+          <transition
+            appear
+            enter-active-class="animated fadeInLeft"
+            leave-active-class="animated fadeOutLeft"
+          >
+            <div v-show="$route.name == 'create'" class="text-weight-bold">
+              Buat Soal
+            </div>
+          </transition>
         </q-tab>
 
         <q-tab
@@ -39,10 +52,16 @@
           name="build"
           @click="$route.name == 'build' ? null : $router.push('/build')"
         >
-          <q-icon name="home" size="md"></q-icon>
-          <div v-if="$route.name == 'build'" class="text-weight-bold q-pr-sm">
-            Rakit
-          </div>
+          <q-icon name="build_circle" size="md"></q-icon>
+          <transition
+            appear
+            enter-active-class="animated fadeInLeft"
+            leave-active-class="animated fadeOutLeft"
+          >
+            <div v-show="$route.name == 'build'" class="text-weight-bold q-pr-sm">
+              Rakit
+            </div>
+          </transition>
           <q-badge floating color="cyan-7" v-if="Assigment.build">{{
             Assigment.build.question_lists
               ? Assigment.build.question_lists.length
@@ -58,15 +77,20 @@
               : $router.push('/studentresultlist')
           "
         >
-          <q-icon name="message" size="md"></q-icon>
+          <q-icon name="poll" size="md"></q-icon>
 
-
-          <div
-            v-if="$route.name == 'studentresultlist'"
-            class="text-weight-bold"
+          <transition
+            appear
+            enter-active-class="animated fadeInLeft"
+            leave-active-class="animated fadeOutLeft"
           >
-            Hasil
-          </div>
+            <div
+              v-show="$route.name == 'studentresultlist'"
+              class="text-weight-bold"
+            >
+              Hasil
+            </div>
+          </transition>
         </q-tab>
         <q-tab
           class="q-pa-xs"
@@ -79,9 +103,15 @@
               no-default-spinner
             />
           </q-avatar>
-          <div v-if="$route.name == 'account'" class="text-weight-bold q-pl-sm">
+            <transition
+            appear
+            enter-active-class="animated fadeInLeft"
+            leave-active-class="animated fadeOutLeft"
+          >
+          <div v-show="$route.name == 'account'" class="text-weight-bold q-pl-sm">
             Profile
           </div>
+            </transition>
         </q-tab>
       </q-tabs>
     </q-footer>

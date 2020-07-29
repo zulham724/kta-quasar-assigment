@@ -1,76 +1,115 @@
 <template>
-  <div style="width:100%">
-    <q-card class="my-card" v-if="assigment != null">
-      <q-card-section style="padding-bottom:0">
-        <div class="row">
-          <div class="col-2 self-center">
-            <q-avatar>
-              <img :src="`${Setting.storageUrl}/${assigment.user.avatar}`" />
-            </q-avatar>
-          </div>
-          <div class="col-8 self-center">
-            <div class="row">
-              <div class="col">
-                <div class="text-caption q-ml-md">
-                  {{ assigment.user.name }}
-                </div>
-                <!-- <div
-                  class="text-caption text-grey-9 q-ml-md"
-                  v-if="assigment.is_publish"
-                >Kode Soal [{{ assigment.code }}]</div>
-                -->
-              </div>
-            </div>
-          </div>
-          <div class="col-2 self-center">
-            <q-fab flat icon="more_vert" direction="left">
-              <q-fab-action
-                v-if="assigment.user.id == Auth.auth.id"
-                color="red"
-                icon="delete"
-                @click="destroy()"
-              />
-              <q-fab-action
-                color="secondary"
-                icon="cloud_download"
-                @click="$q.notify('Dalam kontruksi')"
-              />
-              <q-fab-action
-                v-if="assigment.user.id == Auth.auth.id"
-                color="indigo"
-                icon="edit"
-                @click="$router.push(`/assigment/${assigment.id}/edit`)"
-              />
-              <q-btn round @click="$router.push({name:'share',params:{assigmentId:assigment.id}})">
-                <q-avatar size="42px">
-                  <img src="~assets/Logo-Siswa.png">
-                </q-avatar>
-              </q-btn>
+  <div style="width:100%;top:10px=" class="q-pr-sm q-pl-sm">
+    <q-card
+      flat
+      bordered
+      class="my-card"
+      v-if="assigment != null"
+      style="border:1px solid #1976D2;"
+    >
+      <q-item>
+        <q-item-section avatar>
+          <q-avatar>
+            <img :src="`${Setting.storageUrl}/${assigment.user.avatar}`" />
+          </q-avatar>
+        </q-item-section>
 
-              <q-fab-action
-                v-if="assigment.user.id == Auth.auth.id"
-                color="red"
-                icon="school"
-                @click="
-                  $router.push({
-                    name: 'sharefortraining',
-                    params: {assigment:assigment, assigmentId: assigment.id }
-                  })
-                "
-              />
-            </q-fab>
-          </div>
-        </div>
-      </q-card-section>
-      <q-card-section style="padding-bottom:0">
+        <q-item-section>
+          <q-item-label> {{ assigment.user.name }}</q-item-label>
+          <q-item-label caption>
+            <div class="q-gutter-sm">
+              <q-badge color="primary"
+                >Semester {{ assigment.semester }}</q-badge
+              >
+              <q-badge color="primary">
+                {{ assigment.grade.description }}</q-badge
+              >
+            </div>
+          </q-item-label>
+        </q-item-section>
+        <q-item-section top side>
+          <q-btn flat dense round icon="more_vert">
+            <q-menu transition-show="jump-down" transition-hide="jump-up">
+              <q-list dense style="min-width: 100px">
+                <q-item
+                  clickable
+                  v-close-popup
+                  v-if="assigment.user.id == Auth.auth.id"
+                >
+                  <q-item-section
+                    @click="$router.push(`/assigment/${assigment.id}/edit`)"
+                  >
+                    <div class="row">
+                      <div class="col-4"><q-icon name="edit" /></div>
+                      <div class="col">Edit</div>
+                    </div>
+                  </q-item-section>
+                </q-item>
+                <q-item
+                  clickable
+                  v-close-popup
+                  v-if="assigment.user.id == Auth.auth.id"
+                >
+                  <q-item-section @click="destroy()">
+                    <div class="row">
+                      <div class="col-4"><q-icon name="delete" /></div>
+                      <div class="col">Delete</div>
+                    </div>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup>
+                  <q-item-section @click="$q.notify('Dalam kontruksi')">
+                    <div class="row">
+                      <div class="col-4"><q-icon name="cloud_download" /></div>
+                      <div class="col">Unduh</div>
+                    </div>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup>
+                  <q-item-section
+                    @click="
+                      $router.push({
+                        name: 'share',
+                        params: { assigmentId: assigment.id }
+                      })
+                    "
+                  >
+                    <div class="row">
+                      <div class="col-4"><q-icon name="share" /></div>
+                      <div class="col">Bagikan ke Siswa</div>
+                    </div>
+                  </q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup>
+                  <q-item-section
+                    @click="
+                      $router.push({
+                        name: 'sharefortraining',
+                        params: {
+                          assigment: assigment,
+                          assigmentId: assigment.id
+                        }
+                      })
+                    "
+                  >
+                    <div class="row">
+                      <div class="col-4"><q-icon name="school" /></div>
+                      <div class="col">Set Latihan Mandiri</div>
+                    </div>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+        </q-item-section>
+      </q-item>
+      <div class="q-pl-md">
+        {{ assigment.name }}
+      </div>
+
+      <q-card-section style="padding-bottom:0px;padding-top:0px">
         <!-- <div class="text-caption">{{assigment.description}}</div> -->
-        <div v-if="assigment.is_publish" class="text-caption">
-          {{ assigment.grade.description }} | Semester
-          {{ assigment.semester }} | {{ assigment.name }}
-        </div>
-        <div v-else class="text-caption">
-          {{ assigment.grade.description }} | {{ assigment.subject }}
-        </div>
+
         <q-carousel
           @click="$router.push(`/knowledgetest/${assigment.id}`)"
           v-model="slide"
@@ -80,7 +119,7 @@
           infinite
           autoplay
           control-color="primary"
-          class="rounded-borders"
+          class="rounded-borders bg-grey-2"
           height="20vh"
           style="width:100%"
         >
@@ -90,6 +129,9 @@
             :name="ql"
             class="column no-wrap flex-center"
           >
+            <!--<div style="position:absolute;top:0;left:0;;border-bottom-right-radius:35px;" class="bg-blue q-pa-sm">
+              sasd
+            </div>-->
             <div class="text-justify">
               <div class="text-body1">Soal {{ ql + 1 }}</div>
               <div class="text-caption">{{ question_list.name }}</div>
@@ -97,55 +139,64 @@
           </q-carousel-slide>
         </q-carousel>
       </q-card-section>
-      <q-card-section>
-        <div class="row">
-          <div
-            class="col-6 self-center"
-            @click="$router.push(`/comment/${assigment.id}`)"
-          >
-            <div class="text-caption text-grey">
-              {{
-                assigment.comments.length
-                  ? `Lihat Semua ${assigment.comments.length} Komentar`
-                  : "Lihat Komentar"
-              }}
-            </div>
+
+      <q-item dense>
+        <q-item-section>
+          <div class="row q-gutter-sm">
+            <q-btn
+              flat
+              round
+              no-caps
+              :color="assigment.liked_count ? 'red' : null"
+              :icon="assigment.liked_count ? 'favorite' : 'favorite_border'"
+              @click="assigment.liked_count ? dislike() : like()"
+            >
+              <div class="text-caption text-grey">
+                {{
+                  assigment.likes.length ? assigment.likes.length : 0
+                }}
+                Suka
+              </div>
+            </q-btn>
+            <q-btn
+              flat
+              round
+              no-caps
+              icon="message"
+              @click="$router.push(`/comment/${assigment.id}`)"
+            >
+              <div class="text-caption text-grey">
+                {{
+                  assigment.comments.length ? assigment.comments.length : 0
+                }}
+                Komentar
+              </div></q-btn
+            >
           </div>
-          <div class="col-6">
-            <div class="row justify-end">
-              <q-btn
-                flat
-                round
-                :color="assigment.liked_count ? 'red' : null"
-                :icon="assigment.liked_count ? 'favorite' : 'favorite_border'"
-                @click="assigment.liked_count ? dislike() : like()"
-              />
-              <q-btn
-                flat
-                round
-                icon="message"
-                @click="$router.push(`/comment/${assigment.id}`)"
-              />
-            </div>
-          </div>
-        </div>
-        <!-- <div class="row justify-between">
-          <div class="text-caption text-green">Rata-rata nilai didapat 97</div>
-          <div class="text-caption text-green">Tingkat kesulitan rendah</div>
-        </div>-->
-      </q-card-section>
+        </q-item-section>
+
+        <q-item-section side>
+          <q-item-label caption>{{getDate}}</q-item-label>
+        </q-item-section>
+      </q-item>
+
     </q-card>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import { date } from 'quasar'
 export default {
   props: {
-    assigment: null
+    assigment: null,
+    isAuth:null
   },
   computed: {
-    ...mapState(["Setting", "Auth"])
+    ...mapState(["Setting", "Auth"]),
+    getDate(){
+      return date.formatDate(this.assigment.created_at, 'DD MMMM YYYY')
+    }
   },
   data() {
     return {
@@ -175,16 +226,28 @@ export default {
     },
     like() {
       this.$store.dispatch("Assigment/like", this.assigment.id).then(res => {
-        this.assigment.liked_count = res.data.liked_count;
-        this.assigment.likes_count = res.data.likes_count;
-        this.$forceUpdate();
+        // this.assigment.liked_count = res.data.liked_count;
+        // this.assigment.likes_count = res.data.likes_count;
+        //console.log(res.data) 
+        if(this.isAuth){
+            this.$store.dispatch("Auth/setAssigment", {assigment:res.data, field:['likes_count', 'liked_count','likes'] })
+        }else{
+            this.$store.dispatch("Publish/setAssigment", {assigment:res.data, field:['likes_count', 'liked_count','likes'] })
+        }
+        //this.$forceUpdate();
       });
     },
     dislike() {
       this.$store.dispatch("Assigment/dislike", this.assigment.id).then(res => {
-        this.assigment.liked_count = res.data.liked_count;
-        this.assigment.likes_count = res.data.likes_count;
-        this.$forceUpdate();
+        // this.assigment.liked_count = res.data.liked_count;
+        // this.assigment.likes_count = res.data.likes_count;
+        //console.log(res.data) 
+        if(this.isAuth){
+            this.$store.dispatch("Auth/setAssigment", {assigment:res.data, field:['likes_count', 'liked_count','likes'] })
+        }else{
+            this.$store.dispatch("Publish/setAssigment", {assigment:res.data, field:['likes_count', 'liked_count','likes'] })
+        }
+        //this.$forceUpdate();
       });
     }
   }

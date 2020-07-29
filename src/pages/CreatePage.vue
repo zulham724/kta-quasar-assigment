@@ -1,8 +1,8 @@
 <template>
   <div>
     <q-header elevated>
-      <q-toolbar class="bg-cyan-7">
-        <q-icon name="home" style="font-size:1.5em" />
+      <q-toolbar class="bg-blue">
+        <q-icon name="add" style="font-size:1.5em" />
         <q-toolbar-title>
           <div class="text-body1">Buat Soal</div>
         </q-toolbar-title>
@@ -11,13 +11,13 @@
     </q-header>
 
     <q-form class="q-gutter-sm" ref="form">
-      <q-stepper v-model="step" color="cyan-7" style="width:100vw;" animated>
-        <q-step :name="1" title="Isi" color="cyan-7" icon="settings" :done="step > 1">
+      <q-stepper v-model="step" color="blue" style="width:100vw;" animated>
+        <q-step :name="1" title="Isi" color="blue" icon="settings" :done="step > 1">
           <q-select
             rounded
             outlined
             dense
-            color="cyan-7"
+            color="blue"
             :options="Grade.grades"
             v-model="assigment.grade"
             option-value="id"
@@ -28,7 +28,7 @@
           />
           <q-select
             rounded
-            color="cyan-7"
+            color="blue"
             outlined
             dense
             option-label="name"
@@ -46,7 +46,7 @@
           />
           <q-input
             rounded
-            color="cyan-7"
+            color="blue"
             outlined
             dense
             label="Kompetensi Dasar"
@@ -56,7 +56,7 @@
           />
           <q-input
             rounded
-            color="cyan-7"
+            color="blue"
             outlined
             dense
             label="Materi"
@@ -66,7 +66,7 @@
           />
           <q-input
             rounded
-            color="cyan-7"
+            color="blue"
             outlined
             dense
             label="Indikator"
@@ -84,7 +84,7 @@
                     .validate()
                     .then(success => (success ? (step = 2) : null))
               "
-              color="cyan-7"
+              color="blue"
               label="Lanjut"
             />
           </q-stepper-navigation>
@@ -96,7 +96,7 @@
           icon="create_new_folder"
           :done="step > 2"
           style="margin-bottom:30vh"
-          color="cyan-7"
+          color="blue"
         >
           <div v-for="(question_list, ql) in assigment.question_lists" :key="ql">
             <div
@@ -109,7 +109,7 @@
                   <q-input
                     v-model="question_list.name"
                     rounded
-                    color="cyan-7"
+                    color="blue"
                     outlined
                     dense
                     :label="`Soal ${ql + 1}`"
@@ -137,7 +137,7 @@
                     :key="al"
                     v-model="answer_list.name"
                     rounded
-                    color="cyan-7"
+                    color="blue"
                     outlined
                     dense
                     lazy-rules
@@ -190,7 +190,7 @@
                   <q-input
                     v-model="question_list.name"
                     rounded
-                    color="cyan-7"
+                    color="blue"
                     outlined
                     dense
                     :label="`Soal ${ql + 1}`"
@@ -219,7 +219,7 @@
                     :key="al"
                     v-model="answer_list.name"
                     rounded
-                    color="cyan-7"
+                    color="blue"
                     outlined
                     dense
                     :label="String.fromCharCode('A'.charCodeAt() + al)"
@@ -290,7 +290,7 @@
                   <q-input
                     v-model="question_list.name"
                     rounded
-                    color="cyan-7"
+                    color="blue"
                     outlined
                     dense
                     :label="`Soal ${ql + 1}`"
@@ -319,7 +319,7 @@
                     :key="al"
                     v-model="answer_list.name"
                     rounded
-                    color="cyan-7"
+                    color="blue"
                     outlined
                     dense
                     lazy-rules
@@ -365,7 +365,7 @@
 
           <q-stepper-navigation>
             <div class="row justify-between">
-              <q-btn flat dense @click="step = 1" color="cyan-7" label="Back" class="q-ml-sm" />
+              <q-btn flat dense @click="step = 1" color="blue" label="Back" class="q-ml-sm" />
               <q-fab
                 flat
                 color="secondary"
@@ -398,14 +398,14 @@
                       .validate()
                       .then(success => (success ? (step = 3) : null))
                 "
-                color="cyan-7"
+                color="blue"
                 label="Lanjut"
               />
             </div>
           </q-stepper-navigation>
         </q-step>
 
-        <q-step :name="3" title="Finish" color="cyan-7" icon="add_comment">
+        <q-step :name="3" title="Finish" color="blue" icon="add_comment">
 
         <div class="row justify-center">
         <q-btn
@@ -414,7 +414,7 @@
           outline
           rounded
           size="35px"
-          color="cyan-7"
+          color="blue"
           icon="publish"
           label="Terbitkan"
           type="submit"
@@ -425,7 +425,7 @@
 
           <q-stepper-navigation>
             <div class="row justify-between">
-              <q-btn flat @click="step = 2" color="cyan-7" label="Back" class="q-ml-sm" />
+              <q-btn flat @click="step = 2" color="blue" label="Back" class="q-ml-sm" />
             </div>
           </q-stepper-navigation>
         </q-step>

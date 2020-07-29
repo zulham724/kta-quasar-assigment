@@ -22,6 +22,13 @@ const mutations = {
         state.token = {}
         state.auth = ''
     },
+    setAssigment(state, payload){
+        const index = state.auth.publish_assigments.findIndex(item => item.id == payload.assigment.id);
+        payload.field.forEach(v=>{
+            state.auth.publish_assigments[index][v] = payload.assigment[v]
+        })
+       
+    }
 };
 
 // Actions
@@ -106,6 +113,11 @@ const actions = {
                 .catch(err => {
                     reject(err);
                 });
+        });
+    },
+    setAssigment({commit}, payload){
+        return new Promise((resolve, reject) => {
+            commit("setAssigment", {assigment:payload.assigment, field:payload.field});
         });
     }
 };

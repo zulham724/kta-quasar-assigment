@@ -1,7 +1,8 @@
 <template>
   <div>
-    <q-header elevated>
-      <q-toolbar class="bg-cyan-7">
+    <q-pull-to-refresh @refresh="onRefresh">
+    <q-header>
+      <q-toolbar class="bg-blue">
         <q-btn flat dense icon="arrow_back" @click="$router.back()" />
         <q-toolbar-title>
           <div class="text-body1">
@@ -11,8 +12,7 @@
         <q-space />
       </q-toolbar>
     </q-header>
-  <q-pull-to-refresh @refresh="onRefresh">
-    <div id="corner1" style="margin-top:10px;">
+    <div id="corner1" style="margin-top:10px;" class="bg-blue-6">
       <div class="q-pt-sm q-pl-md">
         <div class="text-h5 text-white">
           {{ assigment.name ? assigment.name : "" }}
@@ -32,7 +32,7 @@
           />
         </div>
       </div>
-      <div id="corner2">
+      <div id="corner2" class="bg-blue-4">
         <div class="row">
           <div class="col-3" style="border-right: 1px solid white;">
             <div class="row justify-center">
@@ -66,7 +66,7 @@
           </div>
         </div>
 
-        <div id="corner3">
+        <div id="corner3" class="bg-blue-1">
           <div class="text-h5 q-pa-sm">
             Nilai Siswa
           </div>
@@ -198,15 +198,12 @@ export default {
 <style>
 #corner1 {
   border-top-right-radius: 50px;
-  background: #08bdca;
 }
 #corner2 {
   border-top-right-radius: 50px;
-  background: #4cdbe6;
 }
 #corner3 {
   border-top-right-radius: 50px;
-  background: white;
 }
 #rcorners1 {
   border-radius: 8px;

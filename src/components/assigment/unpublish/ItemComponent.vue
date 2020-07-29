@@ -1,51 +1,76 @@
 <template>
-  <div>
-    <q-list bordered class="rounded-borders" v-if="assigment">
+  <div class="q-pr-sm q-pl-sm">
+    <q-list
+      bordered
+      class="rounded-borders"
+      v-if="assigment"
+      style="border:1px solid #1976D2;"
+    >
       <q-expansion-item expand-separator :label="assigment.subject">
         <template v-slot:header>
           <q-item-section avatar>
             <q-avatar>
               <q-img :src="`${Setting.storageUrl}/${assigment.user.avatar}`">
-                <template v-slot:loading>
-                </template>
+                <template v-slot:loading> </template>
               </q-img>
             </q-avatar>
           </q-item-section>
           <q-item-section>
-            <q-item-label>{{assigment.user.name}}</q-item-label>
+            <q-item-label>{{ assigment.user.name }}</q-item-label>
             <q-item-label>
-              {{assigment.grade.description}} | {{assigment.assigment_category.description}} |
-              <q-badge
-                color="blue"
-              >{{assigment.question_lists[0] ? assigment.question_lists[0].pivot.assigment_type ? assigment.question_lists[0].pivot.assigment_type.name : null : null}}</q-badge>
+              <div class="q-gutter-sm">
+                <q-badge color="blue">{{
+                  assigment.grade.description
+                }}</q-badge>
+                <q-badge color="blue">{{
+                  assigment.assigment_category.description
+                }}</q-badge>
+                <q-badge color="blue">{{
+                  assigment.question_lists[0]
+                    ? assigment.question_lists[0].pivot.assigment_type
+                      ? assigment.question_lists[0].pivot.assigment_type.name
+                      : null
+                    : null
+                }}</q-badge>
+              </div>
             </q-item-label>
-            <q-item-label caption>{{assigment.subject}}</q-item-label>
+            <q-item-label caption>{{ assigment.subject }}</q-item-label>
           </q-item-section>
         </template>
         <q-card>
           <q-card-section>
-            <q-list
-              v-for="(question_list,ql) in assigment.question_lists"
-              :key="`${ql}-${assigment.id}-${question_list.id}`"
-            >
-              <q-item>
+            <q-list>
+              <q-item
+                v-for="(question_list, ql) in assigment.question_lists"
+                :key="`${ql}-${assigment.id}-${question_list.id}`"
+              >
                 <q-item-section>
                   <q-item-label>
-                    <div class="text-caption">Soal {{ql+1}}. {{ question_list.name }}</div>
+                    <div class="text-caption">
+                      Soal {{ ql + 1 }}. {{ question_list.name }}
+                    </div>
                     <div class="row justify-center">
                       <q-btn
                         v-if="ruleAddQuestionList(assigment)"
                         flat
                         @click="addQuestionList(question_list)"
-                      >Pilih Soal {{ql+1}}</q-btn>
+                        >Pilih Soal {{ ql + 1 }}</q-btn
+                      >
                     </div>
                   </q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>
-            <div class="row justify-between" v-if="assigment.user.id == Auth.auth.id">
+            <div
+              class="row justify-between"
+              v-if="assigment.user.id == Auth.auth.id"
+            >
               <q-btn flat label="Hapus" @click="destroy()"></q-btn>
-              <q-btn flat label="Edit" @click="$router.push(`/assigment/${assigment.id}/edit`)"></q-btn>
+              <q-btn
+                flat
+                label="Edit"
+                @click="$router.push(`/assigment/${assigment.id}/edit`)"
+              ></q-btn>
             </div>
           </q-card-section>
         </q-card>
@@ -63,9 +88,7 @@ export default {
   computed: {
     ...mapState(["Auth", "Setting", "Assigment"])
   },
-  mounted() {
-
-  },
+  mounted() {},
   methods: {
     addQuestionList(question_list) {
       this.$q.notify({
@@ -127,5 +150,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

@@ -3,8 +3,8 @@
     <q-header
       elevated
     >
-      <q-toolbar class="bg-cyan-7">
-        <q-icon name="home" style="font-size:1.5em" />
+      <q-toolbar class="bg-blue">
+        <q-icon name="poll" style="font-size:1.5em" />
         <q-toolbar-title>
           <div class="text-body1">Hasil</div>
         </q-toolbar-title>
