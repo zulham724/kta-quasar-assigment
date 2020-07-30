@@ -1,13 +1,13 @@
 <template>
   <div style="height:100vh;background-image:url('statics/bg-login-2.png');background-size:cover;">
-    <div class="q-pa-md">
-      <div class="row justify-center" style="margin-top:60%">
+    <div class="q-pa-lg">
+      <div class="row justify-center" style="margin-top:40vh">
         <div class="col-12" >
           <div class="row">
             <q-img src="statics/logo-login.png" width="50vw"></q-img>
           </div>
         </div>
-        <div class="col-12" style="margin-top:20%">
+        <div class="col-12">
           <q-form @submit="onSubmit" ref="form" class="q-gutter-md">
             <q-input
               color="white"
@@ -86,7 +86,9 @@ export default {
               this.$router.push("/");
               window.history.pushState(null, null, window.location.href);
             })
-            .catch(err => {})
+            .catch(err => {
+              this.$q.notify("Email atau password Anda salah")
+            })
             .finally(() => {
               this.loading = false;
             });

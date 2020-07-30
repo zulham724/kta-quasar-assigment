@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-header elevated>
-      <q-toolbar class="bg-cyan-7">
+      <q-toolbar class="bg-blue">
         <q-btn flat dense icon="arrow_back" @click="$router.back()" />
         <q-toolbar-title>
           <div class="text-body1">Bagikan Soal</div>
@@ -19,7 +19,7 @@
             v-if="assigmentUpdate.isTimer"
             type="number"
             rounded
-            color="cyan-7"
+            color="blue"
             outlined
             dense
             lazy-rules
@@ -36,7 +36,7 @@
             type="textarea"
             outlined
             rounded
-            color="cyan-7"
+            color="blue"
             v-model="assigmentUpdate.note"
             label="Tulis sesuatu untuk murid"
             hint="contoh: Perhatikan soal dengan baik dan juga jangan sampai telat mengerjakan karena ada batas waktu"
@@ -45,7 +45,7 @@
           />
             
             <div class="row justify-between">
-              <q-btn flat @click="step = 1" color="cyan-7" label="Back" class="q-ml-sm" />
+              <q-btn flat @click="step = 1" color="blue"  label="Back" class="q-ml-sm" />
               <q-btn
                 :loading="loading"
                 :disabled="loading"
@@ -53,7 +53,7 @@
                 outline
                 rounded
                 type="submit"
-                color="cyan-7"
+                color="blue"
                 @click="setAssigmentToPublic()"
               />
             </div>
@@ -121,7 +121,6 @@ export default {
   },
   methods: {
     setAssigmentToPublic() {
-      return "as";
       this.$refs.form.validate().then(success => {
         if (success) {
           this.loading = true;

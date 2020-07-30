@@ -24,7 +24,7 @@
       <div id="text-header" class="q-pa-md">
         <div class="row">
           <div class="col-12 text-blue text-h6">
-            AGPAIII
+            AGPAII
           </div>
         </div>
         <div class="row">
@@ -47,18 +47,18 @@
             color="white"
             text-color="primary"
             :options="[
-              { label: 'Paket Soal', value: 'publish', slot: 'one' },
-              { label: 'Butir Soal', value: 'unpublish', slot: 'two' }
+              { label: 'Butir Soal', value: 'unpublish', slot: 'one' },
+              { label: 'Paket Soal', value: 'publish', slot: 'two' }
             ]"
           >
             <template v-slot:one>
               <div class="row items-center no-wrap">
-                <q-icon right name="bookmarks" />
+                <q-icon right name="description" />
               </div>
             </template>
             <template v-slot:two>
               <div class="row items-center no-wrap">
-                <q-icon right name="description" />
+                <q-icon right name="bookmarks" />
               </div>
             </template>
           </q-btn-toggle>
@@ -70,21 +70,22 @@
             unelevated
             rounded
             color="primary"
-            icon="filter_alt"
             class="q-pr-sm"
           >
-            Filter
+           <q-icon name="fas fa-filter" size="xs" />Filter
           </q-btn>
         </div>
       </div>
     </div>
     </q-slide-transition>
+
        <div
         id="closeOpen"
-        style="position:absolute;padding:0px;top:5px;align-self:center;text-align:center;left: 50%"
+        style="position:absolute;padding:0px;top:14px;width:100vw;text-align:center"
       >
         <q-btn round color="primary" :icon="isShow?'keyboard_arrow_up':'keyboard_arrow_down'" size="sm" @click="isShow=!isShow" />
       </div>
+
     </q-header>
     <q-pull-to-refresh @refresh="init">
       <q-infinite-scroll

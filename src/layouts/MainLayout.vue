@@ -17,15 +17,15 @@
           name="home"
           transition="slide-left"
           class="q-pa-xs"
+          
           @click="$route.name == 'home' ? null : $router.push('/')"
         >
-          <q-icon name="home" size="md"></q-icon>
+          <q-icon name="home" size="sm"></q-icon>
           <transition
             appear
             enter-active-class="animated fadeInLeft"
-            leave-active-class="animated fadeOutLeft"
           >
-            <div v-show="$route.name == 'home'" class="text-weight-bold">
+            <div v-show="$route.name == 'home'" class="text">
               Beranda
             </div>
           </transition>
@@ -35,13 +35,12 @@
           name="create"
           @click="$route.name == 'create' ? null : $router.push('/create')"
         >
-          <q-icon name="add" size="md"></q-icon>
+          <q-icon name="add" size="sm"></q-icon>
           <transition
             appear
             enter-active-class="animated fadeInLeft"
-            leave-active-class="animated fadeOutLeft"
           >
-            <div v-show="$route.name == 'create'" class="text-weight-bold">
+            <div v-show="$route.name == 'create'" class="text">
               Buat Soal
             </div>
           </transition>
@@ -52,13 +51,15 @@
           name="build"
           @click="$route.name == 'build' ? null : $router.push('/build')"
         >
-          <q-icon name="build_circle" size="md"></q-icon>
+          <q-icon name="fa fa-file-alt" class="text-white" size="sm"></q-icon>
           <transition
             appear
             enter-active-class="animated fadeInLeft"
-            leave-active-class="animated fadeOutLeft"
           >
-            <div v-show="$route.name == 'build'" class="text-weight-bold q-pr-sm">
+            <div
+              v-show="$route.name == 'build'"
+              class="text q-pr-sm"
+            >
               Rakit
             </div>
           </transition>
@@ -77,16 +78,15 @@
               : $router.push('/studentresultlist')
           "
         >
-          <q-icon name="poll" size="md"></q-icon>
+          <q-icon name="poll" size="sm"></q-icon>
 
           <transition
             appear
             enter-active-class="animated fadeInLeft"
-            leave-active-class="animated fadeOutLeft"
           >
             <div
               v-show="$route.name == 'studentresultlist'"
-              class="text-weight-bold"
+              class="text"
             >
               Hasil
             </div>
@@ -98,20 +98,25 @@
           @click="$route.name == 'account' ? null : $router.push('/account')"
         >
           <q-avatar size="35px">
+            <div style="position:absolute;">
+              <q-icon size="35px" name="ion-md-contact" />
+            </div>
             <q-img
               :src="`${Setting.storageUrl}/${Auth.auth.avatar}`"
               no-default-spinner
             />
           </q-avatar>
-            <transition
+          <transition
             appear
             enter-active-class="animated fadeInLeft"
-            leave-active-class="animated fadeOutLeft"
           >
-          <div v-show="$route.name == 'account'" class="text-weight-bold q-pl-sm">
-            Profile
-          </div>
-            </transition>
+            <div
+              v-show="$route.name == 'account'"
+              class="text q-pl-sm"
+            >
+              Profile
+            </div>
+          </transition>
         </q-tab>
       </q-tabs>
     </q-footer>
@@ -130,6 +135,7 @@ export default {
   computed: {
     ...mapState(["Setting", "Assigment", "Auth"])
   },
+  created() {},
   mounted() {}
 };
 </script>

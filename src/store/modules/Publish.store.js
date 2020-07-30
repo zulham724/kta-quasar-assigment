@@ -109,6 +109,15 @@ const actions = {
         return new Promise((resolve, reject) => {
             commit("setAssigment", {assigment:payload.assigment, field:payload.field});
         });
+    },
+    shareAssigment({commit}, payload){
+        return new Promise((resolve, reject)=>{
+            axios.post(`${this.state.Setting.url}/api/v1/assigments/share`, payload).then(res=>{
+                resolve(res)
+            }).catch(err=>{
+                reject(err);
+            });
+        })
     }
 };
 

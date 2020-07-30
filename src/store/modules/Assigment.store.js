@@ -64,7 +64,17 @@ const mutations = {
         };
     },
     resetBuild(state) {
-        state.build = null;
+        state.build ={
+            is_publish: true,
+            isTimer: false,
+            isExpire: false,
+            isPassword: false,
+            grade_id: null,
+            question_lists: [],
+            education_year: `${moment().format("YYYY")}/${moment()
+          .add(1, "years")
+          .format("YYYY")}`
+        };
     },
     resetBuildQuestionLists(state) {
         state.build.question_lists = [];

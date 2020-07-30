@@ -59,6 +59,7 @@
             color="blue"
             outlined
             dense
+            autogrow
             label="Materi"
             v-model="assigment.subject"
             lazy-rules
@@ -69,6 +70,7 @@
             color="blue"
             outlined
             dense
+            autogrow
             label="Indikator"
             v-model="assigment.indicator"
             lazy-rules
@@ -106,12 +108,17 @@
             >
               <q-card class="q-mb-md">
                 <q-card-section>
+                 <q-editor
+      v-model="editor"
+    
+    />
                   <q-input
                     v-model="question_list.name"
                     rounded
                     color="blue"
                     outlined
                     dense
+                    autogrow
                     :label="`Soal ${ql + 1}`"
                     lazy-rules
                     :rules="[val => (val && val.length > 0) || 'Harus diisi']"
@@ -140,6 +147,7 @@
                     color="blue"
                     outlined
                     dense
+                    autogrow
                     lazy-rules
                     :rules="[val => (val && val.length > 0) || 'Harus diisi']"
                     @input="() => $forceUpdate()"
@@ -162,7 +170,7 @@
                     </template>
                   </q-input>
                   <q-btn
-                    color="secondary"
+                    color="primary"
                     outline
                     rounded
                     label="Tambah Kunci jawaban"
@@ -193,6 +201,7 @@
                     color="blue"
                     outlined
                     dense
+                    autogrow
                     :label="`Soal ${ql + 1}`"
                     hint="Pilihan ganda"
                     lazy-rules
@@ -221,6 +230,7 @@
                     rounded
                     color="blue"
                     outlined
+                    autogrow
                     dense
                     :label="String.fromCharCode('A'.charCodeAt() + al)"
                     hint="Butir jawaban"
@@ -262,7 +272,7 @@
                     </template>
                   </q-input>
                   <q-btn
-                    color="secondary"
+                    color="primary"
                     outline
                     rounded
                     label="Tambah butir jawaban"
@@ -293,6 +303,7 @@
                     color="blue"
                     outlined
                     dense
+                    autogrow
                     :label="`Soal ${ql + 1}`"
                     lazy-rules
                     :rules="[val => (val && val.length > 0) || 'Harus diisi']"
@@ -322,6 +333,7 @@
                     color="blue"
                     outlined
                     dense
+                    autogrow
                     lazy-rules
                     :rules="[val => (val && val.length > 0) || 'Harus diisi']"
                     @input="() => $forceUpdate()"
@@ -344,7 +356,7 @@
                     </template>
                   </q-input>
                   <q-btn
-                    color="secondary"
+                    color="primary"
                     outline
                     rounded
                     label="Tambah Kunci jawaban"
@@ -368,7 +380,7 @@
               <q-btn flat dense @click="step = 1" color="blue" label="Back" class="q-ml-sm" />
               <q-fab
                 flat
-                color="secondary"
+                color="primary"
                 label="Butir soal"
                 outline
                 rounded
@@ -382,7 +394,7 @@
                 >
                   <q-fab-action
                     v-if="assigment_type.display"
-                    color="secondary"
+                    color="primary"
                     icon="list"
                     :label="assigment_type.name"
                     @click="addQuestionList(assigment_type)"
@@ -439,6 +451,7 @@ import { mapGetters, mapState } from "vuex";
 export default {
   data() {
     return {
+      editor: 'What you see is <b>what</b> you get.',
       loading: false,
       step: 1,
       assigment: {

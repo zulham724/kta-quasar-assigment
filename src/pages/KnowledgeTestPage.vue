@@ -4,7 +4,7 @@
       <q-header
         elevated
       >
-        <q-toolbar class="bg-cyan-7">
+        <q-toolbar class="bg-blue">
           <q-btn round flat dense icon="arrow_back" @click="$router.back()" />
           <q-toolbar-title>
             <div class="text-body1">Review Soal</div>

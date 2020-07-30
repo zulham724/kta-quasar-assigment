@@ -72,6 +72,7 @@
             </div>
             <div class="row justify-center">
               <div
+              style="overflow-wrap:break-word; white-space:pre-line"
                 class="text-caption q-pl-md q-pr-md q-pb-md q-pt-sm"
                 v-linkified
               >
