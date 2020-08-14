@@ -95,6 +95,9 @@ const mutations = {
     setStudentResultSession(state, payload){
        state.studentResultSession = payload;
        console.log(state.studentResultSession)
+    },
+    updateGrade(state, value){
+        state.build.grade = value
     }
 };
 
@@ -250,7 +253,12 @@ const actions = {
                 });
         });
     },
-
+    resetBuildQuestionLists({commit}){
+        return new Promise((resolve, reject)=>{
+            commit("resetBuildQuestionLists");
+            resolve();
+        });
+    },
     ///END-SESSION////
     prev() {},
     page() {},

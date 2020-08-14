@@ -80,7 +80,7 @@
                     </div>
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup>
+                <q-item clickable v-close-popup  v-if="assigment.user.id == Auth.auth.id">
                   <q-item-section
                     @click="
                       $router.push({

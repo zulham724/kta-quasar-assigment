@@ -10,7 +10,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-form class="q-gutter-sm q-pa-md" ref="form">
+    <q-form class="q-gutter-sm q-pa-md" ref="form" @submit="onSubmit">
           <q-toggle
             v-model="assigmentUpdate.isTimer"
             label="Aktifkan untuk set timer ketika mengerjakan soal"
@@ -54,7 +54,6 @@
                 rounded
                 type="submit"
                 color="blue"
-                @click="setAssigmentToPublic()"
               />
             </div>
     </q-form>
@@ -64,7 +63,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import {mapState } from "vuex";
 import axios from "axios";
 
 export default {
@@ -115,12 +114,13 @@ export default {
       return;
     }
     this.assigmentUpdate={...this.assigment, isTimer:this.assigment.isTimer?true:false, is_public:this.assigment.is_public?true:false};
-     console.log(this.assigmentUpdate)
+    // console.log(this.assigmentUpdate)
     //this.$store.dispatch("AssigmentCategory/index");
     //this.getQuestionLists = debounce(this.getQuestionLists, 500);
   },
   methods: {
-    setAssigmentToPublic() {
+    onSubmit() {
+     
       this.$refs.form.validate().then(success => {
         if (success) {
           this.loading = true;
@@ -140,6 +140,7 @@ export default {
             });
         }
       });
+      return false;
     },
 
   }

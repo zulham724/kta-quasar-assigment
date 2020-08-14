@@ -10,6 +10,9 @@ const mutations = {
     set(state, payload) {
         state.items = payload.items;
     },
+    reset(state) {
+        state.items = {}
+    },
     next(state, payload) {
         state.items = {
             ...payload.items,
@@ -20,13 +23,18 @@ const mutations = {
 
 // Actions
 const actions = {
+    reset({commit}){
+        commit("reset")
+    },
     index({ commit }, payload) {
         return new Promise((resolve, reject) => {
+            let search='';
+            if(payload.search)search = payload.search
+
             axios
                 .get(
-                    `${this.state.Setting.url}/api/v1/assigments/questionlists/search/${payload.assigment_category_id}/${payload.educational_level_id}`
-                )
-                .then(res => {
+                    `${this.state.Setting.url}/api/v1/assigments/questionlists/search/${payload.assigment_category_id}/${payload.educational_level_id}?q=${search}`
+                ).then(res => {
                     commit("set", { items: res.data });
                     resolve(res);
                 })

@@ -69,8 +69,14 @@ const routes = [{
             }, {
                 path: 'build',
                 name: 'build',
-                component: () =>
-                    import ('pages/BuildPage.vue')
+                component: () => import ('pages/BuildPage.vue'),
+                props: true,
+            },
+            {
+                path: 'addquestionlists',
+                name: 'addquestionlists',
+                component: () => import ('pages/Assigment/AddQuestionListsPage.vue'),
+                props: true
             },
             {
                 path: 'share',

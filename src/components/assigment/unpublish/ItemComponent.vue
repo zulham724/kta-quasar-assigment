@@ -46,8 +46,8 @@
               >
                 <q-item-section>
                   <q-item-label>
-                    <div class="text-caption">
-                      Soal {{ ql + 1 }}. {{ question_list.name }}
+                    <div class="text-caption" v-html="`Soal ${ql + 1 } ${question_list.name}`">
+                      
                     </div>
                     <div class="row justify-center">
                       <q-btn
@@ -88,7 +88,9 @@ export default {
   computed: {
     ...mapState(["Auth", "Setting", "Assigment"])
   },
-  mounted() {},
+  mounted() {
+  
+  },
   methods: {
     addQuestionList(question_list) {
       this.$q.notify({

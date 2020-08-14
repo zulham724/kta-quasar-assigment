@@ -10,7 +10,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-form class="q-gutter-sm q-pa-md" ref="form">
+    <q-form class="q-gutter-sm q-pa-md" ref="form" @submit="shareAssigment">
       <q-toggle
         v-model="assigment.isTimer"
         label="Aktifkan untuk set timer ketika mengerjakan soal"
@@ -152,7 +152,6 @@
           rounded
           type="submit"
           color="blue"
-          @click="shareAssigment()"
         />
       </div>
     </q-form>
@@ -259,6 +258,7 @@ export default {
             });
         }
       });
+      return false;
     }
   }
 };

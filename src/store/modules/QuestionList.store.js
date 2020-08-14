@@ -4,12 +4,17 @@ import axios from "axios";
 const state = {};
 
 // Mutations
-const mutations = {};
+const mutations = {
+
+};
 
 // Actions
 const actions = {
     index() {
         return new Promise((resolve, reject) => {});
+    },
+    reset({commit}){
+        commit("reset");
     },
     search({ commit }, key) {
         return new Promise((resolve, reject) => {

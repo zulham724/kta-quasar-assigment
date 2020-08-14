@@ -24,7 +24,7 @@
       <div id="text-header" class="q-pa-md">
         <div class="row">
           <div class="col-12 text-blue text-h6">
-            AGPAII
+            AGPAII DIGITAL
           </div>
         </div>
         <div class="row">
@@ -53,12 +53,12 @@
           >
             <template v-slot:one>
               <div class="row items-center no-wrap">
-                <q-icon right name="description" />
+                <q-icon right name="description" size="20px" />
               </div>
             </template>
             <template v-slot:two>
               <div class="row items-center no-wrap">
-                <q-icon right name="bookmarks" />
+                <q-icon right name="bookmarks" size="20px"/>
               </div>
             </template>
           </q-btn-toggle>
@@ -72,7 +72,7 @@
             color="primary"
             class="q-pr-sm"
           >
-           <q-icon name="fas fa-filter" size="xs" />Filter
+           <q-icon name="fas fa-filter" class="q-pl-sm" size="10px" /><div class="text-caption q-pl-sm">Filter</div>
           </q-btn>
         </div>
       </div>

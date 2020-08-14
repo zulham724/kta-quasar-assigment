@@ -1,11 +1,13 @@
 <template>
   <div>
     <q-pull-to-refresh @refresh="onRefresh" v-if="Auth.auth">
-      <q-header>
+      <q-header style="border:1px solid rgb(33, 150, 243);">
         <q-toolbar class="bg-blue">
           <q-icon name="person" style="font-size: 1.5em;" />
           <q-toolbar-title>
-            <div class="text-body2">No Anggota: {{ Auth.auth.kta_id }}</div>
+            {{ Auth.auth.name }}
+             <div class="bg-blue text-white text-body2">No Anggota: {{ Auth.auth.kta_id }}</div>
+
           </q-toolbar-title>
           <q-btn flat icon="logout" @click="logout()" />
         </q-toolbar>
@@ -13,26 +15,27 @@
 
       <div class="row">
         <div class="col-12">
-            <!--begin pengubung-->
-          <div 
+          <!--begin pengubung-->
+          
+
+          <div
             id="penghubung"
             style="position: relative;
   height: 20px;"
             class="bg-blue"
           ></div>
-            <!--end penghubung-->
+          <!--end penghubung-->
 
           <!--begin header-append-->
-          <div
-            id="header_append"
-          >
-            <div id="kotak_biru" style="position: absolute;
+          <div id="header_append">
+            <div
+              id="kotak_biru"
+              style="position: absolute;
   height:60px;width:100vw;"
-            class="bg-blue">
-              
-            </div>
+              class="bg-blue"
+            ></div>
 
-            <!--begin dikerjakan-->
+            <!--begin dikerjakan
             <div
               id="dikerjakan"
               class="text-black"
@@ -46,7 +49,7 @@
               <div class="row justify-center" style="margin-top: -5px;">
                 <div class="text-caption">Dikerjakan</div>
               </div>
-            </div><!--end dikerjakan-->
+            </div>end dikerjakan-->
 
             <!--begin lingkaran-->
             <div class="row justify-center">
@@ -65,19 +68,21 @@
               </div>
             </div>
             <!--end lingkaran-->
-            <div class="row justify-center">
-              <div class="text-body1 text-primary text-weight-bold">
-                {{ Auth.auth.name }}
-              </div>
-            </div>
-            <div class="row justify-center">
-              <div
-              style="overflow-wrap:break-word; white-space:pre-line"
-                class="text-caption q-pl-md q-pr-md q-pb-md q-pt-sm"
-                v-linkified
-              >
-                {{ Auth.auth.profile.long_bio }}
-              </div>
+            <div class="row justify-center q-pt-sm">
+            
+                <div id="dikerjakan" class="text-black">
+                  <div class="row justify-center">
+                    <div class="text-body">
+                      <b>{{ Auth.auth.count_sessions }}</b> 
+                    </div>
+                  </div>
+                    <div class="row justify-center">
+                    <div class="text-body">
+                      Dikerjakan
+                    </div>
+                  </div>
+                </div>
+                <!--end dikerjakan-->
             </div>
           </div>
           <!--end header-append-->
@@ -88,11 +93,7 @@
 
       <div class="row">
         <div class="col-12">
-          <q-tabs
-            v-model="tab"
-            dense
-            class="text-grey-10"
-          >
+          <q-tabs v-model="tab" dense class="text-grey-10">
             <q-tab name="unpublish">
               <q-icon name="description" color="blue"></q-icon>
               <div class="text-caption">

@@ -12,7 +12,13 @@
 
     <q-form class="q-gutter-sm" ref="form">
       <q-stepper v-model="step" color="blue" style="width:100vw;" animated>
-        <q-step :name="1" title="Isi" color="blue" icon="settings" :done="step > 1">
+        <q-step
+          :name="1"
+          title="Isi"
+          color="blue"
+          icon="settings"
+          :done="step > 1"
+        >
           <q-select
             rounded
             outlined
@@ -34,7 +40,11 @@
             option-label="name"
             :option-value="item => item"
             v-model="assigment.assigment_category"
-            :options="AssigmentCategory.assigment_categories.filter(item=>item.id != 9)"
+            :options="
+              AssigmentCategory.assigment_categories.filter(
+                item => item.id != 9
+              )
+            "
             label="Kompetensi"
             :rules="[val => !!val || 'Harus diisi']"
             @input="
@@ -100,19 +110,42 @@
           style="margin-bottom:30vh"
           color="blue"
         >
-          <div v-for="(question_list, ql) in assigment.question_lists" :key="ql">
+          <div
+            v-for="(question_list, ql) in assigment.question_lists"
+            :key="ql"
+          >
             <div
               v-if="
                 question_list.pivot.assigment_type.description == 'textfield'
               "
             >
               <q-card class="q-mb-md">
+                <q-bar>
+                  <q-icon name="note" />
+                  <div>Soal {{ ql + 1 }}</div>
+
+                  <q-space />
+
+                  <q-btn
+                    dense
+                    flat
+                    icon="close"
+                    @click="
+                      () => {
+                        assigment.question_lists.splice(ql, 1);
+                        $forceUpdate();
+                      }
+                    "
+                  />
+                </q-bar>
                 <q-card-section>
-                 <q-editor
-      v-model="editor"
-    
-    />
-                  <q-input
+                  <froala
+                    :tag="'textarea'"
+                    :config="config"
+                    v-model="question_list.name"
+                  ></froala>
+
+                  <!--<q-input
                     v-model="question_list.name"
                     rounded
                     color="blue"
@@ -138,7 +171,8 @@
                         "
                       />
                     </template>
-                  </q-input>
+                  </q-input>-->
+                     <q-separator inset class="q-ma-sm" />  
                   <q-input
                     v-for="(answer_list, al) in question_list.answer_lists"
                     :key="al"
@@ -169,6 +203,7 @@
                       />
                     </template>
                   </q-input>
+
                   <q-btn
                     color="primary"
                     outline
@@ -295,9 +330,34 @@
               "
             >
               <q-card class="q-mb-md">
+              <q-bar>
+                  <q-icon name="note" />
+                  <div>Soal {{ ql + 1 }}</div>
+
+                  <q-space />
+
+                  <q-btn
+                    dense
+                    flat
+                    icon="close"
+                    @click="
+                      () => {
+                        assigment.question_lists.splice(ql, 1);
+                        $forceUpdate();
+                      }
+                    "
+                  />
+                </q-bar>
                 <q-card-section>
-                  <div class="text-body1 text-grey">Soal {{ ql + 1 }}</div>
-                  <q-input
+                  
+                  <froala
+                  
+                    :tag="'textarea'"
+                    :config="config"
+                    v-model="question_list.name"
+                  ></froala>
+
+                  <!--<q-input
                     v-model="question_list.name"
                     rounded
                     color="blue"
@@ -323,8 +383,10 @@
                         "
                       />
                     </template>
-                  </q-input>
+                  </q-input>-->
+                   <q-separator inset class="q-ma-sm" />  
                   <q-input
+                    class="q-mt-sm"
                     type="textarea"
                     v-for="(answer_list, al) in question_list.answer_lists"
                     :key="al"
@@ -377,7 +439,14 @@
 
           <q-stepper-navigation>
             <div class="row justify-between">
-              <q-btn flat dense @click="step = 1" color="blue" label="Back" class="q-ml-sm" />
+              <q-btn
+                flat
+                dense
+                @click="step = 1"
+                color="blue"
+                label="Back"
+                class="q-ml-sm"
+              />
               <q-fab
                 flat
                 color="primary"
@@ -402,7 +471,9 @@
                 </div>
               </q-fab>
               <q-btn
-                v-if="assigment.question_lists && assigment.question_lists.length"
+                v-if="
+                  assigment.question_lists && assigment.question_lists.length
+                "
                 flat
                 @click="
                   () =>
@@ -418,26 +489,30 @@
         </q-step>
 
         <q-step :name="3" title="Finish" color="blue" icon="add_comment">
-
-        <div class="row justify-center">
-        <q-btn
-        :loading="loading"
-          :disabled="loading"
-          outline
-          rounded
-          size="35px"
-          color="blue"
-          icon="publish"
-          label="Terbitkan"
-          type="submit"
-          @click="storeAssigment()"
-        />
-        </div>
-        
+          <div class="row justify-center">
+            <q-btn
+              :loading="loading"
+              :disabled="loading"
+              outline
+              rounded
+              size="35px"
+              color="blue"
+              icon="publish"
+              label="Terbitkan"
+              type="submit"
+              @click="storeAssigment()"
+            />
+          </div>
 
           <q-stepper-navigation>
             <div class="row justify-between">
-              <q-btn flat @click="step = 2" color="blue" label="Back" class="q-ml-sm" />
+              <q-btn
+                flat
+                @click="step = 2"
+                color="blue"
+                label="Back"
+                class="q-ml-sm"
+              />
             </div>
           </q-stepper-navigation>
         </q-step>
@@ -448,10 +523,23 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
+import VueFroala from "vue-froala-wysiwyg";
+
 export default {
   data() {
     return {
-      editor: 'What you see is <b>what</b> you get.',
+      config: {
+        placeholderText: "Tulis soal Anda di sini",
+        tableStyles: {
+          "fr-dashed-borders": "Dashed Borders",
+          "fr-alternate-rows": "Alternate Rows"
+        },
+        events: {
+          initialized: function() {
+            console.log("initialized");
+          }
+        }
+      },
       loading: false,
       step: 1,
       assigment: {
@@ -459,7 +547,7 @@ export default {
         isPassword: false,
         isTimer: false,
         grade_id: null
-      },
+      }
     };
   },
   computed: {
@@ -479,7 +567,7 @@ export default {
           item.display = false;
         }
       });
-      console.log(this.assigment.assigment_category)
+      console.log(this.assigment.assigment_category);
       this.assigment.question_lists.push({
         name: "",
         description: "",

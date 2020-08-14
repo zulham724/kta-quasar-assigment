@@ -2,7 +2,7 @@
   <div>
     <q-header elevated>
       <q-toolbar class="bg-blue">
-        <q-icon name="build_circle" style="font-size: 1.5em;" />
+        <q-icon name="fa fa-file-alt" style="font-size: 1.5em;" />
         <q-toolbar-title>
           <div class="text-body1">Rakit Soal</div>
         </q-toolbar-title>
@@ -10,7 +10,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-form class="q-gutter-sm" ref="form">
+    <q-form class="q-gutter-sm" ref="form" @submit="storeAssigment">
       <q-stepper
         v-model="step"
         color="blue"
@@ -39,7 +39,7 @@
             @input="item => (assigment.grade_id = item.id)"
           />
           <q-select
-            rounded
+            round ed
             color="blue"
             outlined
             dense
@@ -59,7 +59,9 @@
               item => {
                 assigment.question_lists = [];
                 $store.commit('Assigment/resetBuildQuestionLists');
+                $store.commit('SuggestedQuestionList/reset');
                 assigment.assigment_category_id = item.id;
+
               }
             "
           />
@@ -82,8 +84,9 @@
             outlined
             dense
             label="Nama Kegiatan Penilaian"
-            v-model="assigment.name"
+            v-model="assigment_name"
             lazy-rules
+            @blur="setAssigmentName"
             :rules="[val => (val && val.length > 0) || 'Harus diisi']"
           />
 
@@ -124,6 +127,7 @@
           color="blue"
           style="margin-bottom:30vh"
         >
+      
           <div
             v-for="(question_list, ql) in assigment.question_lists"
             :key="ql"
@@ -416,6 +420,9 @@
           </div>
 
           <q-stepper-navigation>
+           <div class="row justify-between q-pb-md text-body2" v-if="!Assigment.build.question_lists || Assigment.build.question_lists.length==0 ">
+            Soal masih kosong. Silahkan klik Tambah Soal
+           </div>
             <div class="row justify-between">
               <q-btn
                 flat
@@ -431,8 +438,9 @@
                 label="Tambah Soal"
                 @click="
                   () => {
-                    search.display = true;
-                    $forceUpdate();
+                    //search.display = true;
+                    $router.push('addquestionlists');
+                    //$forceUpdate();
                   }
                 "
               />
@@ -474,7 +482,6 @@
                   icon="publish"
                   label="Terbitkan"
                   type="submit"
-                  @click="storeAssigment()"
                 />
               </div>
             </div>
@@ -495,7 +502,7 @@
       </q-stepper>
     </q-form>
 
-    <q-dialog v-model="search.display" full-width full-height>
+    <!--<q-dialog v-model="search.display" full-width full-height>
       <q-card>
         <q-card-section>
           <q-infinite-scroll @load="onLoad" :offset="250">
@@ -532,7 +539,7 @@
           </q-infinite-scroll>
         </q-card-section>
       </q-card>
-    </q-dialog>
+    </q-dialog>-->
   </div>
 </template>
 
@@ -541,8 +548,12 @@ import { mapGetters, mapState } from "vuex";
 import { debounce } from "quasar";
 
 export default {
+  props:{
+    _step:null
+  },
   data() {
     return {
+      assigment_name:'',
       loading: false,
       step: 1,
       assigment: {
@@ -570,8 +581,7 @@ export default {
     };
   },
   components: {
-    UnpublishItemComponent: () =>
-      import("components/assigment/unpublish/ItemComponent.vue")
+    //UnpublishItemComponent: () =>import("components/assigment/unpublish/ItemComponent.vue")
   },
   computed: {
     ...mapState([
@@ -586,32 +596,51 @@ export default {
   watch: {
     assigment: {
       handler: function() {
+        console.log('coi ');
+        console.log(this.assigment.name);
         this.$store.commit("Assigment/setBuild", { build: this.assigment });
       },
-      deep: true
+      deep: true,
     }
   },
   created() {
-    this.init();
-    this.$store.dispatch("AssigmentCategory/index");
-    this.getQuestionLists = debounce(this.getQuestionLists, 500);
+    if(this._step){
+      this.step=this._step;
+      
+    }
+
+    this.$store.dispatch("AssigmentCategory/index").then(()=>{
+      this.init(); 
+    });
+    //alert(this.assigment.assigment_category_id);
+  
+  },
+  mounted(){
+    //console.log(this.assigment)
+    if(this.Assigment.build.name)this.assigment_name=this.Assigment.build.name
+    //this.getQuestionLists = debounce(this.getQuestionLists, 500);
   },
   methods: {
-    debounce,
+    //debounce,
     step2() {
       this.init();
-      this.getSuggestedQuestionLists();
+     // this.getSuggestedQuestionLists();
       this.$refs.form
         .validate()
         .then(success => (success ? (this.step = 2) : null));
-      this.$forceUpdate();
+      //this.$forceUpdate();
+    },
+    setAssigmentName(){
+      if(this.assigment_name.trim()!=''){
+       this.assigment.name=this.assigment_name;
+      }
     },
     init() {
       this.assigment = {
         ...this.Assigment.build
       };
       if (this.Grade.grades.length == 0) this.$store.dispatch("Grade/index");
-      this.$forceUpdate();
+      //this.$forceUpdate();
     },
     addQuestionList(assigment_type) {
       if (!this.assigment.question_lists) this.assigment.question_lists = [];
@@ -681,6 +710,7 @@ export default {
             });
         }
       });
+      return false;
     },
     getQuestionLists(key) {
       if (key)
