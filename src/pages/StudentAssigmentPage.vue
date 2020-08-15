@@ -12,6 +12,7 @@
         <q-space />
       </q-toolbar>
     </q-header>
+    <q-page>
     <div id="corner1" style="margin-top:10px;" class="bg-blue-6">
       <div class="q-pt-sm q-pl-md">
         <div class="text-h5 text-white">
@@ -90,6 +91,7 @@
         </div>
       </div>
     </div>
+    </q-page>
     </q-pull-to-refresh>
   </div>
 </template>

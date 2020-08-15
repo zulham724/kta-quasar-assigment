@@ -1,5 +1,6 @@
 <template>
   <div>
+      <q-pull-to-refresh @refresh="init">
     <q-header elevated class="bg-white">
     <q-slide-transition>
     <div id="header" v-show="isShow">
@@ -81,13 +82,13 @@
 
        <div
         id="closeOpen"
-        style="position:absolute;padding:0px;top:14px;width:100vw;text-align:center"
+        style="position:absolute;padding:0px;top:14px;width:100%;text-align:center"
       >
         <q-btn round color="primary" :icon="isShow?'keyboard_arrow_up':'keyboard_arrow_down'" size="sm" @click="isShow=!isShow" />
       </div>
 
     </q-header>
-    <q-pull-to-refresh @refresh="init">
+    <q-page>
       <q-infinite-scroll
         v-if="tab == 'publish'"
         @load="onLoadPublish"
@@ -135,6 +136,7 @@
           </div>
         </template>
       </q-infinite-scroll>
+    </q-page>
     </q-pull-to-refresh>
   </div>
 </template>

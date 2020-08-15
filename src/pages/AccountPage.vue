@@ -13,6 +13,7 @@
         </q-toolbar>
       </q-header>
 
+      <q-page>
       <div class="row">
         <div class="col-12">
           <!--begin pengubung-->
@@ -142,6 +143,7 @@
           </q-tab-panels>
         </div>
       </div>
+      </q-page>
       <!--end col-->
       <!--end row-->
     </q-pull-to-refresh>

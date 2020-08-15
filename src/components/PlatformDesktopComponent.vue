@@ -11,7 +11,6 @@
 
 <script >
 export default {
-
 }
 </script>
 
@@ -40,5 +39,6 @@ export default {
   .q-page-container{
     background-color:white
   }
+  
 </style>
 

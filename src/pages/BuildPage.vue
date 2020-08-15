@@ -10,11 +10,12 @@
       </q-toolbar>
     </q-header>
 
-    <q-form class="q-gutter-sm" ref="form" @submit="storeAssigment">
+  <q-page>
+    <q-form class="q-gutter-sm" ref="form" @submit="storeAssigment" style="width:100%">
       <q-stepper
         v-model="step"
         color="blue"
-        style="width: 100vw;"
+        style="width: 100%"
         animated
         keep-alive
       >
@@ -501,7 +502,7 @@
         </q-step>
       </q-stepper>
     </q-form>
-
+  </q-page>
     <!--<q-dialog v-model="search.display" full-width full-height>
       <q-card>
         <q-card-section>

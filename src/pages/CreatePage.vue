@@ -10,8 +10,9 @@
       </q-toolbar>
     </q-header>
 
-    <q-form class="q-gutter-sm" ref="form">
-      <q-stepper v-model="step" color="blue" style="width:100vw;" animated>
+  <q-page>
+    <q-form class="q-gutter-sm" ref="form" style="width:100%">
+      <q-stepper v-model="step" color="blue" style="width:100%;" animated>
         <q-step
           :name="1"
           title="Isi"
@@ -518,6 +519,7 @@
         </q-step>
       </q-stepper>
     </q-form>
+  </q-page>
   </div>
 </template>
 

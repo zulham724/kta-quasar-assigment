@@ -3,7 +3,7 @@
     <q-header
       elevated
     >
-      <q-toolbar class="bg-cyan-7">
+      <q-toolbar class="bg-blue">
           <q-btn flat dense icon="arrow_back" @click="$router.back()" />
         <q-toolbar-title>
           <div class="text-body1">Hasil {{session.user.name}}</div>
@@ -41,7 +41,7 @@
     </div>
     
     </q-header>
-
+<q-page>
     <q-stepper
     header-nav
       v-model="step"
@@ -197,7 +197,7 @@
 
 
     </q-stepper>
-  
+</q-page>
    
 
   </div>
