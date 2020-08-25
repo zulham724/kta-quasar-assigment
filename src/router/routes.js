@@ -52,6 +52,7 @@ const routes = [{
             {
                 path: "account",
                 name: 'account',
+                props:true,
                 component: () =>
                     import ("pages/AccountPage.vue")
             },

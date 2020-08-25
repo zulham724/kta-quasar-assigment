@@ -94,7 +94,17 @@
                   >
                     <div class="row">
                       <div class="col-4"><q-icon name="school" /></div>
-                      <div class="col">Set Latihan Mandiri</div>
+                      <div class="col">{{assigment.is_public?'Edit':'Set'}} Latihan Mandiri</div>
+                    </div>
+                  </q-item-section>
+                </q-item>
+                  <q-item clickable v-close-popup  v-if="assigment.user.id == Auth.auth.id && assigment.is_public">
+                  <q-item-section
+                    @click="cancelTrainingAssigment(assigment.id)"
+                  >
+                    <div class="row">
+                      <div class="col-4"><q-icon name="remove_circle" /></div>
+                      <div class="col">Batalkan Latihan Mandiri</div>
                     </div>
                   </q-item-section>
                 </q-item>
@@ -205,6 +215,15 @@ export default {
   },
   created() {},
   methods: {
+    cancelTrainingAssigment(assigment_id){
+
+      this.$store.dispatch("Assigment/setPublic", {id:assigment_id,is_public:false}).then(res=>{
+       this.$q.notify("Berhasil membatalkan latihan mandiri");
+       //this.assigment.is_public=false;
+       this.$store.dispatch('Auth/setAssigment', {assigment:{...this.assigment,is_public:false}, field:['is_public']})
+
+      });
+    },
     destroy() {
       this.$q
         .dialog({

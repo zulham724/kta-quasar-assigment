@@ -28,7 +28,8 @@ const mutations = {
             state.auth.publish_assigments[index][v] = payload.assigment[v]
         })
        
-    }
+    },
+   
 };
 
 // Actions

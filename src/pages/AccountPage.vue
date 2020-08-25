@@ -105,7 +105,7 @@
               <q-icon name="bookmarks" color="blue"></q-icon>
               <div class="text-caption">
                 <b>{{
-                  Auth.auth.assigments.filter(item => item.is_publish).length
+                  Auth.auth.publish_assigments.length
                 }}</b>
                 Paket Soal
               </div>
@@ -115,16 +115,17 @@
           <q-tab-panels v-model="tab" animated>
             <q-tab-panel name="publish" class="q-pa-none">
               <div class="q-pa-none row items-start q-gutter-y-sm">
-                <q-intersection
+                <div
                   v-for="assigment in Auth.auth.publish_assigments"
                   :key="assigment.id"
+                  :id="`publish-${assigment.id}`"
                   style="min-height:50px;width:100vw"
                 >
                   <publish-item-component
                     :assigment="assigment"
                     :isAuth="true"
                   ></publish-item-component>
-                </q-intersection>
+                </div>
               </div>
             </q-tab-panel>
             <q-tab-panel name="unpublish" class="q-pa-none">
@@ -152,7 +153,14 @@
 
 <script>
 import { mapState } from "vuex";
+import { scroll } from 'quasar'
+const { getScrollTarget, setScrollPosition } = scroll
+
 export default {
+  props:{
+    tabName:null,
+    assigmentIdtoScroll:null,
+  },
   components: {
     PublishItemComponent: () =>
       import("components/assigment/publish/ItemComponent.vue"),
@@ -167,7 +175,24 @@ export default {
   computed: {
     ...mapState(["Setting", "Auth"])
   },
+  created(){
+    if(this.tabName)this.tab=this.tabName;
+  },
+  mounted(){
+    if(this.assigmentIdtoScroll){
+     // alert(this.assigmentIdtoScroll)
+      const el=document.getElementById('publish-'+this.assigmentIdtoScroll);
+      console.log(el)
+      this.scrollToElement(el)
+    }
+  },
   methods: {
+  scrollToElement (el) {
+    const target = getScrollTarget(el)
+    const offset = el.offsetTop
+    const duration = 1000
+    setScrollPosition(target, offset)
+  },
     logout() {
       this.$store.dispatch("Auth/logout").then(res => {
         this.$router.push("/login");

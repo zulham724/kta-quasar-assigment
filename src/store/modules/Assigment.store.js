@@ -98,7 +98,8 @@ const mutations = {
     },
     updateGrade(state, value){
         state.build.grade = value
-    }
+    },
+ 
 };
 
 // Actions
@@ -312,6 +313,18 @@ const actions = {
     },
     unComment() {
         return new Promise((resolve, reject) => {});
+    },
+    setPublic({commit}, payload){
+        return new Promise((resolve, reject) => {
+            axios
+                .post(`${this.state.Setting.url}/api/v1/assigments/setpublic`, payload)
+                .then(res => {
+                    resolve(res);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
     }
 };
 

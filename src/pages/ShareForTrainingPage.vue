@@ -2,11 +2,10 @@
   <div>
     <q-header elevated>
       <q-toolbar class="bg-blue">
-        <q-btn flat dense icon="arrow_back" @click="$router.back()" />
+        <q-btn flat dense icon="arrow_back" @click="$router.push({name:'account',params:{tabName:'publish',assigmentIdtoScroll:assigmentId}})" />
         <q-toolbar-title>
-          <div class="text-body1">Bagikan Soal</div>
+          <div class="text-body1">Bagikan Soal Latihan Mandiri</div>
         </q-toolbar-title>
-        <q-space />
       </q-toolbar>
     </q-header>
 
@@ -29,7 +28,7 @@
           />
 
          
-          <q-toggle v-model="assigmentUpdate.is_public" label="Publikasikan siswa secara umum" />
+          <!--<q-toggle v-model="assigmentUpdate.is_public" label="Publikasikan siswa secara umum" />-->
 
           <q-input
             class="q-mb-lg"
@@ -79,7 +78,7 @@ export default {
         key: ""
       },
       assigmentUpdate:{
-          is_public:false,
+          is_public:true,
           isTimer:false,
           note:null,
           timer:null,
@@ -113,7 +112,8 @@ export default {
       this.$router.back();
       return;
     }
-    this.assigmentUpdate={...this.assigment, isTimer:this.assigment.isTimer?true:false, is_public:this.assigment.is_public?true:false};
+    this.assigmentUpdate={...this.assigment, isTimer:this.assigment.isTimer?true:false/*, is_public:this.assigment.is_public?true:false*/};
+    this.assigmentUpdate.is_public=true
     // console.log(this.assigmentUpdate)
     //this.$store.dispatch("AssigmentCategory/index");
     //this.getQuestionLists = debounce(this.getQuestionLists, 500);
@@ -134,9 +134,10 @@ export default {
             )
             .then(res => {
               this.$store.dispatch("Auth/getAuth")
-              this.$q.notify("Berhasil mempublikasikan paket soal ke siswa");
-              this.$router.back();
+              if(!this.assigment.is_public)this.$q.notify("Berhasil mempublikasikan paket soal ke siswa");
+              else this.$q.notify("Berhasil mengedit paket soal yang dipublikasikan ke siswa");
               this.loading = false;
+              this.$router.push({name:'account',params:{tabName:'publish',assigmentIdtoScroll:this.assigmentId}})
             });
         }
       });
