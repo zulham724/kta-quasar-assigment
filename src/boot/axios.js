@@ -11,5 +11,5 @@ if (token.access_token) {
     Vue.prototype.$http.defaults.headers.common.Accept = "application/json";
     Vue.prototype.$http.defaults.headers.common.Authorization = `${token.token_type} ${token.access_token}`;
     // init
-    store().dispatch("Auth/getAuth");
+    //store().dispatch("Auth/getAuth");
 }

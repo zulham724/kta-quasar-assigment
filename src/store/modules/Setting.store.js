@@ -24,7 +24,7 @@ const actions = {
 
 // Getter functions
 const getters = {
-
+    url: state => state.url
 }
 
 export default {

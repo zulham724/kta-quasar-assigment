@@ -102,6 +102,12 @@ const routes = [{
                 name: 'studentresult',
                 component: () => import ('pages/StudentResult.vue'),
                 props: true,
+            },
+            {
+                path: "/announcement",
+                beforeEnter: multiguard([auth]),
+                component: () =>
+                    import ("pages/AnnouncementPage.vue")
             }
         ]
     },

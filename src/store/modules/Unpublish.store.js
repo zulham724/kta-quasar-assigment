@@ -31,7 +31,7 @@ const actions = {
     index({ commit }) {
         return new Promise((resolve, reject) => {
             axios
-                .get(`${this.state.Setting.url}/api/v1/assigments/unpublish`)
+                .get(`${this.state.Setting.url}/api/v1/assigments/unpublish2`)
                 .then(res => {
                     commit("set", { items: res.data });
                     resolve(res);
