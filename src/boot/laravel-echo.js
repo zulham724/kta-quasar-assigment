@@ -19,7 +19,7 @@ Vue.prototype.$connect = (token)=>{
             Vue.use(VueEcho, {
               //broadcaster: "socket.io",
               broadcaster: "pusher",
-              key:"3fa4f5ea1c2d2c09d457",
+              key:"c59b9918ea05165dbe03",
               //host: "http://localhost:8000",
               authEndpoint: url+'/broadcasting/auth',
               cluster:'ap1',
@@ -34,28 +34,7 @@ Vue.prototype.$connect = (token)=>{
               console.log('token kosong')
           }
           resolve('konek gan')
-    })
-    // if (token.access_token) {
-    //     console.log('token')
-    //     console.log(token.token_type)
-    //     Vue.use(VueEcho, {
-    //       //broadcaster: "socket.io",
-    //       broadcaster: "pusher",
-    //       key:"3fa4f5ea1c2d2c09d457",
-    //       //host: "http://localhost:8000",
-    //       authEndpoint: url+'/broadcasting/auth',
-    //       cluster:'ap1',
-    //       forceTLS: true,
-    //       auth: {
-    //         headers: { 
-    //           Authorization: `${token.token_type} ${token.access_token}`
-    //         }
-    //       }
-    //     });
-    //   }else{
-    //       console.log('token kosong')
-    //   }
-    //   return "asu";      
+    })     
 }
 //subsribe pada channel App.User.{id}
 Vue.prototype.$subscribeNotification = ()=>{

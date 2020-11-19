@@ -114,9 +114,17 @@ const actions = {
                 });
         });
     },
-    logout({ commit }) {
+    logout({ commit,state }) {
         return new Promise((resolve, reject) => {
+            const user_id=state.auth.id;
+            const channel='notification.'+user_id;
+            console.log('leaving channel: '+channel);
+            window.Echo.leave(channel);
+            window.Echo=null;
+
             commit("logout")
+            commit("EchoNotification/deleteItems",null,{root:true});
+         
             delete axios.defaults.headers.common.Authorization
             resolve()
         })

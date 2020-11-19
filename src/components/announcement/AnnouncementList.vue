@@ -2,10 +2,10 @@
 <q-infinite-scroll @load="onLoad" :offset="250">
     <div v-if="announcementList">
         <div v-for="(item, n) in announcementList" :key="`announcement-${n}`" class="q-py-xs bg-blue-1">
-            <q-intersection style="min-height:50px" v-if="item.type=='App\\Notifications\\AssigmentNotification'">
+            <q-intersection style="min-height:50px" v-if="item.type=='App\\Notifications\\AssigmentNotification' || item.type=='AssigmentTeacherEvent'">
                 <announcement-item-assigment :item="item"></announcement-item-assigment>
             </q-intersection>
-            <q-intersection style="min-height:50px" v-else-if="item.type=='App\\Notifications\\AssigmentSharedNotification'">
+            <q-intersection style="min-height:50px" v-else-if="item.type=='App\\Notifications\\AssigmentSharedNotification' || item.type=='AssigmentSharedEvent'">
                 <announcement-item-shared-assigment :item="item"></announcement-item-shared-assigment>
             </q-intersection>
             <q-intersection style="min-height:50px" v-else-if="item.type=='App\\Notifications\\LikedCommentNotification'">

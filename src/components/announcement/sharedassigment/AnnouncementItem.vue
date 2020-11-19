@@ -1,6 +1,7 @@
 <template>
 <div>
-    <q-item clickable @click="goToResult(item.data.data.id)" :disable="loading">
+    <!--<q-item clickable @click="goToResult(item.data.data.id)" :disable="loading">-->
+    <q-item clickable :disable="loading">
         <q-item-section avatar top>
             <q-avatar size="3.5rem">
                 <q-img v-if="item.data.data.teacher" :src="`${Setting.storageUrl}/${item.data.data.teacher.avatar}`"></q-img>

@@ -1,6 +1,6 @@
 {
     "name": "kta-quasar-assigment",
-    "version": "0.0.16",
+    "version": "0.0.17",
     "description": "PENILAIAN AGPAII UNTUK GURU PAI",
     "productName": "PENILAIAN AGPAII DIGITAL",
     "cordovaId": "org.agpaiidigital.assigment.app",
@@ -20,11 +20,13 @@
         "moment": "^2.27.0",
         "pusher-js": "^7.0.0",
         "quasar": "^1.0.0",
+        "vue": "^2.6.12",
         "vue-echo-laravel": "0.0.6",
         "vue-froala-wysiwyg": "^3.2.0",
         "vue-linkify": "^1.0.1",
         "vue-moment": "^4.1.0",
         "vue-router-multiguard": "^1.0.3",
+        "vue-template-compiler": "^2.6.12",
         "vuex-persist": "^2.2.0"
     },
     "devDependencies": {
