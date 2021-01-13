@@ -5,6 +5,7 @@ import axios from "axios";
 const state = {
     auth: null,
     client_id: 2,
+    is_unauthorized:false,
     client_secret: "RM0SqcmpoatgzQ5JXi6aeEXYI6dSaPiWDSbTW79s",
     token: {},
     publish_assigments:{},
@@ -16,6 +17,8 @@ const mutations = {
     auth_success(state, payload) {
         state.token = payload.token;
         state.auth = payload.auth;
+        state.is_unauthorized = false;
+
     },
     setAuth(state, payload) {
         state.auth = payload.auth;
@@ -72,6 +75,9 @@ const mutations = {
             ...payload.posts,
             data: [...state.unpublish_assigments.data, ...payload.assigments.data]
         };
+    },
+    setUnauthorized(state, is_unauthorized){
+        state.is_unauthorized=is_unauthorized;
     }
 };
 
@@ -119,8 +125,10 @@ const actions = {
             const user_id=state.auth.id;
             const channel='notification.'+user_id;
             console.log('leaving channel: '+channel);
-            window.Echo.leave(channel);
-            window.Echo=null;
+            if(window.Echo){
+                window.Echo.leave(channel);
+                window.Echo=null;
+            }
 
             commit("logout")
             commit("EchoNotification/deleteItems",null,{root:true});
@@ -239,6 +247,7 @@ const actions = {
 // Getter functions
 const getters = {
     isLoggedIn: state => !!state.token.access_token,
+    isUnAuthorized: state=>state.is_unauthorized,
     auth: state => state.auth,
     token: state => state.token
 };

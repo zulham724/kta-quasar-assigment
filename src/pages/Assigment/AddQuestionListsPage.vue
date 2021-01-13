@@ -111,6 +111,9 @@ export default {
         UnpublishItemComponent: () =>
             import("components/assigment/unpublish/ItemComponent.vue")
     },
+    mounted(){
+        //setiap kali membuka page ini, akan dilakukan request get profile kemudian diset ke store Auth.auth
+    },
     computed: {
         ...mapState([
             "Grade",
@@ -139,6 +142,7 @@ export default {
     },
     created() {
         //this.init();
+        //pengecekan profile sudah dilakukan di BuildPage.vue
         this.getSuggestedQuestionLists();
         this.onSearch = debounce(this.onSearch, 500);
         this.options = [...this.options, ...this.Grade.grades]

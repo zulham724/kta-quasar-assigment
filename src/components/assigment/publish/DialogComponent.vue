@@ -43,13 +43,19 @@ export default {
   created() {},
   methods: {
     copyCode() {
-      copyToClipboard(this.code)
-        .then(() => {
-            this.$q.notify('Berhasil menyalin kode soal')
-        })
-        .catch(() => {
-          this.$q.notify('Gagal menyalin kode soal')
-        });
+       if(this.$q.platform.is.mobile){
+            cordova.plugins.clipboard.copy(this.code);
+        }else{
+            copyToClipboard(this.code)
+        }
+      //    this.$q.notify('Berhasil menyalin kode soal')
+      // copyToClipboard(this.code)
+      //   .then(() => {
+      //       this.$q.notify('Berhasil menyalin kode soal')
+      //   })
+      //   .catch(() => {
+      //     this.$q.notify('Gagal menyalin kode soal')
+      //   });
     },
     // following method is REQUIRED
     // (don't change its name --> "show")

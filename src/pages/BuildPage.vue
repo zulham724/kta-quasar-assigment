@@ -2,7 +2,7 @@
   <div>
     <q-header elevated>
       <q-toolbar class="bg-blue">
-        <q-icon name="fa fa-file-alt" style="font-size: 1.5em;" />
+        <q-icon name="fa fa-file-alt" style="font-size: 1.5em" />
         <q-toolbar-title>
           <div class="text-body1">Rakit Soal</div>
         </q-toolbar-title>
@@ -11,27 +11,11 @@
     </q-header>
 
     <q-page>
-      <q-form
-        class="q-gutter-sm"
-        ref="form"
-        @submit="storeAssigment"
-        style="width:100%"
-      >
-        <q-stepper
-          v-model="step"
-          color="blue"
-          style="width: 100%"
-          animated
-          keep-alive
-        >
-          <q-step
-            :name="1"
-            color="blue"
-            title="Isi"
-            icon="settings"
-            :done="step > 1"
-          >
+      <q-form class="q-gutter-sm" ref="form" @submit="storeAssigment" style="width: 100%">
+        <q-stepper v-model="step" color="blue" style="width: 100%" animated keep-alive>
+          <q-step :name="1" color="blue" title="Isi" icon="settings" :done="step > 1">
             <q-select
+            :loading="loading"
               rounded
               color="blue"
               outlined
@@ -41,28 +25,29 @@
               option-value="id"
               option-label="description"
               label="Kelas"
-              :rules="[val => !!val || 'Harus diisi']"
-              @input="item => (assigment.grade_id = item.id)"
+              :rules="[(val) => !!val || 'Harus diisi']"
+              @input="(item) => (assigment.grade_id = item.id)"
             />
             <q-select
+             :loading="loading"
               rounded
               color="blue"
               outlined
               dense
               option-label="name"
-              :option-value="item => item"
+              :option-value="(item) => item"
               v-model="assigment.assigment_category"
               :options="
-                AssigmentCategory.assigment_categories.filter(item => {
+                AssigmentCategory.assigment_categories.filter((item) => {
                   if (item.id == 4 || item.id == 6 || item.id == 9) {
                     return item;
                   }
                 })
               "
               label="Kompetensi"
-              :rules="[val => !!val || 'Harus diisi']"
+              :rules="[(val) => !!val || 'Harus diisi']"
               @input="
-                item => {
+                (item) => {
                   assigment.question_lists = [];
                   $store.commit('Assigment/resetBuildQuestionLists');
                   $store.commit('SuggestedQuestionList/reset');
@@ -71,6 +56,7 @@
               "
             />
             <q-select
+             :loading="loading"
               v-if="assigment.assigment_category_id == 9"
               rounded
               color="blue"
@@ -80,7 +66,7 @@
               :options="names"
               v-model="assigment.name"
               lazy-rules
-              :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+              :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
             />
             <q-input
               v-else
@@ -92,7 +78,7 @@
               v-model="assigment_name"
               lazy-rules
               @blur="setAssigmentName"
-              :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+              :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
             />
 
             <q-input
@@ -103,7 +89,7 @@
               label="Topik"
               v-model="assigment.topic"
               lazy-rules
-              :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+              :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
             />
 
             <q-input
@@ -115,7 +101,7 @@
               v-model="assigment.education_year"
               lazy-rules
               disable
-              :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+              :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
             />
 
             <q-select
@@ -127,11 +113,11 @@
               :options="semesters"
               v-model="assigment.semester"
               lazy-rules
-              :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+              :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
             />
 
             <q-stepper-navigation>
-              <q-btn flat @click="step2()" color="blue" label="Lanjut" />
+              <q-btn :loading="loading" flat @click="step2()" color="blue" label="Lanjut" />
             </q-stepper-navigation>
           </q-step>
 
@@ -141,17 +127,10 @@
             icon="create_new_folder"
             :done="step > 2"
             color="blue"
-            style="margin-bottom:30vh"
+            style="margin-bottom: 30vh"
           >
-            <div
-              v-for="(question_list, ql) in assigment.question_lists"
-              :key="ql"
-            >
-              <div
-                v-if="
-                  question_list.pivot.assigment_type.description == 'textfield'
-                "
-              >
+            <div v-for="(question_list, ql) in assigment.question_lists" :key="ql">
+              <div v-if="question_list.pivot.assigment_type.description == 'textfield'">
                 <q-card class="q-mb-md">
                   <q-card-section>
                     <q-input
@@ -163,7 +142,7 @@
                       dense
                       :label="`Soal nomor ${ql + 1}`"
                       lazy-rules
-                      :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+                      :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
                       @input="() => $forceUpdate()"
                     >
                       <template v-slot:after>
@@ -191,15 +170,13 @@
                       outlined
                       dense
                       lazy-rules
-                      :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+                      :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
                       @input="() => $forceUpdate()"
                       :label="`Kunci jawaban ${al + 1}`"
                     >
                       <template v-slot:after>
                         <q-btn
-                          :disable="
-                            question_list.pivot.creator_id != Auth.auth.id
-                          "
+                          :disable="question_list.pivot.creator_id != Auth.auth.id"
                           v-if="al != 0"
                           round
                           dense
@@ -224,7 +201,7 @@
                         () => {
                           question_list.answer_lists.push({
                             name: '',
-                            value: null
+                            value: null,
                           });
                           $forceUpdate();
                         }
@@ -234,10 +211,7 @@
                 </q-card>
               </div>
               <div
-                v-if="
-                  question_list.pivot.assigment_type.description ==
-                    'selectoptions'
-                "
+                v-if="question_list.pivot.assigment_type.description == 'selectoptions'"
               >
                 <q-card class="q-mb-md">
                   <q-card-section>
@@ -251,7 +225,7 @@
                       :label="`Soal nomor ${ql + 1}`"
                       hint="Pilihan ganda"
                       lazy-rules
-                      :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+                      :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
                       @input="() => $forceUpdate()"
                     >
                       <template v-slot:after>
@@ -281,14 +255,12 @@
                       :label="String.fromCharCode('A'.charCodeAt() + al)"
                       hint="Butir jawaban"
                       lazy-rules
-                      :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+                      :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
                       @input="() => $forceUpdate()"
                     >
                       <template v-slot:after>
                         <q-btn
-                          :disable="
-                            question_list.pivot.creator_id != Auth.auth.id
-                          "
+                          :disable="question_list.pivot.creator_id != Auth.auth.id"
                           round
                           dense
                           :flat="answer_list.value == null ? true : false"
@@ -297,18 +269,14 @@
                           @click="
                             () => {
                               question_list.answer_lists.filter((item, i) => {
-                                i == al
-                                  ? (item.value = 100)
-                                  : (item.value = null);
+                                i == al ? (item.value = 100) : (item.value = null);
                               });
                               $forceUpdate();
                             }
                           "
                         />
                         <q-btn
-                          :disable="
-                            question_list.pivot.creator_id != Auth.auth.id
-                          "
+                          :disable="question_list.pivot.creator_id != Auth.auth.id"
                           v-if="al != 0"
                           round
                           dense
@@ -333,7 +301,7 @@
                         () => {
                           question_list.answer_lists.push({
                             name: '',
-                            value: null
+                            value: null,
                           });
                           $forceUpdate();
                         }
@@ -342,16 +310,10 @@
                   </q-card-section>
                 </q-card>
               </div>
-              <div
-                v-if="
-                  question_list.pivot.assigment_type.description == 'textarea'
-                "
-              >
+              <div v-if="question_list.pivot.assigment_type.description == 'textarea'">
                 <q-card class="q-mb-md">
                   <q-card-section>
-                    <div class="text-body1 text-grey">
-                      Soal nomor {{ ql + 1 }}
-                    </div>
+                    <div class="text-body1 text-grey">Soal nomor {{ ql + 1 }}</div>
                     <q-input
                       :disable="question_list.pivot.creator_id != Auth.auth.id"
                       v-model="question_list.name"
@@ -361,7 +323,7 @@
                       dense
                       :label="`Soal nomor ${ql + 1}`"
                       lazy-rules
-                      :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+                      :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
                       @input="() => $forceUpdate()"
                     >
                       <template v-slot:after>
@@ -390,15 +352,13 @@
                       outlined
                       dense
                       lazy-rules
-                      :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+                      :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
                       @input="() => $forceUpdate()"
                       :label="`Kunci jawaban ${al + 1}`"
                     >
                       <template v-slot:after>
                         <q-btn
-                          :disable="
-                            question_list.pivot.creator_id != Auth.auth.id
-                          "
+                          :disable="question_list.pivot.creator_id != Auth.auth.id"
                           v-if="al != 0"
                           round
                           dense
@@ -423,7 +383,7 @@
                         () => {
                           question_list.answer_lists.push({
                             name: '',
-                            value: null
+                            value: null,
                           });
                           $forceUpdate();
                         }
@@ -439,7 +399,7 @@
                 class="row justify-between q-pb-md text-body2"
                 v-if="
                   !Assigment.build.question_lists ||
-                    Assigment.build.question_lists.length == 0
+                  Assigment.build.question_lists.length == 0
                 "
               >
                 Soal masih kosong. Silahkan klik Tambah Soal
@@ -466,15 +426,13 @@
                   "
                 />
                 <q-btn
-                  v-if="
-                    assigment.question_lists && assigment.question_lists.length
-                  "
+                  v-if="assigment.question_lists && assigment.question_lists.length"
                   flat
                   @click="
                     () =>
                       $refs.form
                         .validate()
-                        .then(success => (success ? (step = 3) : null))
+                        .then((success) => (success ? (step = 3) : null))
                   "
                   color="blue"
                   label="Lanjut"
@@ -514,13 +472,7 @@
 
             <q-stepper-navigation>
               <div class="row justify-between">
-                <q-btn
-                  flat
-                  @click="step = 2"
-                  color="blue"
-                  label="Back"
-                  class="q-ml-sm"
-                />
+                <q-btn flat @click="step = 2" color="blue" label="Back" class="q-ml-sm" />
               </div>
             </q-stepper-navigation>
           </q-step>
@@ -574,7 +526,7 @@ import { debounce } from "quasar";
 
 export default {
   props: {
-    _step: null
+    _step: null,
   },
   data() {
     return {
@@ -587,11 +539,11 @@ export default {
         isExpire: false,
         isPassword: false,
         is_public: true,
-        grade_id: null
+        grade_id: null,
       },
       search: {
         dispay: false,
-        key: ""
+        key: "",
       },
       question_lists: [],
       semesters: ["Gasal", "Genap"],
@@ -601,8 +553,8 @@ export default {
         "Penilaian Akhir Semester",
         "Penilaian Akhir Tahun",
         "Ujian Sekolah",
-        "Try Out"
-      ]
+        "Try Out",
+      ],
     };
   },
   components: {
@@ -615,51 +567,59 @@ export default {
       "AssigmentCategory",
       "Setting",
       "Assigment",
-      "SuggestedQuestionList"
-    ])
+      "SuggestedQuestionList",
+    ]),
   },
   watch: {
     assigment: {
-      handler: function() {
+      handler: function () {
         console.log("setBuild ");
         console.log(this.assigment.name);
-        this.setBuild()
+        this.setBuild();
         // this.$store.commit("Assigment/setBuild", {
         //   build: this.assigment
         // });
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   created() {
     if (this._step) {
       this.step = this._step;
     }
     this.setBuild = debounce(this.setBuild, 500);
-    this.$store.dispatch("AssigmentCategory/index").then(() => {
-      this.init();
+    //set auth
+    this.loading=true;
+
+    //dispatch Auth/getAuth di paling awal agar mengupdate Auth.auth.profile
+    this.$store.dispatch("Auth/getAuth").then(() => {
+      //dispatch Grade/index diurutan ke-2 karena action ini mengambil Auth.auth.profile.education_level_id
+      this.$store.dispatch("Grade/index").finally(() => {
+        this.loading=false;
+        this.$store.dispatch("AssigmentCategory/index").then(() => {
+          this.init();
+        });
+      });
     });
+
     //alert(this.assigment.assigment_category_id);
   },
   mounted() {
     //console.log(this.assigment)
-    if (this.Assigment.build.name)
-      this.assigment_name = this.Assigment.build.name;
+    if (this.Assigment.build.name) this.assigment_name = this.Assigment.build.name;
     //this.getQuestionLists = debounce(this.getQuestionLists, 500);
   },
   methods: {
     //debounce,
     setBuild() {
       this.$store.commit("Assigment/setBuild", {
-        build: this.assigment
+        build: this.assigment,
       });
     },
     step2() {
       this.init();
       // this.getSuggestedQuestionLists();
-      this.$refs.form
-        .validate()
-        .then(success => (success ? (this.step = 2) : null));
+      this.$refs.form.validate().then((success) => (success ? (this.step = 2) : null));
       //this.$forceUpdate();
     },
     setAssigmentName() {
@@ -668,9 +628,15 @@ export default {
       }
     },
     init() {
+      //jika build.educational_level_id beda dgn Auth.profile.educational_level_id, maka Reset
+      if(this.Assigment.build.grade && this.Assigment.build.grade.educational_level_id!=this.Auth.auth.profile.educational_level_id){
+        console.log('reset karena education_level_id berbeda');
+        this.$store.commit('Assigment/resetBuild');
+      }
       this.assigment = {
-        ...this.Assigment.build
+        ...this.Assigment.build,
       };
+      console.log('anjay ',)
       if (this.Grade.grades.length == 0) this.$store.dispatch("Grade/index");
       //this.$forceUpdate();
     },
@@ -684,14 +650,14 @@ export default {
           creator_id: this.Auth.auth.id,
           user_id: this.Auth.auth.id,
           assigment_type: assigment_type,
-          assigment_type_id: assigment_type.id
+          assigment_type_id: assigment_type.id,
         },
         answer_lists: [
           {
             name: "",
-            value: 100
-          }
-        ]
+            value: 100,
+          },
+        ],
       });
       this.$forceUpdate();
     },
@@ -713,30 +679,30 @@ export default {
             : null,
           assigment_type_id: question_list.assigments.length
             ? question_list.assigments[0].pivot.assigment_type_id
-            : null
+            : null,
         },
-        answer_lists: question_list.answer_lists
+        answer_lists: question_list.answer_lists,
       });
       this.$store.commit("Assigment/setBuild", {
-        build: this.assigment
+        build: this.assigment,
       });
       this.$forceUpdate();
     },
     storeAssigment() {
       //console.log(this.assigment);return;
-      this.$refs.form.validate().then(success => {
+      this.$refs.form.validate().then((success) => {
         if (success) {
           this.loading = true;
           this.$q.notify("Tunggu");
           this.$router.push("/");
           this.$store
             .dispatch("Assigment/store", this.assigment)
-            .then(res => {
+            .then((res) => {
               // this.$store.commit('Assigment/addPublish',{publish:res.data})
               this.$store.commit("Assigment/resetBuild");
               this.$q.notify("Berhasil menerbitkan Paket Soal.");
             })
-            .catch(err => {
+            .catch((err) => {
               this.$q.notify("Terjadi kesalahan");
             })
             .finally(() => {
@@ -748,7 +714,7 @@ export default {
     },
     getQuestionLists(key) {
       if (key)
-        this.$store.dispatch(`QuestionList/search`, key).then(res => {
+        this.$store.dispatch(`QuestionList/search`, key).then((res) => {
           this.question_lists = res.data;
         });
 
@@ -757,15 +723,15 @@ export default {
     getSuggestedQuestionLists() {
       this.$store.dispatch("SuggestedQuestionList/index", {
         assigment_category_id: this.assigment.assigment_category_id,
-        educational_level_id: this.Auth.auth.profile.educational_level_id
+        educational_level_id: this.Auth.auth.profile.educational_level_id,
       });
     },
     onLoad(index, done) {
       this.SuggestedQuestionList.items.next_page_url
-        ? this.$store.dispatch("SuggestedQuestionList/next").then(res => done())
+        ? this.$store.dispatch("SuggestedQuestionList/next").then((res) => done())
         : done();
-    }
-  }
+    },
+  },
 };
 </script>
 

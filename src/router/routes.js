@@ -3,8 +3,9 @@ import store from './../store'
 import moment from "moment";
 // cek auth apakah sudah login atau belum
 const auth = function(to, from, next) {
-    let isLoggedIn = store().getters['Auth/isLoggedIn']
-    if (isLoggedIn) {
+    let isLoggedIn = store().getters['Auth/isLoggedIn'];
+    let isUnAuthorized = store().getters["Auth/isUnAuthorized"];
+    if (isLoggedIn && !isUnAuthorized) {
         next()
     } else {
         next('/login')
@@ -53,57 +54,67 @@ const routes = [{
                 path: "account",
                 name: 'account',
                 props:true,
+                beforeEnter: multiguard([auth, checkProfile]),
                 component: () =>
                     import ("pages/AccountPage.vue")
             },
             {
                 path: "studentresultlist",
                 name: 'studentresultlist',
+                beforeEnter: multiguard([auth, checkProfile]),
                 component: () =>
                     import ("pages/StudentResultListPage.vue")
             },
             {
                 path: "create",
                 name: 'create',
+                beforeEnter: multiguard([auth, checkProfile]),
                 component: () =>
                     import ("pages/CreatePage.vue")
             }, {
                 path: 'build',
                 name: 'build',
+                beforeEnter: multiguard([auth, checkProfile]),
                 component: () => import ('pages/BuildPage.vue'),
                 props: true,
             },
             {
                 path: 'addquestionlists',
                 name: 'addquestionlists',
+                beforeEnter: multiguard([auth, checkProfile]),
                 component: () => import ('pages/Assigment/AddQuestionListsPage.vue'),
                 props: true
             },
             {
                 path: 'share',
                 name: 'share',
+                beforeEnter: multiguard([auth, checkProfile]),
                 component: () => import ('pages/SharePage.vue'),
                 props: true,
              }, 
              {
                 path: 'sharefortraining',
+                beforeEnter: multiguard([auth, checkProfile]),
                 name: 'sharefortraining',
                 component: () => import ('pages/ShareForTrainingPage.vue'),
                 props: true,
             },
             {
+                beforeEnter: multiguard([auth, checkProfile]),
                 path: '/studentassigment/:assigmentId',
                 name: 'studentassigment',
                 component: () => import ('pages/StudentAssigmentPage.vue'),
                 props: true,
             },
             {
+                beforeEnter: multiguard([auth, checkProfile]),
                 path: '/studentresult/:sessionId',
                 name: 'studentresult',
                 component: () => import ('pages/StudentResult.vue'),
                 props: true,
             },
             {
+                beforeEnter: multiguard([auth, checkProfile]),
                 path: "/announcement",
                 beforeEnter: multiguard([auth]),
                 component: () =>

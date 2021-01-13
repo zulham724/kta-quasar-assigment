@@ -12,14 +12,14 @@
         <q-page-container v-if="assigment != null">
             <q-form @submit="onSubmit" ref="form" class="full-height">
                 <q-stepper v-model="step" vertical color="primary" animated class="full-height" header-nav>
-                    <q-step v-for="(question_list, ql) in assigment.question_lists" :key="question_list.id" :name="ql + 1" :title="`Soal ${ql + 1}`" icon="settings" :done="step > 1">
+                    <q-step v-for="(question_list, ql) in assigment.question_lists" :key="question_list.id" :name="ql + 1" :title="`Soal ${ql + 1}`" icon="settings" :done="question_list.answer!=null">
                         <div class="text-body2">{{ question_list.name }}</div>
 
                         <div v-if="
                   question_list.pivot.assigment_type.description ==
                   'selectoptions'
                 ">
-                            <q-input disable class="q-pa-sm" rounded outlined dense v-for="answer_list in question_list.answer_lists" :key="answer_list.id" v-model="answer_list.name" :rules="[(val) => !!val || 'Harus diisi']">
+                            <q-input autogrow disable class="q-pa-sm" rounded outlined dense v-for="answer_list in question_list.answer_lists" :key="answer_list.id" v-model="answer_list.name" :rules="[(val) => !!val || 'Harus diisi']">
                                 <template v-slot:after>
                                     <div>
                                         <q-btn round icon="check" :flat="

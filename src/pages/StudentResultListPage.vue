@@ -42,9 +42,6 @@ import {
 import {
     Notify
 } from 'quasar'
-import {
-    copyToClipboard
-} from 'quasar'
 
 export default {
     components: {

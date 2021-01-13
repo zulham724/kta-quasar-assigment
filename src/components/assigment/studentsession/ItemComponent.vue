@@ -51,13 +51,12 @@ export default {
   },
   methods: {
     copyCode(value) {
-      copyToClipboard(value)
-        .then(() => {
-          this.$q.notify("Berhasil menyalin kode soal");
-        })
-        .catch(() => {
-          this.$q.notify("Gagal menyalin kode soal");
-        });
+        if(this.$q.platform.is.mobile){
+            cordova.plugins.clipboard.copy(value);
+        }else{
+            copyToClipboard(value)
+        }
+        this.$q.notify('Berhasil menyalin kode soal');
     },
     destroy() {}
   }

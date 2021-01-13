@@ -30,7 +30,7 @@
               dense
               label="Password"
               v-model="credential.password"
-              type="password"
+               :type="show_password?'text':'password'"
               lazy-rules
               :rules="[
                 val => (val && val.length > 0) || 'Please type something'
@@ -39,6 +39,9 @@
               <template v-slot:prepend>
                 <q-icon name="vpn_key" size="xs" />
               </template>
+              <template v-slot:append>
+                  <q-btn flat round color="bg-light-blue" :icon="show_password?'visibility':'visibility_off'" @click="show_password=!show_password" />
+            </template>
             </q-input>
           </q-form>
         </div>
@@ -68,6 +71,7 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
+      show_password:false,
       credential: {},
       loading: false
     };
