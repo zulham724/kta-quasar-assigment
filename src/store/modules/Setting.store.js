@@ -4,8 +4,8 @@ import axios from 'axios'
 const state = {
     // url: 'http://localhost:8000',
     storageUrl: 'https://S3.wasabisys.com/agpaiidigital.org',
-    // url: process.env.DEV ? 'http://192.168.56.1:8000' : 'https://agpaiidigital.org',
-    url: process.env.DEV ? 'http://127.0.0.1:8000' : 'https://agpaiidigital.org',
+    url: process.env.DEV ? 'http://192.168.56.1:8000' : 'https://agpaiidigital.org',
+    // url: process.env.DEV ? 'http://127.0.0.1:8000' : 'https://agpaiidigital.org',
     // url: 'https://agpaiidigital.org',
     // storageUrl: 'http://localhost:8000/storage',
     assets: {
@@ -20,7 +20,15 @@ const mutations = {
 
 // Actions
 const actions = {
-
+    index({ commit }) {
+        return new Promise((resolve, reject) => {
+          axios.get(`${this.state.Setting.url}/api/v1/settings`).then(res => {
+            resolve(res)
+          }).catch(err => {
+            reject(err)
+          })
+        })
+      },
 }
 
 // Getter functions
