@@ -1,5 +1,5 @@
 <template>
-<div class="q-pr-sm q-pl-sm">
+<div style="width:100%;" class="q-pr-sm q-pl-sm">
     <q-list bordered class="rounded-borders" v-if="assigment" style="border:1px solid #1976D2;">
         <q-expansion-item expand-separator :label="assigment.subject">
             <template v-slot:header>

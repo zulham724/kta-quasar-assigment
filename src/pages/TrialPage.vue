@@ -1,5 +1,5 @@
 <template>
-<div>
+<q-layout>
     <q-pull-to-refresh @refresh="init">
         <q-header elevated class="bg-white">
             <q-toolbar class="text-primary">
@@ -58,6 +58,11 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row text-center">
+                        <div class="col-12">
+                            <q-btn @click="$router.push('/payment')" outline color="blue" size="lg" label="Lakukan Pembayaran" />
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-9 self-center q-pa-sm">
                             <q-btn-toggle v-model="tab" spread class="my-custom-toggle" no-caps dense rounded unelevated toggle-color="primary" color="white" text-color="primary" :options="[
@@ -91,6 +96,7 @@
             </div>
 
         </q-header>
+        <q-page-container>
         <q-page>
             <q-infinite-scroll v-if="tab == 'publish'" @load="onLoadPublish" :offset="250">
                 <div class="q-pa-none row items-start q-gutter-y-sm" v-if="Publish.items.data">
@@ -117,8 +123,9 @@
                 </template>
             </q-infinite-scroll>
         </q-page>
+        </q-page-container>
     </q-pull-to-refresh>
-</div>
+</q-layout>
 </template>
 
 <script>

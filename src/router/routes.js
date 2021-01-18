@@ -39,9 +39,24 @@ const checkProfile = function(to, from, next) {
     }
 }
 
+// kalo belum bayar atau masa aktif berakhir cma bisa lihat halaman trial
+const isTrial = (from, to, next) => {
+    store().dispatch('Auth/getAuth').then(res => {
+        let user_activated_at = store().getters['Auth/auth'].user_activated_at
+        const monthDifference = moment(new Date()).diff(
+            new Date(user_activated_at),
+            "months",
+            true
+        );
+        // console.log(user_activated_at, monthDifference < 6, store().getters['Auth/auth'], res.data)
+        if (user_activated_at != null && monthDifference < 6) from.name == 'trial' ? next('/') : next()
+        else from.name != 'trial' ? next('/trial') : next()
+    })
+};
+
 const routes = [{
         path: "/",
-        beforeEnter: multiguard([auth, checkProfile]),
+        beforeEnter: multiguard([auth, isTrial, checkProfile]),
         component: () =>
             import ("layouts/MainLayout.vue"),
         children: [{
@@ -123,6 +138,13 @@ const routes = [{
         ]
     },
     {
+        path: "/trial",
+        name: "trial",
+        beforeEnter: multiguard([isTrial]),
+        component: () =>
+            import ("pages/TrialPage.vue")
+    },
+    {
         path: '/comment/:assigmentId',
         name: 'comment',
         beforeEnter: multiguard([auth]),
@@ -166,6 +188,12 @@ const routes = [{
         name: "accountedit",
         component: () =>
             import ("pages/account/EditPage.vue")
+    },
+    {
+        path: "/payment",
+        name: "payment",
+        component: () =>
+            import ("pages/PaymentPage.vue")
     }
 ];
 
