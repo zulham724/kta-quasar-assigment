@@ -6,7 +6,7 @@
 
     <q-footer bordered class="bg-white text-primary">
         <q-tabs v-model="tab" no-caps class="text-grey bg-white" active-color="primary" inline-label >
-            <q-tab style="background:white" name="home" transition="slide-left" class="q-pa-xs" @click="$route.name == 'home' ? null : $router.push('/')">
+            <q-tab style="background:white" name="home" transition="slide-left"  @click="$route.name == 'home' ? null : $router.push('/')">
                 <q-icon name="home" size="20px"></q-icon>
                 <transition appear enter-active-class="animated fadeInLeft">
                     <div v-show="$route.name == 'home'" class="text-caption q-pl-sm">
@@ -14,7 +14,7 @@
                     </div>
                 </transition>
             </q-tab>
-            <q-tab class="q-pa-xs" name="create" @click="$route.name == 'create' ? null : $router.push('/create')">
+            <q-tab  name="create" @click="$route.name == 'create' ? null : $router.push('/create')">
                 <q-icon name="add" size="20px"></q-icon>
                 <transition appear enter-active-class="animated fadeInLeft">
                     <div v-show="$route.name == 'create'" class="text-caption q-pl-sm">
@@ -23,7 +23,7 @@
                 </transition>
             </q-tab>
 
-            <q-tab class="q-pa-xs" name="build" @click="$route.name == 'build' ? null : $router.push('/build')">
+            <q-tab name="build" @click="$route.name == 'build' ? null : $router.push('/build')">
                 <q-icon name="note_add" size="20px"></q-icon>
                 <transition appear enter-active-class="animated fadeInLeft">
                     <div v-show="$route.name == 'build'" class="text-caption q-pl-sm q-pr-sm">
@@ -50,7 +50,7 @@
                     </div>
                 </transition>
             </q-tab>
-            <q-tab class="q-pa-xs" name="account" @click="$route.name == 'account' ? null : $router.push('/account')">
+            <q-tab  name="account" @click="$route.name == 'account' ? null : $router.push('/account')">
                 <q-avatar size="30px">
                     <div style="position:absolute;">
                         <q-icon size="30px" name="ion-md-contact" />
