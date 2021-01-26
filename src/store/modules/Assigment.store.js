@@ -117,15 +117,34 @@ const actions = {
                 });
         });
     },
-    store({ commit }, access) {
+    store({ commit }, {access,audio}) {
         return new Promise((resolve, reject) => {
+            console.log('babi',access);
+            
+            let form = new FormData();
+            access.question_lists.forEach((v,k)=>{
+                console.log('cok')
+                if(v.audio.blob){
+                    form.append(`audio[${k}]`,v.audio.blob);
+                }else{
+                    form.append(`audio[${k}]`,'');
+                }
+                
+            });
+            
+            form.append('data',JSON.stringify(access));
             axios
-                .post(`${this.state.Setting.url}/api/v1/assigment`, access)
+                .post(`${this.state.Setting.url}/api/v1/assigment`, form, {
+                    headers:{
+                        'content-type':'multipart/form-data'
+                      }
+                })
                 .then(res => {
                     // commit("add", { assigment: res.data });
                     resolve(res);
                 })
                 .catch(err => {
+                    
                     reject(err);
                 });
         });

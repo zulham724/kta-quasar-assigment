@@ -567,7 +567,7 @@ export default {
         isExpire: false,
         isPassword: false,
         isTimer: false,
-        grade_id: null
+        grade_id: null,
       }
     };
   },
@@ -585,11 +585,13 @@ export default {
     init(){
       this.$store.dispatch('Assigment/show',this.assigmentId).then(res=>{
         this.assigment = res.data
+        console.log('cok',this.assigment.assigment_category
+                    .assigment_types)
       })
     },
     addQuestionList(assigment_type) {
       if (!this.assigment.question_lists) this.assigment.question_lists = [];
-
+      console.log('babi')
       this.assigment.question_lists.push({
         name: "",
         description: "",

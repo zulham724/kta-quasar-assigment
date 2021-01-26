@@ -5,6 +5,7 @@
     </q-page-container>
 
     <q-footer bordered class="bg-white text-primary">
+         
         <q-tabs v-model="tab" no-caps class="text-grey bg-white" active-color="primary" inline-label >
             <q-tab style="background:white" name="home" transition="slide-left"  @click="$route.name == 'home' ? null : $router.push('/')">
                 <q-icon name="home" size="20px"></q-icon>
@@ -81,7 +82,7 @@ export default {
         };
     },
     computed: {
-        ...mapState(["Setting", "Assigment", "Auth", "EchoNotification"])
+        ...mapState(["Setting", "Assigment", "Auth", "EchoNotification","MusicPlayer"])
     },
     methods: {
         initNotification() {
@@ -112,7 +113,16 @@ export default {
             } else {
                 console.log('user belum login');
             }
-        }
+        },
+        pause() {
+            this.$store.commit('MusicPlayer/pause')
+        },
+        resume() {
+            this.$store.commit('MusicPlayer/resume')
+        },
+        close() {
+            this.$store.commit('MusicPlayer/close')
+        },
     },
     created() {
         this.initNotification();
