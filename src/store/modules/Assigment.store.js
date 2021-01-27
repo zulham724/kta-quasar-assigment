@@ -119,7 +119,7 @@ const actions = {
     },
     store({ commit }, {access,audio}) {
         return new Promise((resolve, reject) => {
-            console.log('babi',access);
+            // console.log('access',access);
             
             let form = new FormData();
             access.question_lists.forEach((v,k)=>{

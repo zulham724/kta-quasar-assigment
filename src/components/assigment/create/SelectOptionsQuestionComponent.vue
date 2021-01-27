@@ -176,14 +176,31 @@ export default {
             "file://" + obj.full_path,
             function (entry) {
               entry.file(
-                function (file) {
-                  //tambah object audio
+                 function (file) {
+                   //tambah object audio
                   const audio = {
                     file: file,
                     nativePath: obj.full_path,
+                    
                   };
 
+                  //BEGIN olah data hasil record ke Blob
+                  var reader = new FileReader();
+                  reader.onloadend = function () {
+                    console.log("Successful file write: " + this.result);
+
+                    var blob = new Blob([new Uint8Array(this.result)], {
+                      type: "audio/mp4",
+                    });
+                    audio.blob = blob;
+                  };
+
+                  reader.readAsArrayBuffer(file);
+                  //END
+
+
                   //ini dikomen karena tidak jadi pakay musicplayer.store.js
+                  
                   vm.$emit("addAudioToQuestionList", { audio: audio, ql: index });
                   vm.audio.item = new Audio(vm.question_list.audio.file.localURL);
                   // console.log('anjay',vm.audio.item.duration);

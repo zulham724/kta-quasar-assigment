@@ -41,7 +41,7 @@ export default {
       // create an input file element to open file dialog
       let input = document.createElement("input");
       input.type = "file";
-      input.accept = ".png, .jpg"; // file extensions allowed
+      input.accept = "image/*"; // file extensions allowed
       let file;
       let vm = this;
       input.onchange = (e) => {

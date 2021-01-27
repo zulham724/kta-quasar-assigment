@@ -409,7 +409,7 @@ export default {
         if (success) {
           // this.loading = true;
           this.$q.notify("Tunggu");
-          // this.$router.push("/");
+          this.$router.push("/");
           this.$store
             .dispatch("Assigment/store", { access: this.assigment, audio: "" })
             .then((res) => {
