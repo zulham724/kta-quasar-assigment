@@ -18,7 +18,8 @@
             @click="playAudio"
             color="blue"
             icon="play_arrow"
-            class="q-my-xs"
+            size="sm" 
+            class="q-mb-xs"
           ></q-btn>
           <q-btn
             v-else
@@ -26,7 +27,8 @@
             @click="stopAudio"
             color="blue"
             icon="stop"
-            class="q-my-xs"
+            size="sm" 
+            class="q-mb-xs"
           ></q-btn>
         </div>
      

@@ -18,6 +18,7 @@
             color="red"
             icon="close"
             class="q-my-xs"
+            size="sm" 
           ></q-btn>
         </div>
         <div class="" v-if="question_list.audio.file">
@@ -28,6 +29,7 @@
             color="blue"
             icon="play_arrow"
             class="q-my-xs"
+            size="sm" 
           ></q-btn>
           <q-btn
             v-else
@@ -36,14 +38,15 @@
             color="blue"
             icon="stop"
             class="q-my-xs"
+            size="sm" 
           ></q-btn>
         </div>
         <div class="self-center">
-          <q-btn color="blue" icon="mic" @click="recordAudio(ql)">
-            <span class="text-caption" v-if="!question_list.audio.file"
+          <q-btn round class="q-my-xs" color="blue" size="sm" icon="mic" @click="recordAudio(ql)">
+            <!-- <span class="text-caption" v-if="!question_list.audio.file"
               >Tambah Suara</span
             >
-            <span class="text-caption" v-else>Rekam Ulang</span>
+            <span class="text-caption" v-else>Rekam Ulang</span> -->
           </q-btn>
         </div>
       </div>
