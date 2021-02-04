@@ -1,60 +1,27 @@
 <template>
   <q-card class="q-mb-md">
-    <q-bar>
-      <q-icon name="note" />
-      <div>Soal {{ ql + 1 }}</div>
-
-      <q-space />
-
-      <q-btn dense flat icon="close" @click="$emit('deleteQuestionList', ql)" />
-    </q-bar>
     <q-card-section>
-      <editor-component ref="editor" v-model="question_list.name"></editor-component>
-      <div class="row justify-end q-gutter-sm">
-        <div class="" v-if="question_list.audio.file">
+      <div class="row">
+        <div class="col">
+          <div class="text-body1 text-grey">Soal nomor {{ ql + 1 }}</div>
+        </div>
+        <div class="col-1">
           <q-btn
             round
-            @click="removeAudio"
-            color="red"
+            dense
+            flat
             icon="close"
-            class="q-my-xs"
-            size="sm" 
-          ></q-btn>
-        </div>
-        <div class="" v-if="question_list.audio.file">
-          <q-btn
-            v-if="!audio.isPlay"
-            round
-            @click="playAudio"
-            color="blue"
-            icon="play_arrow"
-            class="q-my-xs"
-            size="sm" 
-          ></q-btn>
-          <q-btn
-            v-else
-            round
-            @click="stopAudio"
-            color="blue"
-            icon="stop"
-            class="q-my-xs"
-            size="sm" 
-          ></q-btn>
-        </div>
-        <div class="self-center">
-          <q-btn round class="q-my-xs" color="blue" size="sm" icon="mic" @click="recordAudio(ql)">
-            <!-- <span class="text-caption" v-if="!question_list.audio.file"
-              >Tambah Suara</span
-            >
-            <span class="text-caption" v-else>Rekam Ulang</span> -->
-          </q-btn>
+             @click="$emit('removeQuestionList',ql)"
+          />
         </div>
       </div>
+      <div class="row">
+        <p v-html="question_list.name">
 
-      <q-separator inset class="q-ma-sm" />
+          </p>
+      </div>
       <q-input
-        class="q-mt-sm"
-        type="textarea"
+        :readonly="true/*(question_list.pivot.creator_id != Auth.auth.id*/"
         v-for="(answer_list, al) in question_list.answer_lists"
         :key="al"
         v-model="answer_list.name"
@@ -62,13 +29,32 @@
         color="blue"
         outlined
         dense
-        autogrow
+        :label="String.fromCharCode('A'.charCodeAt(0) + al)"
+        hint="Butir jawaban"
         lazy-rules
         :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
-        :label="`Kunci jawaban ${al + 1}`"
+        @input="() => $forceUpdate()"
       >
         <template v-slot:after>
+          <!--question_list.pivot.creator_id != Auth.auth.id-->
           <q-btn
+            :disable="true /*question_list.pivot.creator_id != Auth.auth.id*/"
+            round
+            dense
+            :flat="answer_list.value == null ? true : false"
+            :color="answer_list.value != null ? 'green-4' : null"
+            icon="check"
+            @click="
+              /*() => {
+                question_list.answer_lists.filter((item, i) => {
+                  i == al ? (item.value = 100) : (item.value = null);
+                });
+                $forceUpdate();
+              }*/
+            "
+          />
+          <q-btn
+            :disable="true /*question_list.pivot.creator_id != Auth.auth.id*/"
             v-if="al != 0"
             round
             dense
@@ -76,36 +62,34 @@
             icon="close"
             @click="
               () => {
-                question_list.answer_lists.splice(ql, 1);
+                question_list.answer_lists.splice(al, 1);
+                $forceUpdate();
               }
             "
           />
         </template>
       </q-input>
-      <q-btn
-        color="primary"
-        outline
-        rounded
-        label="Tambah Kunci jawaban"
-        @click="
-          () => {
-            question_list.answer_lists.push({
-              name: '',
-              value: null,
-            });
-          }
-        "
-      />
+      <!-- <q-btn
+                      v-show="question_list.pivot.creator_id == Auth.auth.id"
+                      color="primary"
+                      outline
+                      rounded
+                      label="Tambah butir jawaban"
+                      @click="
+                        () => {
+                          question_list.answer_lists.push({
+                            name: '',
+                            value: null,
+                          });
+                          $forceUpdate();
+                        }
+                      "
+                    /> -->
     </q-card-section>
   </q-card>
 </template>
 <script>
-import EditorComponent from "../../Editor/EditorComponent";
-
 export default {
-  components: {
-    EditorComponent,
-  },
   props: {
     ql: Number,
     question_list: Object,
@@ -124,7 +108,6 @@ export default {
   created() {
     // this.question_list.answer_lists = []
   },
-
   methods: {
     playAudio() {
       // this.audio = new Audio(this.question_list.audio.file.localURL);
@@ -141,13 +124,13 @@ export default {
 
       // this.$store.commit('MusicPlayer/play',{item:this.question_list.audio})
     },
+    removeAudio() {
+      this.$emit("removeAudio", this.ql); //ql=index question_list yg dipassing dari parent
+    },
     stopAudio() {
       this.audio.item.pause();
       this.audio.item.currentTime = 0;
       this.audio.isPlay = false;
-    },  
-    removeAudio() {
-      this.$emit("removeAudio", this.ql); //ql=index question_list yg dipassing dari parent
     },
     recordAudio(index) {
       let vm = this;
@@ -167,11 +150,10 @@ export default {
             function (entry) {
               entry.file(
                 function (file) {
-                   //tambah object audio
+                  //tambah object audio
                   const audio = {
                     file: file,
                     nativePath: obj.full_path,
-                    
                   };
 
                   //BEGIN olah data hasil record ke Blob
@@ -188,9 +170,8 @@ export default {
                   reader.readAsArrayBuffer(file);
                   //END
 
-
                   //ini dikomen karena tidak jadi pakay musicplayer.store.js
-                  
+
                   vm.$emit("addAudioToQuestionList", { audio: audio, ql: index });
                   vm.audio.item = new Audio(vm.question_list.audio.file.localURL);
                   // console.log('anjay',vm.audio.item.duration);

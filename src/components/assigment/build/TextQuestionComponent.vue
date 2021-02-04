@@ -1,59 +1,20 @@
 <template>
   <q-card class="q-mb-md">
-    <q-bar>
-      <q-icon name="note" />
-      <div>Soal {{ ql + 1 }}</div>
-
-      <q-space />
-
-      <q-btn dense flat icon="close" @click="$emit('deleteQuestionList', ql)" />
-    </q-bar>
     <q-card-section>
-      <editor-component ref="editor" v-model="question_list.name"></editor-component>
-      <div class="row justify-end q-gutter-sm">
-        <div class="" v-if="question_list.audio.file">
-          <q-btn
-            round
-            @click="removeAudio"
-            color="red"
-            icon="close"
-            class="q-my-xs"
-            size="sm" 
-          ></q-btn>
+      <div class="row">
+        <div class="col">
+          <div class="text-body1 text-grey">Soal nomor {{ ql + 1 }}</div>
         </div>
-        <div class="" v-if="question_list.audio.file">
-          <q-btn
-            v-if="!audio.isPlay"
-            round
-            @click="playAudio"
-            color="blue"
-            icon="play_arrow"
-            class="q-my-xs"
-            size="sm" 
-          ></q-btn>
-          <q-btn
-            v-else
-            round
-            @click="stopAudio"
-            color="blue"
-            icon="stop"
-            class="q-my-xs"
-            size="sm" 
-          ></q-btn>
-        </div>
-        <div class="self-center">
-          <q-btn round class="q-my-xs" color="blue" size="sm" icon="mic" @click="recordAudio(ql)">
-            <!-- <span class="text-caption" v-if="!question_list.audio.file"
-              >Tambah Suara</span
-            >
-            <span class="text-caption" v-else>Rekam Ulang</span> -->
-          </q-btn>
+        <div class="col-1">
+          <q-btn round dense flat icon="close" @click="$emit('removeQuestionList', ql)" />
         </div>
       </div>
 
-      <q-separator inset class="q-ma-sm" />
+      <div class="row">
+        <p v-html="question_list.name"></p>
+      </div>
       <q-input
-        class="q-mt-sm"
+        :readonly="true /*question_list.pivot.creator_id != Auth.auth.id*/"
         type="textarea"
         v-for="(answer_list, al) in question_list.answer_lists"
         :key="al"
@@ -62,13 +23,15 @@
         color="blue"
         outlined
         dense
-        autogrow
         lazy-rules
-        :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
         :label="`Kunci jawaban ${al + 1}`"
       >
-        <template v-slot:after>
+        <!-- <template v-slot:default>
+        asu
+      </template> -->
+        <!-- <template v-slot:after>
           <q-btn
+            :disable="true/*question_list.pivot.creator_id != Auth.auth.id*/"
             v-if="al != 0"
             round
             dense
@@ -76,35 +39,41 @@
             icon="close"
             @click="
               () => {
-                question_list.answer_lists.splice(ql, 1);
+                question_list.answer_lists.splice(al, 1);
               }
             "
           />
-        </template>
+        </template> -->
       </q-input>
-      <q-btn
-        color="primary"
-        outline
-        rounded
-        label="Tambah Kunci jawaban"
-        @click="
-          () => {
-            question_list.answer_lists.push({
-              name: '',
-              value: null,
-            });
-          }
-        "
-      />
+      <!-- <q-btn
+                      v-show="question_list.pivot.creator_id == Auth.auth.id"
+                      color="primary"
+                      outline
+                      rounded
+                      label="Tambah Kunci jawaban"
+                      @click="
+                        () => {
+                          question_list.answer_lists.push({
+                            name: '',
+                            value: null,
+                          });
+                          $forceUpdate();
+                        }
+                      "
+                    /> -->
     </q-card-section>
   </q-card>
 </template>
 <script>
 import EditorComponent from "../../Editor/EditorComponent";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   components: {
     EditorComponent,
+  },
+  computed: {
+    ...mapState(["Auth"]),
   },
   props: {
     ql: Number,
@@ -145,7 +114,7 @@ export default {
       this.audio.item.pause();
       this.audio.item.currentTime = 0;
       this.audio.isPlay = false;
-    },  
+    },
     removeAudio() {
       this.$emit("removeAudio", this.ql); //ql=index question_list yg dipassing dari parent
     },
@@ -167,11 +136,10 @@ export default {
             function (entry) {
               entry.file(
                 function (file) {
-                   //tambah object audio
+                  //tambah object audio
                   const audio = {
                     file: file,
                     nativePath: obj.full_path,
-                    
                   };
 
                   //BEGIN olah data hasil record ke Blob
@@ -188,9 +156,8 @@ export default {
                   reader.readAsArrayBuffer(file);
                   //END
 
-
                   //ini dikomen karena tidak jadi pakay musicplayer.store.js
-                  
+
                   vm.$emit("addAudioToQuestionList", { audio: audio, ql: index });
                   vm.audio.item = new Audio(vm.question_list.audio.file.localURL);
                   // console.log('anjay',vm.audio.item.duration);

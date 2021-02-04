@@ -15,7 +15,7 @@
         <q-stepper v-model="step" color="blue" style="width: 100%" animated keep-alive>
           <q-step :name="1" color="blue" title="Isi" icon="settings" :done="step > 1">
             <q-select
-            :loading="loading"
+              :loading="loading"
               rounded
               color="blue"
               outlined
@@ -29,7 +29,7 @@
               @input="(item) => (assigment.grade_id = item.id)"
             />
             <q-select
-             :loading="loading"
+              :loading="loading"
               rounded
               color="blue"
               outlined
@@ -56,7 +56,7 @@
               "
             />
             <q-select
-             :loading="loading"
+              :loading="loading"
               v-if="assigment.assigment_category_id == 9"
               rounded
               color="blue"
@@ -117,7 +117,13 @@
             />
 
             <q-stepper-navigation>
-              <q-btn :loading="loading" flat @click="step2()" color="blue" label="Lanjut" />
+              <q-btn
+                :loading="loading"
+                flat
+                @click="step2()"
+                color="blue"
+                label="Lanjut"
+              />
             </q-stepper-navigation>
           </q-step>
 
@@ -131,266 +137,39 @@
           >
             <div v-for="(question_list, ql) in assigment.question_lists" :key="ql">
               <div v-if="question_list.pivot.assigment_type.description == 'textfield'">
-                <q-card class="q-mb-md">
-                  <q-card-section>
-                    <q-input
-                      :disable="question_list.pivot.creator_id != Auth.auth.id"
-                      v-model="question_list.name"
-                      rounded
-                      color="blue"
-                      outlined
-                      dense
-                      :label="`Soal nomor ${ql + 1}`"
-                      lazy-rules
-                      :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
-                      @input="() => $forceUpdate()"
-                    >
-                      <template v-slot:after>
-                        <q-btn
-                          round
-                          dense
-                          flat
-                          icon="close"
-                          @click="
-                            () => {
-                              assigment.question_lists.splice(ql, 1);
-                              $forceUpdate();
-                            }
-                          "
-                        />
-                      </template>
-                    </q-input>
-                    <q-input
-                      :disable="question_list.pivot.creator_id != Auth.auth.id"
-                      v-for="(answer_list, al) in question_list.answer_lists"
-                      :key="al"
-                      v-model="answer_list.name"
-                      rounded
-                      color="blue"
-                      outlined
-                      dense
-                      lazy-rules
-                      :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
-                      @input="() => $forceUpdate()"
-                      :label="`Kunci jawaban ${al + 1}`"
-                    >
-                      <template v-slot:after>
-                        <q-btn
-                          :disable="question_list.pivot.creator_id != Auth.auth.id"
-                          v-if="al != 0"
-                          round
-                          dense
-                          flat
-                          icon="close"
-                          @click="
-                            () => {
-                              question_list.answer_lists.splice(al, 1);
-                              $forceUpdate();
-                            }
-                          "
-                        />
-                      </template>
-                    </q-input>
-                    <q-btn
-                      :disable="question_list.pivot.creator_id != Auth.auth.id"
-                      color="primary"
-                      outline
-                      rounded
-                      label="Tambah Kunci jawaban"
-                      @click="
-                        () => {
-                          question_list.answer_lists.push({
-                            name: '',
-                            value: null,
-                          });
-                          $forceUpdate();
-                        }
-                      "
-                    />
-                  </q-card-section>
-                </q-card>
+                <build-text-question-component
+                  @removeQuestionList="
+                    (index) => {
+                      assigment.question_lists.splice(index, 1);
+                    }
+                  "
+                  :question_list="question_list"
+                  :ql="ql"
+                ></build-text-question-component>
               </div>
               <div
                 v-if="question_list.pivot.assigment_type.description == 'selectoptions'"
               >
-                <q-card class="q-mb-md">
-                  <q-card-section>
-                    <q-input
-                      :disable="question_list.pivot.creator_id != Auth.auth.id"
-                      v-model="question_list.name"
-                      rounded
-                      color="blue"
-                      outlined
-                      dense
-                      :label="`Soal nomor ${ql + 1}`"
-                      hint="Pilihan ganda"
-                      lazy-rules
-                      :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
-                      @input="() => $forceUpdate()"
-                    >
-                      <template v-slot:after>
-                        <q-btn
-                          round
-                          dense
-                          flat
-                          icon="close"
-                          @click="
-                            () => {
-                              assigment.question_lists.splice(ql, 1);
-                              $forceUpdate();
-                            }
-                          "
-                        />
-                      </template>
-                    </q-input>
-                    <q-input
-                      :disable="question_list.pivot.creator_id != Auth.auth.id"
-                      v-for="(answer_list, al) in question_list.answer_lists"
-                      :key="al"
-                      v-model="answer_list.name"
-                      rounded
-                      color="blue"
-                      outlined
-                      dense
-                      :label="String.fromCharCode('A'.charCodeAt() + al)"
-                      hint="Butir jawaban"
-                      lazy-rules
-                      :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
-                      @input="() => $forceUpdate()"
-                    >
-                      <template v-slot:after>
-                        <q-btn
-                          :disable="question_list.pivot.creator_id != Auth.auth.id"
-                          round
-                          dense
-                          :flat="answer_list.value == null ? true : false"
-                          :color="answer_list.value != null ? 'green-4' : null"
-                          icon="check"
-                          @click="
-                            () => {
-                              question_list.answer_lists.filter((item, i) => {
-                                i == al ? (item.value = 100) : (item.value = null);
-                              });
-                              $forceUpdate();
-                            }
-                          "
-                        />
-                        <q-btn
-                          :disable="question_list.pivot.creator_id != Auth.auth.id"
-                          v-if="al != 0"
-                          round
-                          dense
-                          flat
-                          icon="close"
-                          @click="
-                            () => {
-                              question_list.answer_lists.splice(al, 1);
-                              $forceUpdate();
-                            }
-                          "
-                        />
-                      </template>
-                    </q-input>
-                    <q-btn
-                      :disable="question_list.pivot.creator_id != Auth.auth.id"
-                      color="primary"
-                      outline
-                      rounded
-                      label="Tambah butir jawaban"
-                      @click="
-                        () => {
-                          question_list.answer_lists.push({
-                            name: '',
-                            value: null,
-                          });
-                          $forceUpdate();
-                        }
-                      "
-                    />
-                  </q-card-section>
-                </q-card>
+                <build-selectoptions-question-component
+                  @removeQuestionList="
+                    () => {
+                      assigment.question_lists.splice(ql, 1);
+                    }
+                  "
+                  :question_list="question_list"
+                  :ql="ql"
+                ></build-selectoptions-question-component>
               </div>
               <div v-if="question_list.pivot.assigment_type.description == 'textarea'">
-                <q-card class="q-mb-md">
-                  <q-card-section>
-                    <div class="text-body1 text-grey">Soal nomor {{ ql + 1 }}</div>
-                    <q-input
-                      :disable="question_list.pivot.creator_id != Auth.auth.id"
-                      v-model="question_list.name"
-                      rounded
-                      color="blue"
-                      outlined
-                      dense
-                      :label="`Soal nomor ${ql + 1}`"
-                      lazy-rules
-                      :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
-                      @input="() => $forceUpdate()"
-                    >
-                      <template v-slot:after>
-                        <q-btn
-                          round
-                          dense
-                          flat
-                          icon="close"
-                          @click="
-                            () => {
-                              assigment.question_lists.splice(ql, 1);
-                              $forceUpdate();
-                            }
-                          "
-                        />
-                      </template>
-                    </q-input>
-                    <q-input
-                      :disable="question_list.pivot.creator_id != Auth.auth.id"
-                      type="textarea"
-                      v-for="(answer_list, al) in question_list.answer_lists"
-                      :key="al"
-                      v-model="answer_list.name"
-                      rounded
-                      color="blue"
-                      outlined
-                      dense
-                      lazy-rules
-                      :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
-                      @input="() => $forceUpdate()"
-                      :label="`Kunci jawaban ${al + 1}`"
-                    >
-                      <template v-slot:after>
-                        <q-btn
-                          :disable="question_list.pivot.creator_id != Auth.auth.id"
-                          v-if="al != 0"
-                          round
-                          dense
-                          flat
-                          icon="close"
-                          @click="
-                            () => {
-                              question_list.answer_lists.splice(al, 1);
-                              $forceUpdate();
-                            }
-                          "
-                        />
-                      </template>
-                    </q-input>
-                    <q-btn
-                      :disable="question_list.pivot.creator_id != Auth.auth.id"
-                      color="primary"
-                      outline
-                      rounded
-                      label="Tambah Kunci jawaban"
-                      @click="
-                        () => {
-                          question_list.answer_lists.push({
-                            name: '',
-                            value: null,
-                          });
-                          $forceUpdate();
-                        }
-                      "
-                    />
-                  </q-card-section>
-                </q-card>
+                <build-text-question-component
+                  @removeQuestionList="
+                    () => {
+                      assigment.question_lists.splice(ql, 1);
+                    }
+                  "
+                  :question_list="question_list"
+                  :ql="ql"
+                ></build-text-question-component>
               </div>
             </div>
 
@@ -558,6 +337,10 @@ export default {
     };
   },
   components: {
+    BuildTextQuestionComponent: () =>
+      import("components/assigment/build/TextQuestionComponent.vue"),
+    BuildSelectoptionsQuestionComponent: () =>
+      import("components/assigment/build/SelectOptionsQuestionComponent.vue"),
     //UnpublishItemComponent: () =>import("components/assigment/unpublish/ItemComponent.vue")
   },
   computed: {
@@ -589,13 +372,13 @@ export default {
     }
     this.setBuild = debounce(this.setBuild, 500);
     //set auth
-    this.loading=true;
+    this.loading = true;
 
     //dispatch Auth/getAuth di paling awal agar mengupdate Auth.auth.profile
     this.$store.dispatch("Auth/getAuth").then(() => {
       //dispatch Grade/index diurutan ke-2 karena action ini mengambil Auth.auth.profile.education_level_id
       this.$store.dispatch("Grade/index").finally(() => {
-        this.loading=false;
+        this.loading = false;
         this.$store.dispatch("AssigmentCategory/index").then(() => {
           this.init();
         });
@@ -629,14 +412,18 @@ export default {
     },
     init() {
       //jika build.educational_level_id beda dgn Auth.profile.educational_level_id, maka Reset
-      if(this.Assigment.build.grade && this.Assigment.build.grade.educational_level_id!=this.Auth.auth.profile.educational_level_id){
-        console.log('reset karena education_level_id berbeda');
-        this.$store.commit('Assigment/resetBuild');
+      if (
+        this.Assigment.build.grade &&
+        this.Assigment.build.grade.educational_level_id !=
+          this.Auth.auth.profile.educational_level_id
+      ) {
+        console.log("reset karena education_level_id berbeda");
+        this.$store.commit("Assigment/resetBuild");
       }
       this.assigment = {
         ...this.Assigment.build,
       };
-      console.log('anjay ',)
+      console.log("anjay ");
       if (this.Grade.grades.length == 0) this.$store.dispatch("Grade/index");
       //this.$forceUpdate();
     },
@@ -696,13 +483,14 @@ export default {
           this.$q.notify("Tunggu");
           this.$router.push("/");
           this.$store
-            .dispatch("Assigment/store", this.assigment)
+            .dispatch("Assigment/storeBuild", this.assigment)
             .then((res) => {
               // this.$store.commit('Assigment/addPublish',{publish:res.data})
               this.$store.commit("Assigment/resetBuild");
               this.$q.notify("Berhasil menerbitkan Paket Soal.");
             })
             .catch((err) => {
+              console.log(err);
               this.$q.notify("Terjadi kesalahan");
             })
             .finally(() => {
