@@ -100,7 +100,7 @@
               label="Tahun pelajaran"
               v-model="assigment.education_year"
               lazy-rules
-              disable
+              
               :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
             />
 
