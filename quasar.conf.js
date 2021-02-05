@@ -22,7 +22,7 @@ module.exports = function (/* ctx */) {
       'i18n',
       'axios',
 
-      'app-version', 'cordova-media', 'compressorjs','vue-linkify', 'pusher-js','moment','checkProfile'
+      'vue2-animate','app-version', 'cordova-media', 'compressorjs','vue-linkify', 'pusher-js','moment','checkProfile'
 
     ],
 

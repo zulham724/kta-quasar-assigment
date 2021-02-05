@@ -358,6 +358,20 @@ const actions = {
                     reject(err);
                 });
         });
+    },
+    deleteAssigment({state, commit}, payload){
+        return new Promise((resolve,reject)=>{
+            axios.post(`${this.state.Setting.url}/api/v1/assigments/${payload.id}/softdelete`).then(res=>{
+                resolve(res);
+            })
+        });
+    },
+    restoreAssigment({state, commit}, payload){
+        return new Promise((resolve,reject)=>{
+            axios.post(`${this.state.Setting.url}/api/v1/assigments/${payload.id}/restore`).then(res=>{
+                resolve(res);
+            })
+        });
     }
 };
 

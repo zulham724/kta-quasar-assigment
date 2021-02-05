@@ -18,8 +18,8 @@ const mutations = {
         const index = state.items.data.findIndex(e=>e.id==data.id);
         if(index==-1){
             state.items.data = [...state.items.data, {...data}];
+            console.log('add deletedstudenresult',state.items.data)
         }
-        // console.log('duplikat gan',data)
         
     },
     next(state, payload) {
@@ -36,19 +36,19 @@ const mutations = {
         }
     },
     sortItems(state){
-        state.items.data.sort(function(a,b){
-            if(a.id>b.id)return -1;
-            if(a.id<b.id)return 1;
-            return 0;
-        });
-     },
+       state.items.data.sort(function(a,b){
+           if(a.id>b.id)return -1;
+           if(a.id<b.id)return 1;
+           return 0;
+       });
+    },
 };
 // Actions
 const actions = {
     index({ commit }) {
         return new Promise((resolve, reject) => {
             axios
-                .get(`${this.state.Setting.url}/api/v1/assigments/getsharedpublish`)
+                .get(`${this.state.Setting.url}/api/v1/assigments/getdeleteditems`)
                 .then(res => {
                     commit("set", { items: res.data });
                     resolve(res);
@@ -58,6 +58,7 @@ const actions = {
                 });
         });
     },
+ 
     store({ commit }, access) {
         return new Promise((resolve, reject) => {
             axios
@@ -118,6 +119,7 @@ const actions = {
     add({state, dispatch, commit}, data){
         return new Promise((resolve, reject) => {
            if(!state.items.data){
+               console.log('kosong gan')
                dispatch('index').then(res=>{
                    commit('add', data);
                    resolve();
@@ -128,6 +130,7 @@ const actions = {
            }
         });
     },
+    
 };
 
 // Getter functions

@@ -1,6 +1,6 @@
 <template>
   <q-card
-    :class="session.assigments[0].pivot.total_score == null ? 'bg-red-11' : 'bg-blue-11'"
+    :class="session.assigments[0].pivot.total_score == null ? 'bg-red-12' : 'bg-blue-12'"
     @click="
       $router.push({ name: 'studentresult', params: { sessionId: session.id } })
     "
@@ -17,7 +17,7 @@
       </q-item-section>
 
       <q-item-section>
-        <q-item-label lines="3">{{ session.user.name }}</q-item-label>
+        <q-item-label lines="3" class="text-grey-1">{{ session.user.name }}</q-item-label>
       </q-item-section>
 
       <q-item-section side top v-if="session.assigments[0].pivot.total_score == null">
@@ -25,9 +25,9 @@
         <q-item-label caption>Belum dinilai</q-item-label>
       </q-item-section>
       <q-item-section side top v-else>
-        <q-item-label caption>Nilai</q-item-label>
+        <q-item-label caption class="text-grey-1">Nilai</q-item-label>
         <div class="row justify-end">
-          <div class="text-black text-h5" style="bottom:0;position:absolute;">
+          <div class="text-grey-1 text-h5" style="bottom:0;position:absolute;">
             {{ session.assigments[0].pivot.total_score }}
           </div>
         </div>
