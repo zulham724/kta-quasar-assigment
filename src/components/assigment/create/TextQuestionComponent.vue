@@ -18,7 +18,7 @@
             color="red"
             icon="close"
             class="q-my-xs"
-            size="sm" 
+            size="sm"
           ></q-btn>
         </div>
         <div class="" v-if="question_list.audio.file">
@@ -29,7 +29,7 @@
             color="blue"
             icon="play_arrow"
             class="q-my-xs"
-            size="sm" 
+            size="sm"
           ></q-btn>
           <q-btn
             v-else
@@ -38,15 +38,26 @@
             color="blue"
             icon="stop"
             class="q-my-xs"
-            size="sm" 
+            size="sm"
           ></q-btn>
         </div>
         <div class="self-center">
-          <q-btn round class="q-my-xs" color="blue" size="sm" icon="mic" @click="recordAudio(ql)">
+          <q-btn
+            :disable="!$q.platform.is.mobile"
+            round
+            class="q-my-xs"
+            color="blue"
+            size="sm"
+            icon="mic"
+            @click="recordAudio(ql)"
+          >
             <!-- <span class="text-caption" v-if="!question_list.audio.file"
               >Tambah Suara</span
             >
             <span class="text-caption" v-else>Rekam Ulang</span> -->
+            <q-tooltip v-if="!$q.platform.is.mobile"
+              >Hanya bisa digunakan di mobile</q-tooltip
+            >
           </q-btn>
         </div>
       </div>
@@ -145,7 +156,7 @@ export default {
       this.audio.item.pause();
       this.audio.item.currentTime = 0;
       this.audio.isPlay = false;
-    },  
+    },
     removeAudio() {
       this.$emit("removeAudio", this.ql); //ql=index question_list yg dipassing dari parent
     },
@@ -167,11 +178,10 @@ export default {
             function (entry) {
               entry.file(
                 function (file) {
-                   //tambah object audio
+                  //tambah object audio
                   const audio = {
                     file: file,
                     nativePath: obj.full_path,
-                    
                   };
 
                   //BEGIN olah data hasil record ke Blob
@@ -188,9 +198,8 @@ export default {
                   reader.readAsArrayBuffer(file);
                   //END
 
-
                   //ini dikomen karena tidak jadi pakay musicplayer.store.js
-                  
+
                   vm.$emit("addAudioToQuestionList", { audio: audio, ql: index });
                   vm.audio.item = new Audio(vm.question_list.audio.file.localURL);
                   // console.log('anjay',vm.audio.item.duration);

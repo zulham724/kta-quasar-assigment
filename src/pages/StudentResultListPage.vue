@@ -22,10 +22,10 @@
         </div>
       </div>
       <q-infinite-scroll @load="onLoad" :offset="250" v-if="StudentResult.items.data">
-        <div class="q-pa-none row q-gutter-y-xs">
-          <transition-group name="fadeLeft">
+          <div class="q-pa-none row q-gutter-y-xs">
+          <transition-group name="fadeLeft" style="width:100%">
           <q-intersection
-            style="min-height: 25vh; width: 100vw"
+            style="min-height: 25vh; width: 100%;"
             class="q-pa-xs"
             v-for="(assigment) in StudentResult.items.data"
             :key="assigment.id"

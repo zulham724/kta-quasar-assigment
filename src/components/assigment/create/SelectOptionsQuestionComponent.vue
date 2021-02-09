@@ -49,12 +49,14 @@
           ></q-btn>
         </div>
         <div class="self-center">
-          <q-btn round size="sm" color="blue" :class="question_list.audio.file?'':'q-mb-sm'"  icon="mic" @click="recordAudio(ql)">
+          <q-btn :disable="!$q.platform.is.mobile" round size="sm" color="blue" :class="question_list.audio.file?'':'q-mb-sm'"  icon="mic" @click="recordAudio(ql)">
             <!-- <span class="text-caption " v-if="!question_list.audio.file"
               >Tambah Suara</span
             >
             <span class="text-caption" v-else>Rekam Ulang</span> -->
+               <q-tooltip v-if="!$q.platform.is.mobile">Hanya bisa digunakan di mobile</q-tooltip>
           </q-btn>
+         
         </div>
       </div>
       <q-input
