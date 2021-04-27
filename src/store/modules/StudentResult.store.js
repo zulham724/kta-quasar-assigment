@@ -2,7 +2,7 @@
 import axios from "axios";
 // State object
 const state = {
-    items: {}
+    items: {},
 };
 
 // Mutations
@@ -14,8 +14,13 @@ const mutations = {
         const index = state.items.data.findIndex(item => item.id == payload.id);
         state.items.data.splice(index, 1);
     },
-    add() {
-        state.items.data = [payload.items, ...state.items.data];
+    add(state, data) {
+        const index = state.items.data.findIndex(e=>e.id==data.id);
+        if(index==-1){
+            state.items.data = [...state.items.data, {...data}];
+        }
+        // console.log('duplikat gan',data)
+        
     },
     next(state, payload) {
         state.items = {
@@ -23,7 +28,20 @@ const mutations = {
             data: [...state.items.data, ...payload.items.data]
         };
     },
-    update() {}
+    update() {},
+    deleteById(state, id){
+        const index=state.items.data.findIndex(e=>e.id==id);
+        if(index>-1){
+            state.items.data.splice(index, 1);
+        }
+    },
+    sortItems(state){
+        state.items.data.sort(function(a,b){
+            if(a.id>b.id)return -1;
+            if(a.id<b.id)return 1;
+            return 0;
+        });
+     },
 };
 // Actions
 const actions = {
@@ -96,7 +114,20 @@ const actions = {
                     reject(err);
                 });
         });
-    }
+    },
+    add({state, dispatch, commit}, data){
+        return new Promise((resolve, reject) => {
+           if(!state.items.data){
+               dispatch('index').then(res=>{
+                   commit('add', data);
+                   resolve();
+               })
+           }else{
+            commit('add', data);
+            resolve();
+           }
+        });
+    },
 };
 
 // Getter functions

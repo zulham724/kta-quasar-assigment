@@ -26,7 +26,7 @@
                         <!--begin header-append-->
                         <div id="header_append">
                             <div id="kotak_biru" style="position: absolute;
-  height:60px;width:100vw;" class="bg-blue"></div>
+  height:60px;width:100%;" class="bg-blue"></div>
 
                             <!--begin dikerjakan
             <div
@@ -101,14 +101,14 @@
                         <q-tab-panels v-model="tab" animated>
                             <q-tab-panel name="publish" class="q-pa-none">
                                 <div class="q-pa-none row items-start q-gutter-y-sm">
-                                    <q-intersection v-for="assigment in Auth.publish_assigments.data" :key="assigment.id" :id="`publish-${assigment.id}`" style="min-height:50px;width:100vw">
+                                    <q-intersection v-for="assigment in Auth.publish_assigments.data" :key="assigment.id" :id="`publish-${assigment.id}`" style="min-height:50px;width:100%">
                                         <publish-item-component :assigment="assigment" :isAuth="true"></publish-item-component>
                                     </q-intersection>
                                 </div>
                             </q-tab-panel>
                             <q-tab-panel name="unpublish" class="q-pa-none">
                                 <div class="q-pa-none q-gutter-y-xs">
-                                    <q-intersection v-for="assigment in Auth.unpublish_assigments.data" :key="assigment.id" :style="`min-height:50px;width: 100vw`">
+                                    <q-intersection v-for="assigment in Auth.unpublish_assigments.data" :key="assigment.id" :style="`min-height:50px;width: 100%`">
                                         <unpublish-item-component :assigment="assigment"></unpublish-item-component>
                                     </q-intersection>
                                 </div>

@@ -81,6 +81,13 @@ const routes = [{
                     import ("pages/StudentResultListPage.vue")
             },
             {
+                path: "recyclebin/studentresult",
+                name: 'deletedstudentresult',
+                beforeEnter: multiguard([auth, checkProfile]),
+                component: () =>
+                    import ("pages/DeletedStudentResultListPage.vue")
+            },
+            {
                 path: "create",
                 name: 'create',
                 beforeEnter: multiguard([auth, checkProfile]),

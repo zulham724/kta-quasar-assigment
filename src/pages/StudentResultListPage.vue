@@ -7,7 +7,9 @@
           <q-toolbar-title>
             <div class="text-body1">Hasil</div>
           </q-toolbar-title>
-          <q-space />
+          <q-btn flat round dense @click="$router.push({name:'deletedstudentresult'})">
+          <q-icon name="o_auto_delete" />
+        </q-btn>
         </q-toolbar>
       </q-header>
 
@@ -20,17 +22,20 @@
         </div>
       </div>
       <q-infinite-scroll @load="onLoad" :offset="250" v-if="StudentResult.items.data">
-        <div class="q-pa-none row q-gutter-y-xs">
+          <div class="q-pa-none row q-gutter-y-xs">
+          <transition-group name="fadeLeft" style="width:100%">
           <q-intersection
-            style="min-height: 25vh; width: 100vw"
+            style="min-height: 25vh; width: 100%;"
             class="q-pa-xs"
-            v-for="(assigment, id) in StudentResult.items.data"
-            :key="id"
+            v-for="(assigment) in StudentResult.items.data"
+            :key="assigment.id"
           >
+        
             <student-result-item-component
               :assigment="assigment"
             ></student-result-item-component>
           </q-intersection>
+          </transition-group>
         </div>
         <template v-slot:loading>
           <div class="row justify-center q-my-md">

@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import store from './../store'
 import routes from './routes'
 
 Vue.use(VueRouter)
@@ -14,26 +13,23 @@ Vue.use(VueRouter)
  * with the Router instance.
  */
 
-export default function( /* { store, ssrContext } */ ) {
+export default function (/* { store, ssrContext } */) {
+  const Router = new VueRouter({
+    scrollBehavior (to, from, savedPosition) {
+      if (savedPosition) {
+        return savedPosition
+      } else {
+        return { x: 0, y: 0 }
+      }
+    },
+    routes,
 
-    // check proses storage inititalized
-    const waitForStorageToBeReady = async(to, from, next) => {
-        await store().restored
-            // console.log(store(), store().restored)
-        next()
-    }
+    // Leave these as they are and change in quasar.conf.js instead!
+    // quasar.conf.js -> build -> vueRouterMode
+    // quasar.conf.js -> build -> publicPath
+    mode: process.env.VUE_ROUTER_MODE,
+    base: process.env.VUE_ROUTER_BASE
+  })
 
-    const Router = new VueRouter({
-        scrollBehavior: () => ({ x: 0, y: 0 }),
-        routes,
-        // Leave these as they are and change in quasar.conf.js instead!
-        // quasar.conf.js -> build -> vueRouterMode
-        // quasar.conf.js -> build -> publicPath
-        mode: process.env.VUE_ROUTER_MODE,
-        base: process.env.VUE_ROUTER_BASE
-    })
-
-    // Router.beforeEach(waitForStorageToBeReady)
-
-    return Router
+  return Router
 }

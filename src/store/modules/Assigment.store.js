@@ -83,6 +83,7 @@ const mutations = {
         console.log(payload);
         if (!state.build.question_lists) state.build = { question_lists: [] };
         state.build.question_lists.push({
+            id: payload.question_list.id,
             name: payload.question_list.name,
             description: payload.question_list.description,
             pivot: {
@@ -117,7 +118,39 @@ const actions = {
                 });
         });
     },
-    store({ commit }, access) {
+    store({ commit }, {access,audio}) {
+        return new Promise((resolve, reject) => {
+            // console.log('access',access);
+            
+            let form = new FormData();
+            access.question_lists.forEach((v,k)=>{
+                console.log('cok')
+                if(v.audio.blob){
+                    form.append(`audio[${k}]`,v.audio.blob);
+                }else{
+                    form.append(`audio[${k}]`,'');
+                }
+                
+            });
+            
+            form.append('data',JSON.stringify(access));
+            axios
+                .post(`${this.state.Setting.url}/api/v1/assigment`, form, {
+                    headers:{
+                        'content-type':'multipart/form-data'
+                      }
+                })
+                .then(res => {
+                    // commit("add", { assigment: res.data });
+                    resolve(res);
+                })
+                .catch(err => {
+                    
+                    reject(err);
+                });
+        });
+    },
+    storeBuild({ commit }, access) {
         return new Promise((resolve, reject) => {
             axios
                 .post(`${this.state.Setting.url}/api/v1/assigment`, access)
@@ -324,6 +357,20 @@ const actions = {
                 .catch(err => {
                     reject(err);
                 });
+        });
+    },
+    deleteAssigment({state, commit}, payload){
+        return new Promise((resolve,reject)=>{
+            axios.post(`${this.state.Setting.url}/api/v1/assigments/${payload.id}/softdelete`).then(res=>{
+                resolve(res);
+            })
+        });
+    },
+    restoreAssigment({state, commit}, payload){
+        return new Promise((resolve,reject)=>{
+            axios.post(`${this.state.Setting.url}/api/v1/assigments/${payload.id}/restore`).then(res=>{
+                resolve(res);
+            })
         });
     }
 };

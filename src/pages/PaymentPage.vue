@@ -6,91 +6,56 @@
       height: 100vh;
     "
   >
-    <div class="fixed-center text-center">
-      <q-card style="width: 90vw">
-        <q-stepper v-model="step" vertical color="blue" animated>
-          <q-step
-            :name="1"
-            color="blue"
-            title="Pilih Metode Pembayaran"
-            icon="settings"
-            :done="step > 1"
-          >
-            <div class="q-pa-sm">
-              <div class="row">
-                <div class="col-12" v-if="payment_vendors.length">
-                  <q-btn
-                    color="blue"
-                    v-for="pv in payment_vendors"
-                    :key="pv.id"
-                    @click="() => step2(pv)"
-                    :loading="loading"
-                    :disable="loading"
-                    >Transfer ke Bank {{ pv.service_code }}</q-btn
-                  >
-                </div>
-                <div class="col-12" v-else>
-                  <q-spinner-ios color="blue" size="2em" />
-                </div>
-              </div>
-            </div>
-          </q-step>
-
-          <q-step
-            :name="2"
-            title="Pembayaran"
-            color="blue"
-            icon="create_new_folder"
-            :done="step > 2"
-          >
-            <div class="text-body1 text-left" v-if="payment_vendor">
-              Harap Melakukan Transfer ke
-              <b>BANK {{ payment_vendor.service_code.toUpperCase() }}</b> -
-              <b>{{ payment_vendor.account_number }}</b>
-            </div>
-            <div
-              class="text-body1 text-bold text-left q-pt-md q-pb-md"
-              v-if="payment_value"
+    <div class="q-pa-sm">
+      <q-card class="fixed-center" style="width: 90vw">
+        <q-card-section>
+          <div class="text-h6 text-center">Cara Melakukan Pembayaran</div>
+        </q-card-section>
+        <q-card-section>
+          <div>
+            1. Buka aplikasi<a href="#" @click.prevent="openKta"> KTA AGPAII DIGITAL</a
+            ><br />
+            2. Jika belum Login, Login terlebih dahulu.<br />
+            <!--jika sudah bayar, tpi expired-->
+            <span
+              v-if="
+                Auth.auth.user_activated_at &&
+                moment(new Date()).diff(
+                  new Date(Auth.auth.user_activated_at),
+                  'months',
+                  true
+                ) > 6
+              "
             >
-              Dengan Nominal Sebesar <br />Rp
-              {{ payment_value.toLocaleString() }}
-            </div>
-            <div class="text-body1 text-left q-pb-md" v-if="payment_vendor">
-              Harap transfer dengan <b>nominal yang sesuai</b> agar sistem dapat
-              melakukan pengecekan dengan tepat
-            </div>
-            <div class="text-body1 text-left">
-              Jika sudah melakukan pembayaran, silahkan tunggu
-              <b>5 menit</b> kemudian <b>Lakukan Pengecekan</b> melalui tombol
-              di bawah
-            </div>
-          </q-step>
-        </q-stepper>
-        <!-- <q-card-section>
-                <p>
-                    <img src="statics/images/agpaii-logo-blue.png" style="width:30vw;max-width:150px;">
-                </p>
-                <q-btn flat color="blue" style="width:200px;" label="Lakukan pembayaran" @click="createTransaction" />
-                <q-btn color="blue" flat label="Konfirmasi" @click="check" />
-
-                <div class="text-caption">
-                    Silahkan lakukan pembayaran. Jika sudah membayar klik tombol
-                    "Konfirmasi" untuk melakukan Verifikasi Pembayaran
-                </div>
-            </q-card-section>
-            <q-card-actions class="row justify-end">
-                <q-btn color="blue" flat label="Keluar" @click="logout" />
-            </q-card-actions> -->
-        <q-card-actions class="row justify-between">
+              3. Masuk ke halaman profile.<br />
+              4. Tekan menu di pojok kanan atas, dan pilih
+              <strong>Riwayat Pembayaran</strong>. Anda akan melihat peringatan bahwa masa
+              penggunaan RPP DIGITAL, PENILAIAN DIGITAL, dan MODUL DIGITAL sudah habis.<br />
+              5. Tekan <strong>BAYAR</strong>. Anda akan diminta mentransfer uang
+              perpanjangan sebesar <strong>Rp. 65.000</strong><br />
+              6. Jika sudah ditransfer, kembali ke halaman
+              <a href="#" @click.prevent="openKta"> Riwayat Pembayaran</a> kemudian tekan
+              tombol <strong>KONFIRMASI</strong>
+            </span>
+            <!--jika belum bayar, Maka-->
+            <span v-else>
+              3. Masuk ke halaman profile. Anda akan diarahkan ke halaman untuk melakukan
+              pembayaran. Tekan tombol <strong>LAKUKAN PEMBAYARAN</strong><br />
+              4. Anda akan diminta mentransfer uang pendaftaran sebesar
+              <strong>Rp. 35.000</strong><br />
+              5. Jika sudah ditransfer, kembali ke halaman<a
+                href="#"
+                @click.prevent="openKta"
+              >
+                KTA AGPAII DIGITAL</a
+              >
+              tadi kemudian tekan tombol <strong>KONFIRMASI</strong>
+            </span>
+          </div>
+        </q-card-section>
+        <q-card-actions class="row justify-end">
           <q-btn color="blue" flat label="Keluar" @click="logout" />
-          <q-btn
-            color="blue"
-            flat
-            label="Lakukan Pengecekan"
-            :loading="loading2"
-            :disable="loading2"
-            @click="check()"
-          ></q-btn>
+          <q-btn color="blue" flat label="Konfirmasi" @click="check" />
         </q-card-actions>
       </q-card>
     </div>
@@ -98,106 +63,86 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+import moment from "moment";
+
 export default {
   data() {
     return {
       loading: false,
-      loading2: false,
-      payment_value: null,
-      step: 1,
-      payment_vendors: [],
-      payment_vendor: null,
     };
   },
+  computed: {
+    ...mapState(["Auth"]),
+  },
   mounted() {
-    this.getPaymentVendors();
+    let vm=this;
+    setTimeout(function check() {
+      vm.$store.dispatch("Auth/getPaymentStatus").then((res) => {
+        //alert('test')
+
+        if (res.data.user_activated_at == null || vm.isExpired(res.data.user_activated_at)) {
+          //jika user_activated_at NULL ( pembayaran tidak ada) atau user_activated_at'nya expired, jadi harus panggil lagi fungsi untuk mengecek pembyarannya
+          console.log("check again");
+          setTimeout(check, 10000);
+        } else if (res.data) {
+          vm.$store.dispatch("Auth/getAuth").then((res) => {
+            vm.$q.notify("Pembayaran anda sudah kami terima");
+            vm.$router.push("/");
+          });
+        }
+      });
+    }, 10000);
   },
   methods: {
-    getPaymentVendors() {
-      this.$store.dispatch("Payment/getPaymentVendors").then((res) => {
-        this.payment_vendors = res.data;
-      });
-    },
-    step2(pv) {
-      this.loading = true;
-      this.getUniquePayment()
-        .then((res) => {
-          this.payment_vendor = pv;
-          this.step = 2;
-          this.loading = false;
-        })
-        .catch((err) => {
-          this.loading = false;
-        });
-    },
-    getUniquePayment() {
-      return new Promise((resolve, reject) => {
-        this.loading = true;
-        this.$store
-          .dispatch("Payment/getUniquePayment", { payment_vendor: 1 })
-          .then((res) => {
-            this.loading = false;
-            this.payment_value = res.data.value;
-            resolve(res);
-          })
-          .catch((err) => {
-            reject(err);
-          });
-      });
+    moment,
+    isExpired(datetime) {
+      if(datetime){
+          const diff = this.moment(new Date()).diff(new Date(datetime), "months", true);
+          console.log(diff)
+          return diff > 6;
+      }else return false;
     },
     check() {
-      this.loading2 = true;
-      this.$store
-        .dispatch("Payment/confirmUniquePayment")
-        .then((res) => {
-          if (res.data.user_activated_at == null) {
-            this.loading2 = false;
-            this.$q.notify(
-              "Belum ada pembayaran yang kami terima. Tolong periksa apakah nominal yang anda kirim sudah sesuai"
-            );
-          } else {
-            this.$store.dispatch("Auth/getAuth").then((res) => {
-              this.loading2 = false;
-              this.$q.notify("Pembayaran anda sudah kami terima");
-              this.$router.push("/");
-            });
-          }
-        })
-        .catch((err) => {
-          console.log("error", err);
-          if (err.response.status == 404) {
-            this.$q.notify(
-              "Belum ada pembayaran yang kami terima. Tolong periksa apakah nominal yang anda kirim sudah sesuai"
-            );
-          } else if (err.response.data && err.response.data.message)
-            this.$q.notify(err.response.data.message);
-          else this.$q.notify(err.message);
-        })
-        .finally((_) => {
-          this.loading2 = false;
-        });
+      this.$store.dispatch("Auth/getPaymentStatus").then((res) => {
+        //alert('test')
+
+        if (res.data.user_activated_at == null) {
+          this.$q.notify("Terimakasih silahkan tunggu 1x24 jam");
+        } else {
+          this.$store.dispatch("Auth/getAuth").then((res) => {
+            this.$q.notify("Pembayaran anda sudah kami terima");
+            this.$router.push("/");
+          });
+        }
+      });
     },
     logout() {
       this.$store.dispatch("Auth/logout").then(() => {
         this.$router.push("/login");
       });
     },
-    createTransaction() {
-      return new Promise((resolve, reject) => {
-        this.loading = true;
-        this.$store.dispatch("Payment/getPaymentUrl").then((res) => {
-          this.loading = false;
-          if (this.$q.platform.is.mobile) {
-            cordova.InAppBrowser.open(
-              `${res.data.payment_url}`,
-              "_system",
-              "location=no"
-            );
-          } else {
-            window.location.href = `${res.data.payment_url}`;
-          }
-        });
-      });
+    openKta() {
+      if (this.$q.platform.is.mobile) {
+        var successCallback = (data) => {
+          window.plugins.launcher.launch({ packageName: "org.agpaiidigital.kta2" });
+        };
+        var errorCallback = (errMsg) => {
+          cordova.InAppBrowser.open(
+            `https://play.google.com/store/apps/details?id=org.agpaiidigital.kta2`,
+            "_system",
+            "location=no"
+          );
+        };
+        window.plugins.launcher.canLaunch(
+          { packageName: "org.agpaiidigital.kta2" },
+          successCallback,
+          errorCallback
+        );
+      } else {
+        window.open("http://kta.agpaiidigital.org/", "_blank") ||
+          window.location.replace("http://kta.agpaiidigital.org/");
+      }
     },
   },
 };

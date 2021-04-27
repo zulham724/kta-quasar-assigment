@@ -13,7 +13,7 @@
             <q-form @submit="onSubmit" ref="form" class="full-height">
                 <q-stepper v-model="step" vertical color="primary" animated class="full-height" header-nav>
                     <q-step v-for="(question_list, ql) in assigment.question_lists" :key="question_list.id" :name="ql + 1" :title="`Soal ${ql + 1}`" icon="settings" :done="question_list.answer!=null">
-                        <div class="text-body2">{{ question_list.name }}</div>
+                        <div class="text-body2" v-html="question_list.name" ></div>
 
                         <div v-if="
                   question_list.pivot.assigment_type.description ==
