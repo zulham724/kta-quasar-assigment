@@ -21,7 +21,7 @@ module.exports = function (/* ctx */) {
       
       'i18n',
       'axios',
-
+      'sweetalert2',
       'vue2-animate','app-version', 'cordova-media', 'compressorjs','vue-linkify', 'pusher-js','moment','checkProfile'
 
     ],
@@ -96,7 +96,7 @@ module.exports = function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['LocalStorage', 'SessionStorage', 'Notify', 'Dialog', 'LoadingBar'],
+      plugins: ['LocalStorage', 'SessionStorage', 'Notify', 'Dialog', 'LoadingBar','BottomSheet'],
 
     },
 

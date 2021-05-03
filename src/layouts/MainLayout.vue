@@ -130,6 +130,7 @@ export default {
             this.$store.dispatch("Auth/PublishAssigmentsIndex");
         if (!this.Auth.unpublish_assigments.data)
             this.$store.dispatch("Auth/UnpublishAssigmentsIndex");
+      
     },
     mounted() {
     }

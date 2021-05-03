@@ -141,8 +141,23 @@ const routes = [{
                 beforeEnter: multiguard([auth]),
                 component: () =>
                     import ("pages/AnnouncementPage.vue")
-            }
+            },
+            {
+                name: "meet",
+                path: "meet",
+                beforeEnter: multiguard([auth, actived]),
+                component: () =>
+                    import ("pages/MeetPage.vue")
+            },
         ]
+    },
+    {
+        name: "jitsi",
+        path: "/jitsi",
+        beforeEnter: multiguard([auth, actived]),
+        component: () =>
+            import ("pages/JitsiPage.vue"),
+        props: true
     },
     {
         path: "/trial",

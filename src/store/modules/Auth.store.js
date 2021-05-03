@@ -10,6 +10,7 @@ const state = {
     token: {},
     publish_assigments:{},
     unpublish_assigments:{},
+    rooms:null
 };
 
 // Mutations
@@ -22,6 +23,9 @@ const mutations = {
     },
     setAuth(state, payload) {
         state.auth = payload.auth;
+    },
+    setRoomsCount(state, value){
+        state.auth.rooms_count = value;
     },
     logout(state) {
         state.token = {}
