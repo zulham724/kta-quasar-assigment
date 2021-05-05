@@ -18,11 +18,14 @@ module.exports = function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/boot-files
     boot: [
-      
+      'onDeviceReady',
       'i18n',
       'axios',
       'sweetalert2',
-      'vue2-animate','app-version', 'cordova-media', 'compressorjs','vue-linkify', 'pusher-js','moment','checkProfile'
+      'vue2-animate',
+      // 'app-version', sudah dipanggil di boot onDeviceReady
+      // 'cordova-media',
+      'compressorjs','vue-linkify', 'pusher-js','moment','checkProfile'
 
     ],
 
