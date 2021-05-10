@@ -58,8 +58,15 @@ export default {
   data() {
     return {};
   },
+  created(){
+    this.$store.commit("Room/setIsMetting", true);
+    this.$store.commit("Room/setCurrentRoom", this.room);
+  },
   mounted() {
     this.room == null ? this.$router.back() : null;
+    if (this.room) {
+      this.$store.dispatch("Room/notifAllStudent", { room: this.room });
+    }
   },
   computed: {
     ...mapState(["Setting", "Auth"]),

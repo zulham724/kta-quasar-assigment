@@ -8,7 +8,7 @@ module.exports = function() {
         permissions.CAMERA,
         permissions.RECORD_AUDIO,
         permissions.RECORD_VIDEO,
-        // permissions.MODIFY_AUDIO_SETTINGS
+        permissions.MODIFY_AUDIO_SETTINGS
       ];
       permissions.checkPermission(list, success, null);
   

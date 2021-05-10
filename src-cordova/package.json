@@ -19,6 +19,7 @@
     "cordova-plugin-app-launcher": "git+https://github.com/nchutchind/cordova-plugin-app-launcher.git",
     "cordova-plugin-app-version": "^0.1.12",
     "cordova-plugin-audio-recorder": "^1.1.0",
+    "cordova-plugin-fcm-with-dependecy-updated": "^7.0.8",
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-inappbrowser": "^4.1.0",
     "cordova-plugin-media": "^5.0.3",
@@ -36,7 +37,13 @@
       "cordova-plugin-media": {},
       "cordova-plugin-audio-recorder": {},
       "cordova-plugin-file": {},
-      "cordova-plugin-android-permissions": {}
+      "cordova-plugin-android-permissions": {},
+      "cordova-plugin-fcm-with-dependecy-updated": {
+        "ANDROID_FCM_VERSION": "19.0.0",
+        "ANDROID_GRADLE_TOOLS_VERSION": "3.5.3",
+        "ANDROID_GOOGLE_SERVICES_VERSION": "4.3.3",
+        "ANDROID_DEFAULT_NOTIFICATION_ICON": "@mipmap/ic_launcher"
+      }
     },
     "platforms": [
       "android"

@@ -7,7 +7,7 @@
       background-image: url('statics/training-background.png');
       border-radius:15px;color:black"
       clickable
-      @click="$router.push({ name: 'jitsi', params: { room: room } })"
+      @click="confirmJoinRoom"
     >
       <q-card-section>
         <div class="row items-center no-wrap">
@@ -59,6 +59,43 @@ export default {
   methods: {
     moment(date) {
       return moment(date);
+    },
+    confirmJoinRoom() {
+      let message = "Mulai kelas ini?";
+      this.$q
+        .dialog({
+          title: "Konfirmasi",
+          message,
+          cancel: true,
+          persistent: false
+        })
+        .onOk(() => {
+          this.loading = true;
+          // console.log('>>>> OK')
+          this.$store
+            .dispatch("Room/join", this.room.code)
+            .then(res => {
+              // this.rooms = [res.data, ...this.rooms];
+              this.$router.push({ name: "jitsi", params: { room: this.room } });
+              // this.$q.notify("Berhasil bergabung");
+            })
+            .catch(err => {
+              this.$q.notify("Gagal memulai kelas: "+err.message);
+            })
+            .finally(() => {
+              this.loading = false;
+            });
+
+        })
+        .onOk(() => {
+          // console.log('>>>> second OK catcher')
+        })
+        .onCancel(() => {
+          // console.log('>>>> Cancel')
+        })
+        .onDismiss(() => {
+          // console.log('I am triggered on both OK and Cancel')
+        });
     },
     copyCode(value) {
       if (this.$q.platform.is.mobile) {

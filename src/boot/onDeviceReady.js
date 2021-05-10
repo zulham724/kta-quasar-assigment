@@ -8,13 +8,13 @@ export default ({ app, router, store, Vue }) => {
     requestPermission();
     appVersion({ store });
     
-    console.log("navigator.camera", navigator.camera);
+    // console.log("navigator.camera", navigator.camera);
    
 
-    // const token = store.getters["Auth/token"];
+    const token = store.getters["Auth/token"];
 
-    // if (token.access_token) {
-    //   store.dispatch("Notif/init");
-    // }
+    if (token.access_token) {
+      store.dispatch("Notif/init");
+    }
   }
 };

@@ -87,7 +87,7 @@ const mutations = {
 
 // Actions
 const actions = {
-    login({ commit }, credential) {
+    login({ commit, dispatch }, credential) {
         return new Promise((resolve, reject) => {
             const access = {
                 grant_type: "password",
@@ -111,7 +111,7 @@ const actions = {
                                 auth: auth
                             };
                             commit("auth_success", payload);
-                            
+                            dispatch("Notif/init", {}, { root: true });
                             resolve(resp);
                         })
                         .catch(err => {

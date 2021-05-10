@@ -91,6 +91,7 @@ export default {
               window.history.pushState(null, null, window.location.href);
             })
             .catch(err => {
+              console.log(err);
               this.$q.notify("Email atau password Anda salah")
             })
             .finally(() => {

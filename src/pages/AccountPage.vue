@@ -301,7 +301,8 @@ export default {
       Promise.all([
         this.$store.dispatch("Auth/PublishAssigmentsIndex"),
         this.$store.dispatch("Auth/UnpublishAssigmentsIndex"),
-        this.$store.dispatch("Auth/getAuth")
+        this.$store.dispatch("Auth/getAuth"),
+        this.getRooms()
       ]).then(res => {
         done();
       });
