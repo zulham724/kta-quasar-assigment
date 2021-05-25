@@ -19,6 +19,7 @@ module.exports = function (/* ctx */) {
     // https://quasar.dev/quasar-cli/boot-files
     boot: [
       'onDeviceReady',
+      'polyfill',
       'i18n',
       'axios',
       'sweetalert2',

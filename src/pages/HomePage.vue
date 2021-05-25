@@ -9,7 +9,7 @@
                 </q-toolbar-title>
                 <q-btn dense color="blue" round icon="notifications" class="q-ml-md">
                     <q-badge v-if="EchoNotification.unread_count>0" color="red" floating>{{EchoNotification.unread_count}}</q-badge>
-                    <q-menu anchor="bottom right" self="top right" auto-close transition-show="scale" transition-hide="scale">
+                    <q-menu anchor="bottom right" self="top right" auto-close >
                         <q-list style="width:250px;border:2px solid #1976D2; border-radius:5px">
                             <q-item>
                                 <q-item-section class="text-center">
@@ -94,7 +94,7 @@
         <q-page>
             <q-infinite-scroll v-if="tab == 'publish'" @load="onLoadPublish" :offset="250">
                 <div class="q-pa-none row items-start q-gutter-y-sm" v-if="Publish.items.data">
-                    <q-intersection v-for="assigment in Publish.items.data" :key="assigment.id" style="min-height:200px;width:100vw">
+                    <q-intersection v-for="assigment in Publish.items.data" :key="`publish-${assigment.id}`" style="min-height:200px;width:100vw">
                         <publish-item-component :assigment="assigment"></publish-item-component>
                     </q-intersection>
                 </div>
@@ -106,7 +106,7 @@
             </q-infinite-scroll>
             <q-infinite-scroll v-if="tab == 'unpublish'" @load="onLoadUnpublish" :offset="250">
                 <div class="q-pa-none row q-gutter-y-xs" v-if="Unpublish.items.data">
-                    <q-intersection v-for="assigment in Unpublish.items.data" :key="assigment.id" style="min-height:50px;width:100vw">
+                    <q-intersection v-for="assigment in Unpublish.items.data" :key="`unpublish-${assigment.id}`" style="min-height:50px;width:100vw">
                         <unpublish-item-component :assigment="assigment"></unpublish-item-component>
                     </q-intersection>
                 </div>

@@ -1,5 +1,5 @@
 <template>
-<div style="width:100%;top:10px=" class="q-pr-sm q-pl-sm">
+<div style="width:100%;top:10px" class="q-pr-sm q-pl-sm">
     <q-card flat bordered class="my-card" v-if="assigment != null" style="border:1px solid #1976D2;">
         <q-item>
             <q-item-section avatar>

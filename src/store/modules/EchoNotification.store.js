@@ -7,7 +7,7 @@ import Vue from "vue";
 const state = {
   items: {},
   unread_count: 0,
-  Echo: null,
+  Echo: null
 };
 
 // Mutations
@@ -52,6 +52,39 @@ const mutations = {
       state.unread_count++;
     }
   },
+  // sama dengan addNotification, bedanya untuk menghandle struktur json data yang berbeda
+  addNotification2(state, notification) {
+    if (!state.items.data.find(e => e.id == notification.id)) {
+      let new_item = {
+        id: notification.id,
+        type: notification.type,
+        created_at: notification.created_at,
+        key: notification.key,
+        data: { ...notification }
+      };
+      // if(notification.type.includes('Payable')){
+      //   console.log('Payable newitem',new_item);
+      // }
+      // hapus data yang lama dari array
+      if (notification.key) {
+        const oldItemIndex = state.items.data.findIndex(e => {
+          return (
+            e.type == notification.type &&
+            e.data[notification.key]["id"] == notification[notification.key]["id"]
+          );
+        });
+        console.log("oldItem index", oldItemIndex);
+        if(oldItemIndex>-1){
+          const removing = state.items.data.splice(oldItemIndex, 1);
+          console.log("removed oldData", removing);
+        }
+      }
+
+     
+      state.items.data.unshift(new_item);
+      state.unread_count++;
+    }
+  },
   setCount(state, count) {
     state.unread_count = count;
   },
@@ -65,7 +98,9 @@ const actions = {
   index({ commit }) {
     return new Promise((resolve, reject) => {
       axios
-        .get(`${this.state.Setting.url}/api/v1/notification?type=assigmentnotification,assigmentsharednotification`)
+        .get(
+          `${this.state.Setting.url}/api/v1/notification?type=assigmentnotification,assigmentsharednotification,payablequestionlistnotification,payableassigmentlistnotification`
+        )
         .then(res => {
           commit("set", { items: res.data });
           resolve(res);
@@ -186,15 +221,36 @@ const actions = {
       console.log("Subscribing to notification channel: " + channel);
       //console.log(Vue.prototype.$echo)
       const events = ["AssigmentTeacherEvent", "AssigmentSharedEvent"];
-      window.Echo.private(channel).listen(events[0], notification => {
-        console.log(notification.data);
-        notification.type = events[0];
-        commit("addNotification", notification);
-      }).listen(events[1], notification=>{
-        console.log(notification.data);
-        notification.type = events[1];
-        commit("addNotification", notification);
+      events.forEach(event => {
+        console.log("event", event);
+        window.Echo.private(channel).listen(event, notification => {
+          console.log(notification.data);
+          notification.type = event;
+          commit("addNotification", notification);
+        });
       });
+      window.Echo.private(channel).notification(notification => {
+        console.log("notifikasi", notification.type);
+        console.log("data notifikasi", notification);
+        commit("addNotification2", notification);
+      });
+      // window.Echo.private(channel).listen(events[0], notification => {
+      //   console.log(notification.data);
+      //   notification.type = events[0];
+      //   commit("addNotification", notification);
+      // }).listen(events[1], notification=>{
+      //   console.log(notification.data);
+      //   notification.type = events[1];
+      //   commit("addNotification", notification);
+      // }).listen(events[2], notification=>{
+      //   console.log(notification.data);
+      //   notification.type = events[2];
+      //   commit("addNotification", notification);
+      // }).listen(events[3], notification=>{
+      //   console.log(notification.data);
+      //   notification.type = events[3];
+      //   commit("addNotification", notification);
+      // });
     } else {
       console.log("user belum login atau belum connect ke server broadcast");
     }

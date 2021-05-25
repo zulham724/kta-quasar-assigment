@@ -17,6 +17,12 @@
             <q-intersection style="min-height:50px" v-else-if="item.type=='App\\Notifications\\CommentedAssigmentNotification'">
                 <announcement-item-assigment-comment :item="item"></announcement-item-assigment-comment>
             </q-intersection>
+            <q-intersection style="min-height:50px" v-else-if="item.type=='App\\Notifications\\PayableAssigmentNotification'">
+                <AnnouncementItemPayableAssigment :item="item"></AnnouncementItemPayableAssigment>
+            </q-intersection>
+             <q-intersection style="min-height:50px" v-else-if="item.type=='App\\Notifications\\PayableQuestionListNotification'">
+                <AnnouncementItemPayableQuestionList :item="item"></AnnouncementItemPayableQuestionList>
+            </q-intersection>
 
         </div>
     </div>
@@ -39,6 +45,9 @@ export default {
         AnnouncementItemCommentLike: () => import('components/announcement/commentlike/AnnouncementItem.vue'),
         AnnouncementItemAssigmentLike: () => import('components/announcement/assigmentlike/AnnouncementItem.vue'),
         AnnouncementItemAssigmentComment: () => import('components/announcement/assigmentcomment/AnnouncementItem.vue'),
+
+        AnnouncementItemPayableAssigment: () => import('components/announcement/payableassigment/AnnouncementItem.vue'),
+        AnnouncementItemPayableQuestionList: () => import('components/announcement/payablequestionlist/AnnouncementItem.vue'),
 
     },
     data() {

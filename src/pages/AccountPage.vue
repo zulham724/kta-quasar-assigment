@@ -122,7 +122,7 @@
                   <div class="q-pa-none row items-start q-gutter-y-sm">
                     <q-intersection
                       v-for="assigment in Auth.publish_assigments.data"
-                      :key="assigment.id"
+                      :key="`account-publish-${assigment.id}`"
                       :id="`publish-${assigment.id}`"
                       style="min-height:50px;width:100%"
                     >
@@ -137,7 +137,7 @@
                   <div class="q-pa-none q-gutter-y-xs">
                     <q-intersection
                       v-for="assigment in Auth.unpublish_assigments.data"
-                      :key="assigment.id"
+                      :key="`account-unpublish-${assigment.id}`"
                       :style="`min-height:50px;width: 100%`"
                     >
                       <unpublish-item-component
