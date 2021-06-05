@@ -31,7 +31,7 @@ export default {
     computed: {
         ...mapState(["Setting", "EchoNotification"]),
         getMsg: function () {
-            return this.item.data.question_list.name.length <= 30 ? this.item.data.question_list.name.length : this.item.data.question_list.name.substr(0, 30) + '....';
+            return this.item.data.question_list.name.length <= 30 ? this.item.data.question_list.name : this.item.data.question_list.name.substr(0, 30) + '....';
         }
     },
     data() {
@@ -44,11 +44,12 @@ export default {
         console.log(this.item)
     },
     methods: {
-        goToResult: function (sessionId) {
+        goToResult: function (question_list_id) {
             this.$router.push({
-                name: 'studentresult',
+                name: 'payableassigment',
                 params: {
-                    sessionId: sessionId
+                    tabInit:'question_item',
+                    elementId: question_list_id+''
                 }
             })
 

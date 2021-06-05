@@ -149,6 +149,14 @@ const routes = [{
                 component: () =>
                     import ("pages/MeetPage.vue")
             },
+            {
+                name: "payableassigment",
+                path: "/payableassigment/:tabInit?/:elementId?",
+                beforeEnter: multiguard([auth, actived]),
+                component: () =>
+                    import ("pages/PayableAssigment.vue"),
+                props: true,
+            },
         ]
     },
     {
@@ -184,7 +192,7 @@ const routes = [{
     },
     {
         path: '/knowledgeresult',
-        beforeEnter: multiguard([auth, actived]),
+        // beforeEnter: multiguard([auth, actived]),
         name: 'knowledgeresult',
         beforeEnter: multiguard([auth]),
         component: () =>

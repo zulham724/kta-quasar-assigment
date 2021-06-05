@@ -85,6 +85,12 @@ const mutations = {
       state.unread_count++;
     }
   },
+  deletePayableQuestionListNotification(state,notification_id){
+    const index = state.items.data.findIndex(e=>e.id===notification_id);
+    if(index>-1){
+      state.items.data.splice(index, 1);
+    }
+  }, 
   setCount(state, count) {
     state.unread_count = count;
   },
