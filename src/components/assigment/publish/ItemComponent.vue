@@ -144,7 +144,7 @@
             </q-item-section>
 
             <q-item-section side>
-                <q-item-label caption>{{getDate}}</q-item-label>
+                <q-item-label caption>{{assigment.created_at | moment('DD MMMM YYYY')}}</q-item-label>
             </q-item-section>
         </q-item>
 
@@ -167,7 +167,7 @@ export default {
     computed: {
         ...mapState(["Setting", "Auth"]),
         getDate() {
-            return date.formatDate(this.assigment.created_at, 'DD MMMM YYYY')
+            return moment(this.assigment.created_at, 'DD MMMM YYYY')
         }
     },
     data() {

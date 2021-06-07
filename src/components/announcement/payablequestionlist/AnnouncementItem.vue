@@ -9,7 +9,7 @@
         <q-item-section top>
             <q-item-label>
                 <b>Selamat,</b>
-                 butir soal Anda '<span class="text-grey-8">{{getMsg}}</span>' dapat dijadikan berbayar!
+                 butir soal '<span class="text-grey-8">{{getMsg}}</span>' dapat berprofit untuk Anda!
             </q-item-label>
             <q-item-label caption>
                 <div>{{ item.created_at | moment("from", "now") }}</div>

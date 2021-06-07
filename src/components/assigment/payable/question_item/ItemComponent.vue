@@ -42,17 +42,19 @@
               :disable="loading"
               @click="confirmPaid(0)"
               rounded
-              color="red"
+              class="bg-red-5 text-grey-1"
               label="Tolak Tawaran"
               icon="close"
+              dense
             />
             <q-btn
               :disable="loading"
               @click="confirmPaid(1)"
               rounded
               color="primary"
-              label="Jadikan berbayar"
-              icon="money"
+              label="Jadikan berprofit"
+              icon="check"
+              dense
             />
           </q-card-actions>
         </q-card>
@@ -107,7 +109,7 @@ export default {
     },
     deleteNotification(notification_id) {
       this.$store.commit(
-        "EchoNotification/deletePayableQuestionListNotification",
+        "EchoNotification/deleteNotificationById",
         notification_id
       );
     },
@@ -115,9 +117,9 @@ export default {
       if (value === 1) {
         this.$q
           .dialog({
-            title: "Konfirmasi Soal Berbayar",
+            title: "Konfirmasi Soal Berprofit",
             message:
-              "Sekali dijadikan berbayar, butir soal tidak dapat dirubah. Yakin?",
+              "Sekali dijadikan berprofit, butir soal tidak dapat dirubah. Yakin?",
             cancel: true,
             ok: {
               label: "Ya"
@@ -156,9 +158,9 @@ export default {
       } else {
         this.$q
           .dialog({
-            title: "Konfirmasi Tolak Tawaran Berbayar",
+            title: "Konfirmasi Tolak Tawaran Berprofit",
             message:
-              "Anda menolak untuk menjadikan butir soal ini menjadi tawaran berbayar. Yakin? Pilihan tidak dapat diganti",
+              "Anda menolak untuk menjadikan butir soal ini menjadi tawaran berprofit. Yakin? Pilihan tidak dapat diganti",
             cancel: true,
             ok: {
               label: "Ya"

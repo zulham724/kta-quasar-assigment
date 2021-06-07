@@ -5,7 +5,7 @@
         <q-toolbar class="bg-blue">
           <q-icon name="poll" style="font-size: 1.5em" />
           <q-toolbar-title>
-            <div class="text-body1">Kandidat Soal Berbayar</div>
+            <div class="text-body1">Seleksi Profit Soal</div>
           </q-toolbar-title>
           <!-- <q-btn flat round dense @click="$router.push({name:'deletedstudentresult'})">
           <q-icon name="o_auto_delete" />
@@ -43,12 +43,12 @@
                 v-for="item in PayableQuestionItem.items.data"
                 :key="`payable_question_item-${item.id}`"
               >
-                <PaybaleQuestionItem
+                <PayableQuestionItem
                   @handleScroll="handleScrollEvent"
                   :id="`question_item-${item.id}`"
                   :ref="`question_item-${item.id}`"
                   :item="item"
-                ></PaybaleQuestionItem>
+                ></PayableQuestionItem>
               </div>
               <!-- <q-expansion-item>
               <q-card>
@@ -59,9 +59,18 @@
             </q-expansion-item> -->
             </q-tab-panel>
 
-            <q-tab-panel name="question_package">
-              <div class="text-h6">Paket Soal Berbayar</div>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            <q-tab-panel name="question_package" class="q-gutter-xs">
+              <div
+                v-for="item in PayableQuestionPackage.items.data"
+                :key="`payable_question_package-${item.id}`"
+              >
+                <PayableQuestionPackage
+                  @handleScroll="handleScrollEvent"
+                  :id="`question_package-${item.id}`"
+                  :ref="`question_package-${item.id}`"
+                  :item="item"
+                ></PayableQuestionPackage>
+              </div>
             </q-tab-panel>
           </q-tab-panels>
           <template v-slot:loading>
@@ -69,6 +78,26 @@
               <q-spinner-dots color="primary" size="40px" />
             </div>
           </template>
+          <q-page-sticky position="bottom-right" :offset="[15, 10]">
+            <q-btn flat round>
+              <q-icon
+                @click="showing = !showing"
+                name="contact_support"
+                size="xl"
+                color="blue"
+              ></q-icon>
+            </q-btn>
+            <q-tooltip v-model="showing">
+              Kabar Gembira! Kami telah memberikan fitur baru pada aplikasi
+              PENILAIAN AGPAII DIGITAL untuk Bapak Ibu Guru. Fitur ini
+              memungkinkan soal-soal yang dibuat oleh Bapak Ibu Guru dianalisis
+              tingkat kesulitan dan kelayakannya oleh sistem. Sistem juga dapat
+              memberikan poin profit untuk Bapak Ibu Guru berdasarkan analisis
+              kelayakan butir soal tersebut. Mari manfaatkan aplikasi PENILAIAN
+              AGPAII DIGITAL dalam proses belajar mengajar dan share paket soal
+              kepada siswa Bapak Ibu melalui aplikasi SISWA PAI, GRATIS!
+            </q-tooltip>
+          </q-page-sticky>
         </q-infinite-scroll>
       </q-page>
     </q-pull-to-refresh>
@@ -93,13 +122,16 @@ export default {
     }
   },
   components: {
-    PaybaleQuestionItem: () =>
-      import("components/assigment/payable/question_item/ItemComponent.vue")
+    PayableQuestionItem: () =>
+      import("components/assigment/payable/question_item/ItemComponent.vue"),
+    PayableQuestionPackage: () =>
+      import("components/assigment/payable/question_package/ItemComponent.vue")
   },
   data() {
     return {
       tab: "question_item",
-      loading: false
+      loading: false,
+      showing: false
     };
   },
   computed: {
@@ -109,36 +141,48 @@ export default {
     this.tab = this.tabInit;
   },
   async mounted() {
-    // jika data awal belum diload, maka panggil init()
-    if (!this.checkIsDataInitialized(this.tab)) {
-      await this.init();
-    }
-    // jika parameter pertama adalah 'question_item' dan parameter kedua tidak kosong, maka
-    if (this.tabInit == "question_item" && this.elementId) {
-      const question_list_id = parseInt(this.elementId);
-      // jika tidak ada, maka load 1 item tsb, tambah ke state.items.data, kemudian panggil handleScroll()
-      if (!this.isExists("question_item", question_list_id)) {
-        try {
-          const res = await this.$store.dispatch(
-            "PayableQuestionItem/getItem",
-            question_list_id
-          );
-          console.log('res',res);
-          this.$store.commit("PayableQuestionItem/addTop", res);
-        } catch(err) {
-          console.log(err);
-          this.$q.notify(err);
+    try {
+      // jika data awal belum diload, maka panggil init()
+      const init = await this.checkIsAllInitialized();
+      console.log("init", init);
+      // jika parameter pertama adalah 'question_item' dan parameter kedua tidak kosong, maka
+      if (this.tabInit == "question_item" && this.elementId) {
+        const question_list_id = parseInt(this.elementId);
+        // jika tidak ada, maka load 1 item tsb, tambah ke state.items.data, kemudian panggil handleScroll()
+        if (!this.isExists("question_item", question_list_id)) {
+          try {
+            const res = await this.$store.dispatch(
+              "PayableQuestionItem/getItem",
+              question_list_id
+            );
+            console.log("res", res);
+            this.$store.commit("PayableQuestionItem/addTop", res);
+          } catch (err) {
+            console.log(err);
+            this.$q.notify(err);
+          }
         }
       }
-    }
-    // jika parameter pertama adalah 'question_package' dan parameter kedua tidak kosong, maka
-    else if (this.tabInit == "question_package" && this.elementId) {
-      const assigment_id = parseInt(this.elementId);
-      // jika item ada dalam state.items.data, maka panggil handleScroll()
-      if (this.isExists("question_package", assigment_id)) {
+      // jika parameter pertama adalah 'question_package' dan parameter kedua tidak kosong, maka
+      else if (this.tabInit == "question_package" && this.elementId) {
+        const assigment_id = parseInt(this.elementId);
         // jika tidak ada, maka load 1 item tsb, tambah ke state.items.data, kemudian panggil handleScroll()
-        this.handleScroll();
+        if (!this.isExists("question_package", assigment_id)) {
+          try {
+            const res = await this.$store.dispatch(
+              "PayableQuestionPackage/getItem",
+              assigment_id
+            );
+            console.log("res", res);
+            this.$store.commit("PayableQuestionPackage/addTop", res);
+          } catch (err) {
+            console.log(err);
+            this.$q.notify(err);
+          }
+        }
       }
+    } catch (err) {
+      this.$q.notify(err.message);
     }
   },
   methods: {
@@ -147,6 +191,24 @@ export default {
         this.handleScroll();
       }
     },
+    // mengecek apakah ada salah satu di antara data question_item dan question_package yg belum load data awal
+    async checkIsAllInitialized() {
+      let promises = [];
+      if (!this.PayableQuestionItem.items.data) {
+        promises.push(this.$store.dispatch("PayableQuestionItem/index"));
+      }
+      if (!this.PayableQuestionPackage.items.data) {
+        promises.push(this.$store.dispatch("PayableQuestionPackage/index"));
+      }
+      try {
+        const init = Promise.all(promises);
+        return init;
+      } catch (err) {
+        return err;
+      }
+    },
+
+    // mengecek salah satu antara question_item dan question_package
     checkIsDataInitialized(type = "question_item") {
       if (type == "question_item" && !this.PayableQuestionItem.items.data) {
         return false;
@@ -179,7 +241,7 @@ export default {
       console.log("ref_id", ref_id);
       console.log("ele", ele);
       if (!ref_child) return;
-      ref_child[0].setExpandable();
+      if (ref_child[0].setExpandable) ref_child[0].setExpandable();
       // console.log('ref_id',ref_id)
       console.log("ele", ele);
 
@@ -194,29 +256,45 @@ export default {
     },
     async init(done) {
       this.loading = true;
-      if (this.tab == "question_item") {
-        try {
-          const res = await this.$store.dispatch("PayableQuestionItem/index");
-          return res;
-          // this.handleScroll();
-        } finally {
-          this.loading = false;
-          if (done) done();
-          return Promise.resolve(false);
-        }
-      } else {
-        try {
-          const res = await this.$store.dispatch(
-            "PayableQuestionPackage/index"
-          );
-          return res;
-        } finally {
-          this.loading = false;
-          if (done) done();
-          return Promise.resolve(false);
-        }
+      const promises = [
+        this.$store.dispatch("PayableQuestionItem/index"),
+        this.$store.dispatch("PayableQuestionPackage/index")
+      ];
+      let res;
+      try {
+        res = await Promise.allSettled(promises);
+      } finally {
+        this.loading = false;
+        if (done) done();
+        return res;
       }
     },
+    // async init(done) {
+    //   this.loading = true;
+    //   if (this.tab == "question_item") {
+    //     try {
+    //       const res = await this.$store.dispatch("PayableQuestionItem/index");
+    //       return res;
+    //       // this.handleScroll();
+    //     } finally {
+    //       this.loading = false;
+    //       if (done) done();
+    //       return Promise.resolve(false);
+    //     }
+    //   } else {
+    //     console.log("should load question_package");
+    //     try {
+    //       const res = await this.$store.dispatch(
+    //         "PayableQuestionPackage/index"
+    //       );
+    //       return res;
+    //     } finally {
+    //       this.loading = false;
+    //       if (done) done();
+    //       return Promise.resolve(false);
+    //     }
+    //   }
+    // },
     onLoadQuestionItem(index, done) {
       this.PayableQuestionItem.items.next_page_url
         ? this.$store.dispatch("PayableQuestionItem/next").then(res => done())
