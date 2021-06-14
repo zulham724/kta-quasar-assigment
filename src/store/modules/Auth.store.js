@@ -33,6 +33,7 @@ const mutations = {
         state.publish_assigments={}
         state.unpublish_assigments={}
     },
+   
     setAssigment(state, payload){
          //assigment yang ada di state.auth.publish_assigments
         // let index = state.auth.publish_assigments.findIndex(item => item.id == payload.assigment.id);
@@ -50,6 +51,16 @@ const mutations = {
         }
        
     },
+    setAssigmentByKey(state, {assigment, keys}){
+     
+       let index = state.publish_assigments.data.findIndex(item => item.id == assigment.id);
+       if(index>-1){
+           keys.forEach(v=>{
+               state.publish_assigments.data[index][v] = assigment[v]
+           })
+       }
+      
+   },
     /////////////////////////////////////////
     setPublishAssigments(state, payload){
         state.publish_assigments = payload;

@@ -4,7 +4,7 @@
       <q-toolbar class="bg-blue">
         <q-icon name="fa fa-file-alt" style="font-size: 1.5em" />
         <q-toolbar-title>
-          <div class="text-body1">Rakit Soal</div>
+          <div class="text-body1">Rakit Soal Berprofit</div>
         </q-toolbar-title>
         <q-space />
       </q-toolbar>
@@ -232,7 +232,7 @@
                   @click="
                     () => {
                       //search.display = true;
-                      $router.push('addquestionlists');
+                      $router.push('addpayablequestionlists');
                       //$forceUpdate();
                     }
                   "
@@ -354,7 +354,7 @@ export default {
       loading: false,
       step: 1,
       assigment: {
-        is_paid: false,
+        is_paid: true,
         is_publish: true,
         isTimer: false,
         isExpire: false,
@@ -398,8 +398,8 @@ export default {
   watch: {
     assigment: {
       handler: function() {
-        console.log("setBuild ");
-        console.log(this.assigment.name);
+        console.log("setBuild ", this.assigment);
+        // console.log(this.assigment.name);
         this.setBuild();
         // this.$store.commit("Assigment/setBuild", {
         //   build: this.assigment
@@ -412,11 +412,12 @@ export default {
     if (this._step) {
       this.step = this._step;
     }
+
     this.setBuild = debounce(this.setBuild, 500);
 
-    // jika ada soal berprofit dgn question_lists>0, tampilkan dialog konfirmasi
-    if (this.IsEmptyPayableAssigmentQuestionLists()) {
-      this.$store.commit("Assigment/setIsPaid", false);
+    // jika ada soal biasa dgn question_lists>0, tampilkan dialog konfirmasi
+    if (this.IsEmptyAssigmentQuestionLists()) {
+      this.$store.commit("Assigment/setIsPaid", true);
       //set auth
       this.loading = true;
       this.initAssigment();
@@ -435,17 +436,17 @@ export default {
           },
 
           message:
-            "Ada Rakit Soal Berprofit yang belum Anda submit sebelumnya. Lanjutkan rakit soal berprofit?"
+            "Ada Rakit Soal Non-profit yang belum Anda submit sebelumnya. Lanjutkan rakit soal non-profit?"
         })
         .onOk(() => {
           // lanjutkan merakit soal berprofit
-          this.$router.push("payable_build");
+          this.$router.push("build");
         })
         .onCancel(() => {
-          // jgn lanjutkan merakit soal berprofit, jadi hapus semua butir soal
-          this.$store.commit("Assigment/resetBuild", { is_paid: false });
+          // jgn lanjutkan merakit soal biasa, jadi hapus semua butir soal
+          this.$store.commit("Assigment/resetBuild", { is_paid: true });
 
-          // this.$store.commit("Assigment/setIsPaid", false);
+          // this.$store.commit("Assigment/setIsPaid", true);
           //set auth
           this.loading = true;
           this.initAssigment();
@@ -454,8 +455,6 @@ export default {
           // console.log('I am triggered on both OK and Cancel')
         });
     }
-
-    //alert(this.assigment.assigment_category_id);
   },
   mounted() {
     //console.log(this.assigment)
@@ -464,6 +463,7 @@ export default {
     //this.getQuestionLists = debounce(this.getQuestionLists, 500);
   },
   methods: {
+    //debounce,
     initAssigment() {
       // dispatch Auth/getAuth di paling awal agar mengupdate Auth.auth.profile
       this.$store.dispatch("Auth/getAuth").then(() => {
@@ -476,16 +476,15 @@ export default {
         });
       });
     },
-    IsEmptyPayableAssigmentQuestionLists() {
+    IsEmptyAssigmentQuestionLists() {
       if (
-        this.Assigment.build.is_paid &&
+        !this.Assigment.build.is_paid &&
         this.Assigment.build.question_lists.length
       ) {
         return false;
       }
       return true;
     },
-    //debounce,
     setBuild() {
       this.$store.commit("Assigment/setBuild", {
         build: this.assigment
@@ -517,7 +516,7 @@ export default {
       this.assigment = {
         ...this.Assigment.build
       };
-      console.log("anjay ");
+      console.log("init ");
       if (this.Grade.grades.length == 0) this.$store.dispatch("Grade/index");
       //this.$forceUpdate();
     },

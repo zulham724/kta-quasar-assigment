@@ -31,6 +31,8 @@ export default ({ app, router, Vue, store }) => {
     if (token.access_token) {
         Vue.prototype.$http.defaults.headers.common.Accept = "application/json";
         Vue.prototype.$http.defaults.headers.common.Authorization = `${token.token_type} ${token.access_token}`;
+        // axios.defaults.headers.common.Accept = "application/json";
+        // axios.defaults.headers.common.Authorization = `${token.token_type} ${token.access_token}`;
         // init
         store
             .dispatch("Auth/getAuth")

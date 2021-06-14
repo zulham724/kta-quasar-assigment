@@ -12,11 +12,11 @@
 
     <q-form class="q-gutter-sm q-pa-md" ref="form" @submit="shareAssigment">
       <q-toggle
-        v-model="assigment.isTimer"
+        v-model="isTimer"
         label="Aktifkan untuk set timer ketika mengerjakan soal"
       ></q-toggle>
       <q-input
-        v-if="assigment.isTimer"
+        v-if="isTimer"
         type="number"
         rounded
         color="blue"
@@ -28,11 +28,11 @@
         v-model="assigment.timer"
       />
       <q-toggle
-        v-model="assigment.isExpire"
+        v-model="isExpired"
         label="Aktifkan tanggal berlaku untuk soal? Seperti ketika anda ingin membuat soal ujian yang hanya bisa diisi/dibuka pada hari dan jam tertentu"
       />
       <q-input
-        v-if="assigment.isExpire"
+        v-if="isExpired"
         rounded
         color="cyan-7"
         outlined
@@ -64,7 +64,7 @@
         </template>
       </q-input>
       <q-input
-        v-if="assigment.isExpire"
+        v-if="isExpired"
         rounded
         color="blue"
         outlined
@@ -95,12 +95,9 @@
           </q-icon>
         </template>
       </q-input>
-      <q-toggle
-        v-model="assigment.isPassword"
-        label="Aktifkan untuk mengunci soal"
-      />
+      <q-toggle v-model="isPassword" label="Aktifkan untuk mengunci soal" />
       <q-input
-        v-if="assigment.isPassword"
+        v-if="isPassword"
         v-model="assigment.password"
         type="password"
         rounded
@@ -168,9 +165,17 @@ export default {
   },
   data() {
     return {
+      isTimer: false,
+      isExpired: false,
+      isPassword: false,
       loading: false,
       step: 1,
-      assigment: null,
+      assigment: {
+        timer: null,
+        end_at: null,
+        start_at: null,
+        password: null
+      },
       search: {
         dispay: false,
         key: ""
@@ -191,17 +196,15 @@ export default {
   computed: {
     ...mapState(["Grade", "Auth", "Setting", "Assigment"])
   },
-  //   watch: {
-  //     assigment: {
-  //       handler: function() {
-  //         this.$store.commit("Assigment/setBuild", { build: this.assigment });
-  //       },
-  //       deep: true
-  //     }
-  //   },
-  mounted() {
-   
+  watch: {
+    // isTimer:function(val){
+    //   if(val)this.timer=null;
+    //   else this.timer=60;
+    // },
+    // isPassword:function(val){
+    // }
   },
+  mounted() {},
   created() {
     this.init();
     //this.$store.dispatch("AssigmentCategory/index");
@@ -211,24 +214,35 @@ export default {
     init() {
       this.assigment = {
         id: this.assigmentId,
-        ...this.Assigment.build
+        timer: null,
+        start_at: null,
+        end_at: null,
+        password: null,
+        note: null,
+        grade_code: null
       };
-      delete this.assigment.question_lists;
-      delete this.assigment.grade_id;
-      console.log(this.assigment);
+
+      // console.log(this.assigment);
       //if (this.Grade.grades.length == 0) this.$store.dispatch("Grade/index");
       //this.$forceUpdate();
     },
     shareAssigment() {
       //return;
+      console.log("sharePage", this.assigment);
+      // return;
       this.$refs.form.validate().then(success => {
         if (success) {
           this.loading = true;
           this.$q.notify("Tunggu");
           //this.$router.push("/");
-          delete this.assigment.grade_id;
           // console.log(this.assigment)
           // return;
+          if(!this.isTimer)this.assigment.timer=null;
+          if(!this.isPassword)this.assigment.password=null;
+          if(!this.isExpired){
+            this.assigment.start_at=null;
+            this.assigment.end_at=null;
+          }
           this.$store
             .dispatch("Publish/shareAssigment", this.assigment)
             .then(res => {

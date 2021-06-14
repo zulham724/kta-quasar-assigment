@@ -101,10 +101,24 @@ const routes = [{
                 props: true,
             },
             {
+                path: 'payable_build',
+                name: 'payable_build',
+                beforeEnter: multiguard([auth, checkProfile]),
+                component: () => import ('pages/PayableBuildPage.vue'),
+                props: true,
+            },
+            {
                 path: 'addquestionlists',
                 name: 'addquestionlists',
                 beforeEnter: multiguard([auth, checkProfile]),
                 component: () => import ('pages/Assigment/AddQuestionListsPage.vue'),
+                props: true
+            },
+            {
+                path: 'addpayablequestionlists',
+                name: 'addpayablequestionlists',
+                beforeEnter: multiguard([auth, checkProfile]),
+                component: () => import ('pages/Assigment/AddPayableQuestionListsPage.vue'),
                 props: true
             },
             {

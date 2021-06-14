@@ -41,13 +41,14 @@
             size="sm"
           ></q-btn>
         </div>
-        <div class="self-center">
+        <div class="">
+          <span v-if="!question_list.audio.file" class="text-caption text-grey-6">Anda dapat menambahkan suara&nbsp;</span>
           <q-btn
             :disable="!$q.platform.is.mobile"
             round
-            class="q-my-xs"
             color="blue"
             size="sm"
+            class="q-my-xs"
             icon="mic"
             @click="recordAudio(ql)"
           >
