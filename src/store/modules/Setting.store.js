@@ -4,7 +4,7 @@ import axios from 'axios'
 const state = {
     // url: 'https://agpaiidigital.org',
     storageUrl: 'http://cdn-agpaiidigital.online',
-    url: process.env.DEV ? 'http://192.168.1.17:8000' : 'https://agpaiidigital.org',
+    url: process.env.DEV ? 'http://192.168.59.1:8000' : 'https://agpaiidigital.org',
     // url: process.env.DEV ? 'http://192.168.56.1:8000' : 'https://agpaiidigital.org',
     // url: 'https://agpaiidigital.org',
     // storageUrl: 'http://localhost:8000/storage',

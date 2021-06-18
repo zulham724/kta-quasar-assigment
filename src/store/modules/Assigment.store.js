@@ -132,12 +132,24 @@ const actions = {
 
       let form = new FormData();
       access.question_lists.forEach((v, k) => {
-        console.log("cok");
+        console.log("audio dan image");
         if (v.audio.blob) {
           form.append(`audio[${k}]`, v.audio.blob);
         } else {
           form.append(`audio[${k}]`, "");
         }
+
+        let images=[];
+        if(v.images.length){
+          v.images.forEach((image, i)=>{
+            form.append(`images[${k}][${i}]`, image);
+          });
+        }else{
+          form.append(`images[${k}]`, "");
+        }
+       
+      
+        
       });
 
       form.append("data", JSON.stringify(access));

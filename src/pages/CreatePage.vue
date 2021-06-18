@@ -453,6 +453,7 @@ export default {
           assigment_type_id: assigment_type.id
         },
         audio: {},
+        images:[],
         answer_lists: [
           {
             name: "",
@@ -468,18 +469,21 @@ export default {
         if (event) event.preventDefault();
 
         if (success) {
-          // this.loading = true;
-          this.$q.notify("Tunggu");
-          this.$router.push("/");
+          this.loading = true;
+          // this.$router.push("/");
           this.$store
             .dispatch("Assigment/store", { access: this.assigment, audio: "" })
             .then(res => {
               // this.$store.commit('Assigment/addUnpublish',{unPublish:res.data})
               this.$q.notify("Berhasil menerbitkan soal");
+              // this.$q.notify("Tunggu");
+
             })
             .catch(err => {
               console.log(err);
               this.$q.notify("Terjadi kesalahan");
+            }).finally(()=>{
+              this.loading=false;
             });
         }
       });
