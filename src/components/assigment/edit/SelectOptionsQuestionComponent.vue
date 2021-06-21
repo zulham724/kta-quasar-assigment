@@ -1,6 +1,7 @@
 <template>
   <q-card class="q-mb-md">
     <q-card-section>
+      <image-picker :is-enabled="false" class="q-mb-sm" :images.sync="question_list.images" />
       <q-input
         v-model="question_list.name"
         rounded
@@ -11,9 +12,8 @@
         :label="`Soal ${ql + 1}`"
         hint="Pilihan ganda"
         lazy-rules
-        :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
+        :rules="[val => (val && val.length > 0) || 'Harus diisi']"
       >
-       
       </q-input>
       <div class="row justify-end q-gutter-sm">
         <div class="" v-if="question_list.audio">
@@ -23,7 +23,7 @@
             @click="playAudio"
             color="blue"
             icon="play_arrow"
-            size="sm" 
+            size="sm"
             class="q-mb-xs"
           ></q-btn>
           <q-btn
@@ -33,10 +33,9 @@
             color="blue"
             icon="stop"
             class="q-mb-xs"
-            size="sm" 
+            size="sm"
           ></q-btn>
         </div>
-       
       </div>
       <q-input
         v-for="(answer_list, al) in question_list.answer_lists"
@@ -50,7 +49,7 @@
         :label="String.fromCharCode('A'.charCodeAt(0) + al)"
         hint="Butir jawaban"
         lazy-rules
-        :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
+        :rules="[val => (val && val.length > 0) || 'Harus diisi']"
       >
         <template v-slot:after>
           <q-btn
@@ -59,9 +58,7 @@
             :flat="answer_list.value == null ? true : false"
             :color="answer_list.value != null ? 'green-4' : null"
             :icon="answer_list.value != null ? 'check' : null"
-            
           />
-  
         </template>
       </q-input>
 
@@ -83,13 +80,14 @@
   </q-card>
 </template>
 <script>
-import {
-    mapState
-} from "vuex";
+import { mapState } from "vuex";
 export default {
   props: {
     ql: Number,
-    question_list: Object,
+    question_list: Object
+  },
+  components: {
+    ImagePicker: () => import("components/imagepicker/imagePicker.vue")
   },
   data() {
     return {
@@ -97,23 +95,30 @@ export default {
         isPlay: false,
         item: {
           currentTime: 0,
-          duration: 0,
-        },
-      },
+          duration: 0
+        }
+      }
     };
   },
   created() {
     // this.question_list.answer_lists = []
   },
+   watch:{
+    "question_list.images":function(val){
+      console.log('watch edit question_list.images',val);
+    }
+  },
   computed: {
-        ...mapState(["Setting"])
+    ...mapState(["Setting"])
   },
   methods: {
     playAudio() {
-      this.audio.item = new Audio(`${this.Setting.storageUrl}/${this.question_list.audio.src}`);
+      this.audio.item = new Audio(
+        `${this.Setting.storageUrl}/${this.question_list.audio.src}`
+      );
       this.audio.item.play();
       let vm = this;
-      let a = setInterval(function () {
+      let a = setInterval(function() {
         if (vm.audio.item.currentTime >= vm.audio.item.duration) {
           vm.audio.isPlay = false;
           console.log("stop gan");
@@ -131,7 +136,7 @@ export default {
       this.audio.item.pause();
       this.audio.item.currentTime = 0;
       this.audio.isPlay = false;
-    },
-  },
+    }
+  }
 };
 </script>

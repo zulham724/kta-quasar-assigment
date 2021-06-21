@@ -1,7 +1,7 @@
 <template>
   <q-card class="q-mb-md">
     <q-card-section>
-     <image-picker class="q-mb-sm" :images.sync="question_list.images"/>
+      <image-picker class="q-mb-sm" :images.sync="question_list.images" />
       <q-input
         v-model="question_list.name"
         rounded
@@ -81,63 +81,23 @@
           </q-btn>
         </div>
       </div>
-      <q-input
-        v-for="(answer_list, al) in question_list.answer_lists"
-        :key="al"
-        v-model="answer_list.name"
-        rounded
-        color="blue"
-        outlined
-        autogrow
-        dense
-        :label="String.fromCharCode('A'.charCodeAt(0) + al)"
-        hint="Butir jawaban"
-        lazy-rules
-        :rules="[val => (val && val.length > 0) || 'Harus diisi']"
-      >
-        <template v-slot:after>
-          <q-btn
-            round
-            dense
-            :flat="answer_list.value == null ? true : false"
-            :color="answer_list.value != null ? 'green-4' : null"
-            icon="check"
-            @click="
-              () => {
-                question_list.answer_lists.filter((item, i) => {
-                  i == al ? (item.value = 100) : (item.value = null);
-                });
-              }
-            "
-          />
-          <q-btn
-            v-if="al != 0"
-            round
-            dense
-            flat
-            icon="close"
-            @click="
-              () => {
-                question_list.answer_lists.splice(al, 1);
-              }
-            "
-          />
-        </template>
-      </q-input>
+
+      <div v-for="(answer_list, al) in question_list.answer_lists" :key="answer_list._id">
+        <answer-list
+          @removeAnswerList="removeAnswerList"
+          @setAnswerListType="setAnswerListType"
+          :question_list.sync="question_list"
+          :answer_list.sync="answer_list"
+          :al="al"
+        />
+      </div>
 
       <q-btn
         color="primary"
         outline
         rounded
         label="Tambah butir jawaban"
-        @click="
-          () => {
-            question_list.answer_lists.push({
-              name: '',
-              value: null
-            });
-          }
-        "
+        @click="addAnswerList()"
       />
     </q-card-section>
   </q-card>
@@ -149,12 +109,13 @@ export default {
     question_list: Object
   },
   components: {
-    ImagePicker: () => import("components/imagepicker/imagePicker.vue")
-    
+    ImagePicker: () => import("components/imagepicker/imagePicker.vue"),
+    AnswerList: () =>
+      import("components/assigment/selectoptions_answerlist/AnswerList.vue")
   },
-  watch:{
-    "question_list.images":function(val){
-      console.log('watch question_list.images',val);
+  watch: {
+    "question_list.images": function(val) {
+      console.log("watch question_list.images", val);
     }
   },
   data() {
@@ -173,6 +134,34 @@ export default {
     // console.log('iamges',this.question_list.images);
   },
   methods: {
+    setAnswerListType({ answer_list, type }) {
+      answer_list.type = type;
+    },
+    removeAnswerList({ question_list, index }) {
+      console.log(
+        "remove answer_list index:",
+        index,
+        "from question_list",
+        question_list
+      );
+      question_list.answer_lists.splice(index, 1);
+    },
+    addAnswerList() {
+      const len = this.question_list.answer_lists.length;
+      let type = "text";
+      if (len > 0) {
+        const current_answer_list = this.question_list.answer_lists[len - 1];
+        type = current_answer_list.type;
+      }
+
+      this.question_list.answer_lists.push({
+        _id:len+Date.now(),
+        type,
+        name: "",
+        value: null,
+        images: []
+      });
+    },
     addImage() {},
     playAudio() {
       // this.audio = new Audio(this.question_list.audio.file.localURL);

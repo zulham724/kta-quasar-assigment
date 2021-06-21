@@ -11,7 +11,7 @@
     </q-header>
 
     <q-page>
-      <q-form class="q-gutter-sm" ref="form" style="width: 100%">
+      <q-form class="q-gutter-sm" ref="form" >
         <q-stepper v-model="step" color="blue" style="width: 100%" animated>
           <q-step
             :name="1"
@@ -457,7 +457,9 @@ export default {
         answer_lists: [
           {
             name: "",
-            value: 100
+            value: 100,
+            images:[],
+            type:'text',
           }
         ]
       });

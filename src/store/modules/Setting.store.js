@@ -33,7 +33,8 @@ const actions = {
 
 // Getter functions
 const getters = {
-    url: state => state.url
+    url: state => state.url,
+    storageUrl: state => state.storageUrl,
 }
 
 export default {

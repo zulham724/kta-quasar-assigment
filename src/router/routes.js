@@ -93,7 +93,16 @@ const routes = [{
                 beforeEnter: multiguard([auth, checkProfile]),
                 component: () =>
                     import ("pages/CreatePage.vue")
-            }, {
+            },
+            {
+                path: '/assigment/:assigmentId/edit',
+                beforeEnter: multiguard([auth, actived]),
+                name: 'assigmentedit',
+                component: () =>
+                    import ('pages/Assigment/EditPage.vue'),
+                props: true
+            },
+            {
                 path: 'build',
                 name: 'build',
                 beforeEnter: multiguard([auth, checkProfile]),
@@ -212,14 +221,7 @@ const routes = [{
         component: () =>
             import ('pages/KnowledgeResultPage.vue'),
         props: true
-    }, {
-        path: '/assigment/:assigmentId/edit',
-        beforeEnter: multiguard([auth, actived]),
-        name: 'assigmentedit',
-        component: () =>
-            import ('pages/Assigment/EditPage.vue'),
-        props: true
-    },
+    }, 
     {
         path: "/login",
         name: "login",

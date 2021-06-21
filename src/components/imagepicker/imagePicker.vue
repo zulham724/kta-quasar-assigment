@@ -1,11 +1,12 @@
 <template>
 <div>
-  <div class="row q-gutter-sm">
+  <div class="row q-gutter-md" v-show="isEnabled">
     <q-file v-show="false"  @input="inputFile" multiple ref="filePicker" label="Standard" />
     <div class="col-1">
       <q-btn
         round
         @click="addImage"
+        :disable="!isEnabled"
         color="blue"
         icon="add"
         class="q-my-xs"
@@ -18,7 +19,7 @@
   </div>
   <div class="row q-gutter-xs">
       <div class="col-sm-3" v-for="(file, i) in files" :key="file.id">
-         <image-preview @removeFile="removeFile" :file="file" :index="i"/>
+         <image-preview :is-enabled="isEnabled" @removeFile="removeFile" :file="file" :index="i"/>
          <!-- <q-img src="https://cdn.quasar.dev/img/parallax2.jpg" style="width: 100%"/> -->
       </div>
   </div>
@@ -29,6 +30,10 @@ import imagePreview from './imagePreview.vue';
 export default {
   components: { imagePreview },
   props: {
+    isEnabled:{
+      type:Boolean,
+      default:true,
+    },
     images:{
       type: Array,
       required: true

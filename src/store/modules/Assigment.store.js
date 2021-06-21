@@ -1,6 +1,7 @@
 /* Module1.store.js */
 import axios from "axios";
 import moment from "moment";
+import { format } from "quasar";
 
 // function removeDuplicates(originalArray, prop) {
 //     var newArray = [];
@@ -128,8 +129,13 @@ const actions = {
   },
   store({ commit }, { access, audio }) {
     return new Promise((resolve, reject) => {
-      // console.log('access',access);
-
+      console.log('access',access);
+      // resolve('c');
+      // return;
+      const keys = Object.keys(access);
+      console.log('keys',keys);
+      // resolve(e);
+      // return;
       let form = new FormData();
       access.question_lists.forEach((v, k) => {
         console.log("audio dan image");
@@ -147,11 +153,42 @@ const actions = {
         }else{
           form.append(`images[${k}]`, "");
         }
-       
-      
-        
+        //looping question_lists.*.answer_lists
+        v.answer_lists.forEach((v2,k2)=>{
+          if(v2.type=='image'){
+            v2.images.forEach((image, i)=>{
+              form.append(`question_lists[${k}][answer_lists][${k2}][images][${i}]`, image);
+            });
+            
+          }
+          
+        });
       });
 
+      // keys.forEach((v,k)=>{
+      //   if((access[v] instanceof Array)==false){
+      //     form.append(v,access[v]);
+      //   }
+      
+      // });
+      // access.question_lists.forEach((v,k)=>{
+      //   form.append(`question_lists[${k}][name]`,v.name);
+      //   form.append(`question_lists[${k}][description]`,v.description);
+      //   // pivot object
+      //   form.append(`question_lists[${k}][pivot][assigment_type]`,v.pivot.assigment_type);
+      //   form.append(`question_lists[${k}][pivot][assigment_type_id]`,v.pivot.assigment_type_id);
+      //   form.append(`question_lists[${k}][pivot][creator_id]`,v.pivot.creator_id);
+      //   form.append(`question_lists[${k}][pivot][creator_id]`,v.pivot.creator_id);
+
+      //   // answer_list array
+      //   v.answer_lists.forEach((v2,k2)=>{
+      //     form.append(`question_lists[${k}][answer_lists][${k2}]`)
+      //   });
+
+      // });
+
+
+      // console.log('form',form)
       form.append("data", JSON.stringify(access));
       axios
         .post(`${this.state.Setting.url}/api/v1/assigment`, form, {
@@ -183,6 +220,9 @@ const actions = {
   },
   update({ commit, dispatch }, payload) {
     return new Promise((resolve, reject) => {
+
+      let form = new FormData();
+      
       let access = {
         ...payload,
         _method: "put"
