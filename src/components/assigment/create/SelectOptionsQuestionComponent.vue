@@ -12,16 +12,10 @@
         :label="`Soal ${ql + 1}`"
         hint="Pilihan ganda"
         lazy-rules
-        :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+        :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
       >
         <template v-slot:after>
-          <q-btn
-            round
-            dense
-            flat
-            icon="close"
-            @click="$emit('deleteQuestionList', ql)"
-          />
+          <q-btn round dense flat icon="close" @click="$emit('deleteQuestionList', ql)" />
         </template>
       </q-input>
       <div class="row justify-end q-gutter-sm">
@@ -56,9 +50,7 @@
           ></q-btn>
         </div>
         <div class="">
-          <span
-            v-if="!question_list.audio.file"
-            class="text-caption text-grey-6"
+          <span v-if="!question_list.audio.file" class="text-caption text-grey-6"
             >Anda dapat menambahkan suara&nbsp;</span
           >
           <q-btn
@@ -106,17 +98,17 @@
 export default {
   props: {
     ql: Number,
-    question_list: Object
+    question_list: Object,
   },
   components: {
     ImagePicker: () => import("components/imagepicker/imagePicker.vue"),
     AnswerList: () =>
-      import("components/assigment/selectoptions_answerlist/AnswerList.vue")
+      import("components/assigment/selectoptions_answerlist/AnswerList.vue"),
   },
   watch: {
-    "question_list.images": function(val) {
+    "question_list.images": function (val) {
       console.log("watch question_list.images", val);
-    }
+    },
   },
   data() {
     return {
@@ -124,9 +116,9 @@ export default {
         isPlay: false,
         item: {
           currentTime: 0,
-          duration: 0
-        }
-      }
+          duration: 0,
+        },
+      },
     };
   },
   created() {
@@ -155,11 +147,11 @@ export default {
       }
 
       this.question_list.answer_lists.push({
-        _id:len+Date.now(),
+        _id: len + Date.now(),
         type,
         name: "",
         value: null,
-        images: []
+        images: [],
       });
     },
     addImage() {},
@@ -167,7 +159,7 @@ export default {
       // this.audio = new Audio(this.question_list.audio.file.localURL);
       this.audio.item.play();
       let vm = this;
-      let a = setInterval(function() {
+      let a = setInterval(function () {
         if (vm.audio.item.currentTime >= vm.audio.item.duration) {
           vm.audio.isPlay = false;
           console.log("stop gan");
@@ -192,7 +184,7 @@ export default {
       //this.assigment.question_lists[index]
       navigator.device.audiorecorder.recordAudio(
         //membuka audio recoder
-        function(data) {
+        function (data) {
           //data adalah hasil dri record
           console.log(data);
           const obj = JSON.parse(data);
@@ -201,22 +193,22 @@ export default {
           //membaca file hasil record audio
           window.resolveLocalFileSystemURL(
             "file://" + obj.full_path,
-            function(entry) {
+            function (entry) {
               entry.file(
-                function(file) {
+                function (file) {
                   //tambah object audio
                   const audio = {
                     file: file,
-                    nativePath: obj.full_path
+                    nativePath: obj.full_path,
                   };
 
                   //BEGIN olah data hasil record ke Blob
                   var reader = new FileReader();
-                  reader.onloadend = function() {
+                  reader.onloadend = function () {
                     console.log("Successful file write: " + this.result);
 
                     var blob = new Blob([new Uint8Array(this.result)], {
-                      type: "audio/mp4"
+                      type: "audio/mp4",
                     });
                     audio.blob = blob;
                   };
@@ -228,11 +220,9 @@ export default {
 
                   vm.$emit("addAudioToQuestionList", {
                     audio: audio,
-                    ql: index
+                    ql: index,
                   });
-                  vm.audio.item = new Audio(
-                    vm.question_list.audio.file.localURL
-                  );
+                  vm.audio.item = new Audio(vm.question_list.audio.file.localURL);
                   // console.log('anjay',vm.audio.item.duration);
 
                   // vm.assigment.question_lists[index].audio = {
@@ -241,12 +231,12 @@ export default {
                   // };
                 },
 
-                function(error) {
+                function (error) {
                   console.log("error gan", error);
                 }
               );
             },
-            function(error) {
+            function (error) {
               console.log(error);
             }
           );
@@ -268,11 +258,11 @@ export default {
           // );
           // my_media.play();
         },
-        function() {
+        function () {
           console.log("anjay");
         }
       );
-    }
-  }
+    },
+  },
 };
 </script>

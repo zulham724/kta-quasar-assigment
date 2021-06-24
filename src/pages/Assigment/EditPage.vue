@@ -11,7 +11,12 @@
     </q-header>
 
     <q-page>
-      <q-form class="q-gutter-sm" ref="form">
+      <div v-if="loading_question_lists">
+        <div class="flex flex-center column self-center" style="height: 80vh">
+          <q-spinner color="grey" size="5.5em" />
+        </div>
+      </div>
+      <q-form class="q-gutter-sm" ref="form" v-if="!loading_question_lists">
         <q-stepper v-model="step" color="primary" style="width: 100%" animated>
           <q-step :name="1" title="Isi" icon="settings" :done="step > 1">
             <q-select
@@ -23,21 +28,21 @@
               option-value="id"
               option-label="description"
               label="Kelas"
-              :rules="[val => !!val || 'Harus diisi']"
-              @input="item => (assigment.grade_id = item.id)"
+              :rules="[(val) => !!val || 'Harus diisi']"
+              @input="(item) => (assigment.grade_id = item.id)"
             />
             <q-select
               rounded
               outlined
               dense
               option-label="name"
-              :option-value="item => item"
+              :option-value="(item) => item"
               v-model="assigment.assigment_category"
               :options="AssigmentCategory.assigment_categories"
               label="Kompetensi"
-              :rules="[val => !!val || 'Harus diisi']"
+              :rules="[(val) => !!val || 'Harus diisi']"
               @input="
-                item => {
+                (item) => {
                   assigment.question_lists = [];
                   assigment.assigment_category_id = item.id;
                 }
@@ -50,7 +55,7 @@
               label="Kompetensi Dasar"
               v-model="assigment.topic"
               lazy-rules
-              :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+              :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
             />
             <q-input
               rounded
@@ -59,7 +64,7 @@
               label="Materi"
               v-model="assigment.subject"
               lazy-rules
-              :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+              :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
             />
             <q-input
               rounded
@@ -68,7 +73,7 @@
               label="Indikator"
               v-model="assigment.indicator"
               lazy-rules
-              :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+              :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
             />
 
             <q-stepper-navigation>
@@ -76,9 +81,7 @@
                 flat
                 @click="
                   () =>
-                    $refs.form
-                      .validate()
-                      .then(success => (success ? (step = 2) : null))
+                    $refs.form.validate().then((success) => (success ? (step = 2) : null))
                 "
                 color="primary"
                 label="Lanjut"
@@ -93,15 +96,8 @@
             :done="step > 2"
             style="margin-bottom: 30vh"
           >
-            <div
-              v-for="(question_list, ql) in assigment.question_lists"
-              :key="ql"
-            >
-              <div
-                v-if="
-                  question_list.pivot.assigment_type.description == 'textfield'
-                "
-              >
+            <div v-for="(question_list, ql) in assigment.question_lists" :key="ql">
+              <div v-if="question_list.pivot.assigment_type.description == 'textfield'">
                 <!--soal jawaban singkat-->
                 <edit-text-question-component
                   :ql="ql"
@@ -109,22 +105,16 @@
                 ></edit-text-question-component>
               </div>
               <div
-                v-if="
-                  question_list.pivot.assigment_type.description ==
-                    'selectoptions'
-                "
+                v-if="question_list.pivot.assigment_type.description == 'selectoptions'"
               >
                 <!--soal pilihan ganda-->
                 <edit-select-options-question-component
+                  @resetQuestionList="resetQuestionList"
                   :ql="ql"
                   :question_list="question_list"
                 ></edit-select-options-question-component>
               </div>
-              <div
-                v-if="
-                  question_list.pivot.assigment_type.description == 'textarea'
-                "
-              >
+              <div v-if="question_list.pivot.assigment_type.description == 'textarea'">
                 <!--soal jawaban uraian-->
                 <edit-text-question-component
                   :ql="ql"
@@ -145,15 +135,13 @@
                 />
 
                 <q-btn
-                  v-if="
-                    assigment.question_lists && assigment.question_lists.length
-                  "
+                  v-if="assigment.question_lists && assigment.question_lists.length"
                   flat
                   @click="
                     () =>
                       $refs.form
                         .validate()
-                        .then(success => (success ? (step = 3) : null))
+                        .then((success) => (success ? (step = 3) : null))
                   "
                   color="primary"
                   label="Lanjut"
@@ -174,7 +162,7 @@
               outlined
               dense
               lazy-rules
-              :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+              :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
               label="Timer dalam menit"
               v-model="assigment.timer"
             />
@@ -189,30 +177,21 @@
               dense
               lazy-rules
               v-model="assigment.start_at"
-              :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+              :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
               label="Dari"
               disabled
             >
               <template v-slot:prepend>
                 <q-icon name="event" class="cursor-pointer">
-                  <q-popup-proxy
-                    transition-show="scale"
-                    transition-hide="scale"
-                  >
-                    <q-date
-                      v-model="assigment.start_at"
-                      mask="YYYY-MM-DD HH:mm"
-                    />
+                  <q-popup-proxy transition-show="scale" transition-hide="scale">
+                    <q-date v-model="assigment.start_at" mask="YYYY-MM-DD HH:mm" />
                   </q-popup-proxy>
                 </q-icon>
               </template>
 
               <template v-slot:append>
                 <q-icon name="access_time" class="cursor-pointer">
-                  <q-popup-proxy
-                    transition-show="scale"
-                    transition-hide="scale"
-                  >
+                  <q-popup-proxy transition-show="scale" transition-hide="scale">
                     <q-time
                       v-model="assigment.start_at"
                       mask="YYYY-MM-DD HH:mm"
@@ -229,30 +208,21 @@
               dense
               lazy-rules
               v-model="assigment.end_at"
-              :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+              :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
               label="Sampai"
               disabled
             >
               <template v-slot:prepend>
                 <q-icon name="event" class="cursor-pointer">
-                  <q-popup-proxy
-                    transition-show="scale"
-                    transition-hide="scale"
-                  >
-                    <q-date
-                      v-model="assigment.end_at"
-                      mask="YYYY-MM-DD HH:mm"
-                    />
+                  <q-popup-proxy transition-show="scale" transition-hide="scale">
+                    <q-date v-model="assigment.end_at" mask="YYYY-MM-DD HH:mm" />
                   </q-popup-proxy>
                 </q-icon>
               </template>
 
               <template v-slot:append>
                 <q-icon name="access_time" class="cursor-pointer">
-                  <q-popup-proxy
-                    transition-show="scale"
-                    transition-hide="scale"
-                  >
+                  <q-popup-proxy transition-show="scale" transition-hide="scale">
                     <q-time
                       v-model="assigment.end_at"
                       mask="YYYY-MM-DD HH:mm"
@@ -273,8 +243,7 @@
               rounded
               outlined
               dense
-              lazy-rules
-              :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+              class="q-mb-sm"
               label="Kunci Penilaian"
             />
 
@@ -287,7 +256,7 @@
               label="Tulis sesuatu untuk disampaikan kepada guru"
               hint="contoh: Silahkan dilihat jangan lupa like dan komentarnya"
               lazy-rules
-              :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+              :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
             />
 
             <q-input
@@ -299,7 +268,7 @@
               label="Tulis sesuatu untuk disampaikan kepada murid"
               hint="contoh: Perhatikan soal dengan baik dan juga jangan sampai telat mengerjakan karena ada batas waktu"
               lazy-rules
-              :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+              :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
             />
 
             <q-stepper-navigation>
@@ -322,7 +291,6 @@
                   @click="updateAssigment()"
                 />
               </div>
-              
             </q-stepper-navigation>
           </q-step>
         </q-stepper>
@@ -338,39 +306,83 @@ import EditSelectOptionsQuestionComponent from "../../components/assigment/edit/
 export default {
   components: {
     EditTextQuestionComponent,
-    EditSelectOptionsQuestionComponent
+    EditSelectOptionsQuestionComponent,
   },
   props: {
-    assigmentId: null
+    assigmentId: null,
   },
   data() {
     return {
+      loading_question_lists: true,
       loading: false,
       step: 1,
       assigment: {
         isExpire: false,
         isPassword: false,
         isTimer: false,
-        grade_id: null
-      }
+        grade_id: null,
+      },
     };
   },
   mounted() {
     this.init();
   },
   computed: {
-    ...mapState(["Grade", "Auth", "AssigmentCategory", "Setting"])
+    ...mapState(["Grade", "Auth", "AssigmentCategory", "Setting"]),
   },
   created() {
     if (this.Grade.grades.length == 0) this.$store.dispatch("Grade/index");
     this.$store.dispatch("AssigmentCategory/index");
   },
   methods: {
-    init() {
-      this.$store.dispatch("Assigment/show", this.assigmentId).then(res => {
+    resetQuestionList(index) {
+      const original = this.assigment.original_question_lists[index];
+      this.assigment.question_lists[index].name = original.name;
+      this.assigment.question_lists[index].images = [...original.images];
+      // let answer_lists = this.assigment.question_lists[index].answer_lists;
+      this.assigment.question_lists[index].answer_lists = [
+        ...original.answer_lists.map((e) => {
+          return { ...e, images: [...e.images] };
+        }),
+      ];
+      // for (let i = 0; i < answer_lists.length; i++) {
+      //   answer_lists[i] = { ...original.answer_lists[i] };
+      //   answer_lists[i].images = [...original.answer_lists[i].images];
+      // }
+      // original.images.forEach((image) => {
+      //   this.assigment.question_lists[index].images.push(image);
+      // });
+      // this.assigment.question_lists[index].images
+
+      //   JSON.stringify(this.assigment.original_question_lists[index])
+      // );
+      // console.log("resetQuestionList", this.assigment.question_lists[index]);
+    },
+    async init() {
+      try {
+        this.loading_question_lists = true;
+        const res = await this.$store.dispatch("Assigment/show", this.assigmentId);
         this.assigment = res.data;
-        console.log("cok", this.assigment.assigment_category.assigment_types);
-      });
+
+        this.assigment.isTimer = this.assigment.isTimer ? true : false;
+        this.assigment.isExpire = this.assigment.isExpire ? true : false;
+        this.assigment.isPassword = this.assigment.isPassword ? true : false;
+        this.assigment.password = null;
+
+        this.assigment.original_question_lists = [];
+        for (let i = 0; i < this.assigment.question_lists.length; i++) {
+          // deep copy object dgn menggunakan json parse
+          this.assigment.original_question_lists[i] = JSON.parse(
+            JSON.stringify(this.assigment.question_lists[i])
+          );
+        }
+        console.log("assigment", this.assigment);
+        this.loading_question_lists = false;
+        return Promise.resolve(1);
+      } catch (err) {
+        this.$q.notify(err.message);
+        return Promise.reject(0);
+      }
     },
     addQuestionList(assigment_type) {
       if (!this.assigment.question_lists) this.assigment.question_lists = [];
@@ -382,32 +394,34 @@ export default {
           creator_id: this.Auth.auth.id,
           user_id: this.Auth.auth.id,
           assigment_type: assigment_type,
-          assigment_type_id: assigment_type.id
+          assigment_type_id: assigment_type.id,
         },
         answer_lists: [
           {
             name: "",
-            value: 100
-          }
-        ]
+            value: 100,
+          },
+        ],
       });
       this.$forceUpdate();
     },
-    updateAssigment() {
-      this.$refs.form.validate().then(success => {
+    async updateAssigment() {
+      try {
+        const success = await this.$refs.form.validate();
         if (success) {
           this.loading = true;
           this.$q.notify("Tunggu");
-          this.$router.push("/");
-          this.$store.dispatch("Assigment/update", this.assigment).then(res => {
-            this.$store.dispatch("Auth/getAuth").then(res => {
-              this.$q.notify("Berhasil memperbarui soal");
-            });
-          });
+          let res = await this.$store.dispatch("Assigment/update", this.assigment);
+          res = await this.$store.dispatch("Auth/getAuth");
+          this.$q.notify("Berhasil memperbarui soal");
         }
-      });
-    }
-  }
+      } catch (err) {
+        this.$q.notify(err.message);
+      } finally {
+        this.loading = false;
+      }
+    },
+  },
 };
 </script>
 

@@ -10,7 +10,7 @@
       <q-btn
         :disable="!isEnabled"
         v-if="isEnabled"
-        style="position:absolute; top:0;right:0;background: rgba(0, 0, 0, 0.5);"
+        style="position: absolute; top: 0; right: 0; background: rgba(0, 0, 0, 0.5)"
         color="red"
         flat
         dense
@@ -25,14 +25,14 @@ export default {
   props: {
     isEnabled: {
       type: Boolean,
-      default: true
+      default: true,
     },
-    file: [File, Object],
-    index: Number
+    file: [File, Object, String],
+    index: Number,
   },
   data() {
     return {
-      preview: null
+      preview: null,
     };
   },
   methods: {
@@ -41,17 +41,23 @@ export default {
     },
     isFile(obj) {
       return obj instanceof File;
-    }
+    },
   },
   // check apakah instance dri File
 
   mounted() {
     if (this.isFile(this.file)) this.preview = URL.createObjectURL(this.file);
     // jika bukan File, pasti object json
-    else
-      this.preview =
-        this.$store.getters["Setting/storageUrl"] + "/" + this.file.src;
-    // console.log('preview', this.preview);
-  }
+    else if (typeof this.file == "object") {
+      this.preview = this.$store.getters["Setting/storageUrl"] + "/" + this.file.src;
+      console.log("preview", this.preview);
+    } else if (typeof this.file == "string") {
+      this.preview = this.$store.getters["Setting/storageUrl"] + "/" + this.file;
+      console.log("preview", this.preview);
+    } else {
+      this.$q.notify("Image preview gagal. Hrus file file,object,atau string");
+    }
+  },
+  // con
 };
 </script>

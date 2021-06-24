@@ -129,11 +129,11 @@ const actions = {
   },
   store({ commit }, { access, audio }) {
     return new Promise((resolve, reject) => {
-      console.log('access',access);
+      console.log("access", access);
       // resolve('c');
       // return;
       const keys = Object.keys(access);
-      console.log('keys',keys);
+      console.log("keys", keys);
       // resolve(e);
       // return;
       let form = new FormData();
@@ -145,23 +145,23 @@ const actions = {
           form.append(`audio[${k}]`, "");
         }
 
-        let images=[];
-        if(v.images.length){
-          v.images.forEach((image, i)=>{
+        // gambar dri question_lists
+        let images = [];
+        if (v.images.length) {
+          v.images.forEach((image, i) => {
             form.append(`images[${k}][${i}]`, image);
           });
-        }else{
-          form.append(`images[${k}]`, "");
         }
         //looping question_lists.*.answer_lists
-        v.answer_lists.forEach((v2,k2)=>{
-          if(v2.type=='image'){
-            v2.images.forEach((image, i)=>{
-              form.append(`question_lists[${k}][answer_lists][${k2}][images][${i}]`, image);
+        v.answer_lists.forEach((v2, k2) => {
+          if (v2.type == "image") {
+            v2.images.forEach((image, i) => {
+              form.append(
+                `question_lists[${k}][answer_lists][${k2}][images][${i}]`,
+                image
+              );
             });
-            
           }
-          
         });
       });
 
@@ -169,7 +169,7 @@ const actions = {
       //   if((access[v] instanceof Array)==false){
       //     form.append(v,access[v]);
       //   }
-      
+
       // });
       // access.question_lists.forEach((v,k)=>{
       //   form.append(`question_lists[${k}][name]`,v.name);
@@ -186,7 +186,6 @@ const actions = {
       //   });
 
       // });
-
 
       // console.log('form',form)
       form.append("data", JSON.stringify(access));
@@ -219,16 +218,45 @@ const actions = {
     });
   },
   update({ commit, dispatch }, payload) {
-    return new Promise((resolve, reject) => {
+    console.log('payload',payload);
+    const formData = new FormData();
+    function buildFormData(formData, data, parentKey){
+      if (
+        data &&
+        typeof data === "object" &&
+        !(data instanceof Date) &&
+        !(data instanceof File)
+      ) {
+        Object.keys(data).forEach(key => {
+          buildFormData(
+            formData,
+            data[key],
+            parentKey ? `${parentKey}[${key}]` : key
+          );
+        });
+      } else {
+        const value = data == null ? "" : data;
 
-      let form = new FormData();
-      
+        formData.append(parentKey, value);
+      }
+    }
+  
+    buildFormData(formData, payload);
+    // alert(asu);
+    
+    return new Promise((resolve, reject) => {
       let access = {
         ...payload,
         _method: "put"
       };
+      
+      formData.append("_method", "PUT");
       axios
-        .post(`${this.state.Setting.url}/api/v1/assigment/${access.id}`, access)
+        .post(`${this.state.Setting.url}/api/v1/assigment/${access.id}`, formData, {
+          headers: {
+            "content-type": "multipart/form-data"
+          }
+        })
         .then(res => {
           resolve(res);
         })
