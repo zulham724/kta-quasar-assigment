@@ -101,6 +101,7 @@
                 <!--soal jawaban singkat-->
                 <edit-text-question-component
                   :ql="ql"
+                  @resetQuestionList="resetQuestionList"
                   :question_list="question_list"
                 ></edit-text-question-component>
               </div>
@@ -117,6 +118,7 @@
               <div v-if="question_list.pivot.assigment_type.description == 'textarea'">
                 <!--soal jawaban uraian-->
                 <edit-text-question-component
+                  @resetQuestionList="resetQuestionList"
                   :ql="ql"
                   :question_list="question_list"
                 ></edit-text-question-component>
@@ -414,6 +416,7 @@ export default {
           let res = await this.$store.dispatch("Assigment/update", this.assigment);
           res = await this.$store.dispatch("Auth/getAuth");
           this.$q.notify("Berhasil memperbarui soal");
+          this.$router.push("/");
         }
       } catch (err) {
         this.$q.notify(err.message);

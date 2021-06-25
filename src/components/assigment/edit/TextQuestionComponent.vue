@@ -18,7 +18,7 @@
             @click="playAudio"
             color="blue"
             icon="play_arrow"
-            size="sm" 
+            size="sm"
             class="q-mb-xs"
           ></q-btn>
           <q-btn
@@ -27,11 +27,10 @@
             @click="stopAudio"
             color="blue"
             icon="stop"
-            size="sm" 
+            size="sm"
             class="q-mb-xs"
           ></q-btn>
         </div>
-     
       </div>
 
       <q-separator inset class="q-ma-sm" />
@@ -65,28 +64,26 @@
           />
         </template>
       </q-input>
-      <!-- <q-btn
-        color="primary"
-        outline
-        rounded
-        label="Tambah Kunci jawaban"
-        @click="
-          () => {
-            question_list.answer_lists.push({
-              name: '',
-              value: null,
-            });
-          }
-        "
-      /> -->
+      <div class="row q-gutter-none">
+        <div class="col-8">
+          <q-btn
+            color="primary"
+            outline
+            rounded
+            label="Tambah butir jawaban"
+            @click="addAnswerList()"
+          />
+        </div>
+        <div class="col">
+          <q-btn color="primary" rounded label="Reset" @click="reset()" />
+        </div>
+      </div>
     </q-card-section>
   </q-card>
 </template>
 <script>
 import EditorComponent from "../../Editor/EditorComponent";
-import {
-    mapState
-} from "vuex";
+import { mapState } from "vuex";
 export default {
   components: {
     EditorComponent,
@@ -110,11 +107,22 @@ export default {
     // this.question_list.answer_lists = []
   },
   computed: {
-        ...mapState(["Setting"])
+    ...mapState(["Setting"]),
   },
   methods: {
+    reset() {
+      this.$emit("resetQuestionList", this.ql);
+    },
+    addAnswerList() {
+      this.question_list.answer_lists.push({
+        name: "",
+        value: null,
+      });
+    },
     playAudio() {
-      this.audio.item = new Audio(`${this.Setting.storageUrl}/${this.question_list.audio.src}`);
+      this.audio.item = new Audio(
+        `${this.Setting.storageUrl}/${this.question_list.audio.src}`
+      );
       this.audio.item.play();
       let vm = this;
       let a = setInterval(function () {
@@ -135,7 +143,7 @@ export default {
     },
     removeAudio() {
       this.$emit("removeAudio", this.ql); //ql=index question_list yg dipassing dari parent
-    }
+    },
   },
 };
 </script>

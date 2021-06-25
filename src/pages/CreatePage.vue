@@ -11,15 +11,9 @@
     </q-header>
 
     <q-page>
-      <q-form class="q-gutter-sm" ref="form" >
+      <q-form class="q-gutter-sm" ref="form">
         <q-stepper v-model="step" color="blue" style="width: 100%" animated>
-          <q-step
-            :name="1"
-            title="Isi"
-            color="blue"
-            icon="settings"
-            :done="step > 1"
-          >
+          <q-step :name="1" title="Isi" color="blue" icon="settings" :done="step > 1">
             <q-select
               rounded
               outlined
@@ -30,8 +24,8 @@
               option-value="id"
               option-label="description"
               label="Kelas"
-              :rules="[val => !!val || 'Harus diisi']"
-              @input="item => (assigment.grade_id = item.id)"
+              :rules="[(val) => !!val || 'Harus diisi']"
+              @input="(item) => (assigment.grade_id = item.id)"
             />
             <q-select
               rounded
@@ -39,17 +33,15 @@
               outlined
               dense
               option-label="name"
-              :option-value="item => item"
+              :option-value="(item) => item"
               v-model="assigment.assigment_category"
               :options="
-                AssigmentCategory.assigment_categories.filter(
-                  item => item.id != 9
-                )
+                AssigmentCategory.assigment_categories.filter((item) => item.id != 9)
               "
               label="Kompetensi"
-              :rules="[val => !!val || 'Harus diisi']"
+              :rules="[(val) => !!val || 'Harus diisi']"
               @input="
-                item => {
+                (item) => {
                   assigment.question_lists = [];
                   assigment.assigment_category_id = item.id;
                 }
@@ -63,7 +55,7 @@
               label="Kompetensi Dasar"
               v-model="assigment.topic"
               lazy-rules
-              :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+              :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
             />
             <q-input
               rounded
@@ -74,7 +66,7 @@
               label="Materi"
               v-model="assigment.subject"
               lazy-rules
-              :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+              :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
             />
             <q-input
               rounded
@@ -85,7 +77,7 @@
               label="Indikator"
               v-model="assigment.indicator"
               lazy-rules
-              :rules="[val => (val && val.length > 0) || 'Harus diisi']"
+              :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
             />
 
             <q-stepper-navigation>
@@ -93,9 +85,7 @@
                 flat
                 @click="
                   () =>
-                    $refs.form
-                      .validate()
-                      .then(success => (success ? (step = 2) : null))
+                    $refs.form.validate().then((success) => (success ? (step = 2) : null))
                 "
                 color="blue"
                 label="Lanjut"
@@ -111,15 +101,8 @@
             style="margin-bottom: 30vh"
             color="blue"
           >
-            <div
-              v-for="(question_list, ql) in assigment.question_lists"
-              :key="ql"
-            >
-              <div
-                v-if="
-                  question_list.pivot.assigment_type.description == 'textfield'
-                "
-              >
+            <div v-for="(question_list, ql) in assigment.question_lists" :key="ql">
+              <div v-if="question_list.pivot.assigment_type.description == 'textfield'">
                 <!--soal jawaban singkat-->
                 <create-text-question-component
                   :ql="ql"
@@ -130,10 +113,7 @@
                 ></create-text-question-component>
               </div>
               <div
-                v-if="
-                  question_list.pivot.assigment_type.description ==
-                    'selectoptions'
-                "
+                v-if="question_list.pivot.assigment_type.description == 'selectoptions'"
               >
                 <!--soal pilihan ganda-->
                 <create-select-options-question-component
@@ -144,11 +124,7 @@
                   @removeAudio="removeAudio"
                 ></create-select-options-question-component>
               </div>
-              <div
-                v-if="
-                  question_list.pivot.assigment_type.description == 'textarea'
-                "
-              >
+              <div v-if="question_list.pivot.assigment_type.description == 'textarea'">
                 <!--soal jawaban uraian-->
                 <create-text-question-component
                   :ql="ql"
@@ -174,9 +150,9 @@
                   <!--jika ada question_lists, maka hanya tampilkan 1 button-->
                   <div
                     v-if="
-                    assigment_type &&
+                      assigment_type &&
                       assigment.question_lists &&
-                        assigment.question_lists.length
+                      assigment.question_lists.length
                     "
                   >
                     <q-btn
@@ -215,15 +191,13 @@
                 </div>
 
                 <q-btn
-                  v-if="
-                    assigment.question_lists && assigment.question_lists.length
-                  "
+                  v-if="assigment.question_lists && assigment.question_lists.length"
                   flat
                   @click="
                     () =>
                       $refs.form
                         .validate()
-                        .then(success => (success ? (step = 3) : null))
+                        .then((success) => (success ? (step = 3) : null))
                   "
                   color="blue"
                   label="Lanjut"
@@ -250,13 +224,7 @@
 
             <q-stepper-navigation>
               <div class="row justify-between">
-                <q-btn
-                  flat
-                  @click="step = 2"
-                  color="blue"
-                  label="Back"
-                  class="q-ml-sm"
-                />
+                <q-btn flat @click="step = 2" color="blue" label="Back" class="q-ml-sm" />
               </div>
             </q-stepper-navigation>
           </q-step>
@@ -276,7 +244,7 @@ export default {
   components: {
     EditorComponent,
     CreateTextQuestionComponent,
-    CreateSelectOptionsQuestionComponent
+    CreateSelectOptionsQuestionComponent,
   },
   data() {
     return {
@@ -285,13 +253,13 @@ export default {
         placeholderText: "Tulis soal Anda di sini",
         tableStyles: {
           "fr-dashed-borders": "Dashed Borders",
-          "fr-alternate-rows": "Alternate Rows"
+          "fr-alternate-rows": "Alternate Rows",
         },
         events: {
-          initialized: function() {
+          initialized: function () {
             console.log("initialized");
-          }
-        }
+          },
+        },
       },
       loading: false,
       step: 1,
@@ -300,12 +268,12 @@ export default {
         isPassword: false,
         isTimer: false,
         grade_id: null,
-        question_lists: []
-      }
+        question_lists: [],
+      },
     };
   },
   computed: {
-    ...mapState(["Grade", "Auth", "AssigmentCategory", "Setting"])
+    ...mapState(["Grade", "Auth", "AssigmentCategory", "Setting"]),
   },
   created() {
     if (this.Grade.grades.length == 0) this.$store.dispatch("Grade/index");
@@ -333,7 +301,7 @@ export default {
       //this.assigment.question_lists[index]
       navigator.device.audiorecorder.recordAudio(
         //membuka audio recoder
-        function(data) {
+        function (data) {
           //data adalah hasil dri record
           console.log(data);
           const obj = JSON.parse(data);
@@ -342,23 +310,23 @@ export default {
           //membaca file hasil record audio
           window.resolveLocalFileSystemURL(
             "file://" + obj.full_path,
-            function(entry) {
+            function (entry) {
               entry.file(
-                function(file) {
+                function (file) {
                   //tambah object audio
                   vm.assigment.question_lists[index].audio = {
                     file: file,
-                    nativePath: obj.full_path
+                    nativePath: obj.full_path,
                   };
                   console.log(vm.assigment.question_lists[index].audio);
                 },
 
-                function(error) {
+                function (error) {
                   console.log("error gan", error);
                 }
               );
             },
-            function(error) {
+            function (error) {
               console.log(error);
             }
           );
@@ -380,12 +348,12 @@ export default {
           // );
           // my_media.play();
         },
-        function() {
+        function () {
           console.log("anjay");
         }
       );
     },
-    test: function() {
+    test: function () {
       console.log(this.assigment.question_lists);
       // navigator.device.audiorecorder.recordAudio(
       //   //membuka audio recoder
@@ -439,10 +407,7 @@ export default {
       //     item.display = false;
       //   }
       // });
-      console.log(
-        "assigment.assigment_category",
-        this.assigment.assigment_category
-      );
+      console.log("assigment.assigment_category", this.assigment.assigment_category);
       this.assigment.question_lists.push({
         name: "",
         description: "",
@@ -450,47 +415,48 @@ export default {
           creator_id: this.Auth.auth.id,
           user_id: this.Auth.auth.id,
           assigment_type: assigment_type,
-          assigment_type_id: assigment_type.id
+          assigment_type_id: assigment_type.id,
         },
         audio: {},
-        images:[],
+        images: [],
         answer_lists: [
           {
             name: "",
             value: 100,
-            images:[],
-            type:'text',
-          }
-        ]
+            images: [],
+            type: "text",
+          },
+        ],
       });
       // this.$forceUpdate();
       // console.log(this.assigment);
     },
     storeAssigment(event) {
-      this.$refs.form.validate().then(success => {
+      this.$refs.form.validate().then((success) => {
         if (event) event.preventDefault();
 
         if (success) {
           this.loading = true;
-          // this.$router.push("/");
+
           this.$store
             .dispatch("Assigment/store", { access: this.assigment, audio: "" })
-            .then(res => {
+            .then((res) => {
               // this.$store.commit('Assigment/addUnpublish',{unPublish:res.data})
               this.$q.notify("Berhasil menerbitkan soal");
+              this.$router.push("/");
               // this.$q.notify("Tunggu");
-
             })
-            .catch(err => {
+            .catch((err) => {
               console.log(err);
               this.$q.notify("Terjadi kesalahan");
-            }).finally(()=>{
-              this.loading=false;
+            })
+            .finally(() => {
+              this.loading = false;
             });
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
