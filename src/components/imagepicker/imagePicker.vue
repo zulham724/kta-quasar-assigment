@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="row q-gutter-md" v-show="isEnabled">
+    <div class="row q-gutter-none" v-show="isEnabled">
       <q-file
         v-show="false"
         @input="inputFile"
@@ -8,21 +8,21 @@
         ref="filePicker"
         label="Standard"
       />
-      <div class="col-1">
+      <div class="col">
         <q-btn
           flat
-          round
           @click="addImage"
           :disable="!isEnabled"
-          color="blue"
+          color="grey"
           icon="add"
           class="q-my-xs"
           size="sm"
+          label="Tambah Gambar"
         ></q-btn>
       </div>
-      <div class="col self-center">
+      <!-- <div class="col self-center">
         <span class="text-caption text-grey-6">Tambah gambar</span>
-      </div>
+      </div> -->
     </div>
     <div class="row q-gutter-xs">
       <div class="col-sm-3" v-for="(file, i) in files" :key="file.id">
