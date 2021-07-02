@@ -6,96 +6,69 @@
           <div class="text-body1 text-grey">Soal nomor {{ ql + 1 }}</div>
         </div>
         <div class="col-1">
-          <q-btn
-            round
-            dense
-            flat
-            icon="close"
-             @click="$emit('removeQuestionList',ql)"
-          />
+          <q-btn round dense flat icon="close" @click="$emit('removeQuestionList', ql)" />
         </div>
       </div>
       <div class="row">
-        <p v-html="question_list.name">
-
-          </p>
+        <p v-html="question_list.name"></p>
       </div>
-      <q-input
-        :readonly="true/*(question_list.pivot.creator_id != Auth.auth.id*/"
-        v-for="(answer_list, al) in question_list.answer_lists"
-        :key="al"
-        v-model="answer_list.name"
-        rounded
-        color="blue"
-        outlined
-        dense
-        :label="String.fromCharCode('A'.charCodeAt(0) + al)"
-        hint="Butir jawaban"
-        lazy-rules
-        :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
-        @input="() => $forceUpdate()"
-      >
-        <template v-slot:after>
-          <!--question_list.pivot.creator_id != Auth.auth.id-->
+
+      <image-picker
+        :is-enabled="false"
+        class="q-mb-sm"
+        :images.sync="question_list.images"
+      />
+
+      <div class="row justify-end q-gutter-sm">
+        <div class="" v-if="question_list.audio">
           <q-btn
-            :disable="true /*question_list.pivot.creator_id != Auth.auth.id*/"
+            v-if="!audio.isPlay"
             round
-            dense
-            :flat="answer_list.value == null ? true : false"
-            :color="answer_list.value != null ? 'green-4' : null"
-            icon="check"
-            @click="
-              /*() => {
-                question_list.answer_lists.filter((item, i) => {
-                  i == al ? (item.value = 100) : (item.value = null);
-                });
-                $forceUpdate();
-              }*/
-            "
-          />
+            @click="playAudio"
+            color="blue"
+            icon="play_arrow"
+            size="sm"
+            class="q-mb-xs"
+          ></q-btn>
           <q-btn
-            :disable="true /*question_list.pivot.creator_id != Auth.auth.id*/"
-            v-if="al != 0"
+            v-else
             round
-            dense
-            flat
-            icon="close"
-            @click="
-              () => {
-                question_list.answer_lists.splice(al, 1);
-                $forceUpdate();
-              }
-            "
-          />
-        </template>
-      </q-input>
-      <!-- <q-btn
-                      v-show="question_list.pivot.creator_id == Auth.auth.id"
-                      color="primary"
-                      outline
-                      rounded
-                      label="Tambah butir jawaban"
-                      @click="
-                        () => {
-                          question_list.answer_lists.push({
-                            name: '',
-                            value: null,
-                          });
-                          $forceUpdate();
-                        }
-                      "
-                    /> -->
+            @click="stopAudio"
+            color="blue"
+            icon="stop"
+            class="q-my-xs"
+            size="sm"
+          ></q-btn>
+        </div>
+      </div>
+      <div v-for="(answer_list, al) in question_list.answer_lists" :key="answer_list.id">
+        <answer-list
+          :editable="false"
+          @removeAnswerList="removeAnswerList"
+          @setAnswerListType="setAnswerListType"
+          :question_list.sync="question_list"
+          :answer_list.sync="answer_list"
+          :al="al"
+        />
+      </div>
     </q-card-section>
   </q-card>
 </template>
 <script>
+import { mapState } from "vuex";
 export default {
   props: {
     ql: Number,
     question_list: Object,
   },
+  components: {
+    ImagePicker: () => import("components/imagepicker/imagePicker.vue"),
+    AnswerList: () =>
+      import("components/assigment/selectoptions_answerlist/AnswerList.vue"),
+  },
   data() {
     return {
+      original_question_list: {},
       audio: {
         isPlay: false,
         item: {
@@ -106,11 +79,53 @@ export default {
     };
   },
   created() {
+    this.original_question_list = JSON.parse(JSON.stringify(this.question_list));
     // this.question_list.answer_lists = []
   },
+  watch: {
+    "question_list.images": function (val) {
+      console.log("watch edit question_list.images", val);
+    },
+  },
+  computed: {
+    ...mapState(["Setting"]),
+  },
   methods: {
+    setAnswerListType({ answer_list, type }) {
+      answer_list.type = type;
+    },
+    reset() {
+      this.$emit("resetQuestionList", this.ql);
+    },
+    removeAnswerList({ question_list, index }) {
+      console.log(
+        "remove answer_list index:",
+        index,
+        "from question_list",
+        question_list
+      );
+      question_list.answer_lists.splice(index, 1);
+    },
+    addAnswerList() {
+      const len = this.question_list.answer_lists.length;
+      let type = "text";
+      if (len > 0) {
+        const current_answer_list = this.question_list.answer_lists[len - 1];
+        type = current_answer_list.type;
+      }
+
+      this.question_list.answer_lists.push({
+        _id: len + Date.now(),
+        type,
+        name: "",
+        value: null,
+        images: [],
+      });
+    },
     playAudio() {
-      // this.audio = new Audio(this.question_list.audio.file.localURL);
+      this.audio.item = new Audio(
+        `${this.Setting.storageUrl}/${this.question_list.audio.src}`
+      );
       this.audio.item.play();
       let vm = this;
       let a = setInterval(function () {
@@ -131,88 +146,6 @@ export default {
       this.audio.item.pause();
       this.audio.item.currentTime = 0;
       this.audio.isPlay = false;
-    },
-    recordAudio(index) {
-      let vm = this;
-      console.log(index);
-      //this.assigment.question_lists[index]
-      navigator.device.audiorecorder.recordAudio(
-        //membuka audio recoder
-        function (data) {
-          //data adalah hasil dri record
-          console.log(data);
-          const obj = JSON.parse(data);
-          console.log(obj.full_path);
-
-          //membaca file hasil record audio
-          window.resolveLocalFileSystemURL(
-            "file://" + obj.full_path,
-            function (entry) {
-              entry.file(
-                function (file) {
-                  //tambah object audio
-                  const audio = {
-                    file: file,
-                    nativePath: obj.full_path,
-                  };
-
-                  //BEGIN olah data hasil record ke Blob
-                  var reader = new FileReader();
-                  reader.onloadend = function () {
-                    console.log("Successful file write: " + this.result);
-
-                    var blob = new Blob([new Uint8Array(this.result)], {
-                      type: "audio/mp4",
-                    });
-                    audio.blob = blob;
-                  };
-
-                  reader.readAsArrayBuffer(file);
-                  //END
-
-                  //ini dikomen karena tidak jadi pakay musicplayer.store.js
-
-                  vm.$emit("addAudioToQuestionList", { audio: audio, ql: index });
-                  vm.audio.item = new Audio(vm.question_list.audio.file.localURL);
-                  // console.log('anjay',vm.audio.item.duration);
-
-                  // vm.assigment.question_lists[index].audio = {
-                  //   file: file,
-                  //   nativePath: obj.full_path,
-                  // };
-                },
-
-                function (error) {
-                  console.log("error gan", error);
-                }
-              );
-            },
-            function (error) {
-              console.log(error);
-            }
-          );
-
-          //tambah object audio
-          // vm.assigment.question_lists.audio = {
-          //   file:
-          //   nativePath: obj.full_path,
-
-          // }
-          // var my_media = new Media(
-          //   obj.full_path,
-          //   function(data){
-          //     console.log(data)
-          //   },
-          //   function (err) {
-          //     console.log("gagal play", err);
-          //   }
-          // );
-          // my_media.play();
-        },
-        function () {
-          console.log("anjay");
-        }
-      );
     },
   },
 };

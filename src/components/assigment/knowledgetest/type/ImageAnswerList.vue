@@ -1,16 +1,16 @@
 <template>
   <div>
     <q-card flat bordered>
-      <div class="row text-center">
+      <!-- <div class="row text-center">
         <div class="col-12">
           <span class="text-caption"
             >Jawaban {{ String.fromCharCode("A".charCodeAt(0) + al) }}</span
           >
         </div>
-      </div>
+      </div> -->
       <q-card-section>
         <image-picker
-          :is-enabled="editable"
+          :is-enabled="false"
           class="q-mb-sm"
           :images.sync="answer_list.images"
         />
@@ -21,10 +21,6 @@
 <script>
 export default {
   props: {
-    editable: {
-      type: Boolean,
-      default: true,
-    },
     answer_list: Object,
     al: Number,
   },

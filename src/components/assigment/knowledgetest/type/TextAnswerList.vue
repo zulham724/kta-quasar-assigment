@@ -1,20 +1,14 @@
 <template>
   <div>
-    <q-card flat bordered>
-      <div class="row text-center">
+    <q-card flat bordered class="q-pa-sm">
+      <!-- <div class="row text-center">
         <div class="col-12">
           <span class="text-caption"
             >Jawaban {{ String.fromCharCode("A".charCodeAt(0) + al) }}</span
           >
         </div>
-      </div>
-      <q-card-section>
-        <image-picker
-          :is-enabled="editable"
-          class="q-mb-sm"
-          :images.sync="answer_list.images"
-        />
-      </q-card-section>
+      </div> -->
+      {{ answer_list.name }}
     </q-card>
   </div>
 </template>
@@ -27,9 +21,6 @@ export default {
     },
     answer_list: Object,
     al: Number,
-  },
-  components: {
-    ImagePicker: () => import("components/imagepicker/imagePicker.vue"),
   },
 };
 </script>

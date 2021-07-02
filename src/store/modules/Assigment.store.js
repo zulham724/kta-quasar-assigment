@@ -96,7 +96,10 @@ const mutations = {
       pivot: {
         ...payload.question_list.pivot
       },
-      answer_lists: payload.question_list.answer_lists
+      answer_lists: payload.question_list.answer_lists,
+      audio: payload.question_list.audio,
+      images: payload.question_list.images,
+    
     });
     console.log(state.build);
   },
@@ -205,6 +208,8 @@ const actions = {
     });
   },
   storeBuild({ commit }, access) {
+    console.log('access', access);
+    // return;
     return new Promise((resolve, reject) => {
       axios
         .post(`${this.state.Setting.url}/api/v1/assigment`, access)
@@ -218,14 +223,15 @@ const actions = {
     });
   },
   update({ commit, dispatch }, payload) {
-    console.log('payload',payload);
+    console.log("payload", payload);
     const formData = new FormData();
-    function buildFormData(formData, data, parentKey){
+    function buildFormData(formData, data, parentKey) {
       if (
         data &&
         typeof data === "object" &&
         !(data instanceof Date) &&
-        !(data instanceof File)
+        !(data instanceof File) &&
+        !(data instanceof Blob)
       ) {
         Object.keys(data).forEach(key => {
           buildFormData(
@@ -240,23 +246,27 @@ const actions = {
         formData.append(parentKey, value);
       }
     }
-  
+
     buildFormData(formData, payload);
     // alert(asu);
-    
+
     return new Promise((resolve, reject) => {
       let access = {
         ...payload,
         _method: "put"
       };
-      
+
       formData.append("_method", "PUT");
       axios
-        .post(`${this.state.Setting.url}/api/v1/assigment/${access.id}`, formData, {
-          headers: {
-            "content-type": "multipart/form-data"
+        .post(
+          `${this.state.Setting.url}/api/v1/assigment/${access.id}`,
+          formData,
+          {
+            headers: {
+              "content-type": "multipart/form-data"
+            }
           }
-        })
+        )
         .then(res => {
           resolve(res);
         })

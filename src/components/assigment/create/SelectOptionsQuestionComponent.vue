@@ -1,7 +1,6 @@
 <template>
   <q-card class="q-mb-md">
     <q-card-section>
-      <image-picker class="q-mb-sm" :images.sync="question_list.images" />
       <q-input
         v-model="question_list.name"
         rounded
@@ -18,6 +17,8 @@
           <q-btn round dense flat icon="close" @click="$emit('deleteQuestionList', ql)" />
         </template>
       </q-input>
+      <image-picker :images.sync="question_list.images" />
+
       <div class="row justify-end q-gutter-sm">
         <div class="" v-if="question_list.audio.file">
           <q-btn

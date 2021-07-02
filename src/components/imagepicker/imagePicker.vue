@@ -80,7 +80,6 @@ export default {
         this.files.push(v);
       });
       this.$emit("update:images", this.files);
-      // console.log('inputFile',value);
     },
     addImage() {
       this.$refs.filePicker.pickFiles();

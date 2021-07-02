@@ -1,11 +1,6 @@
 <template>
   <q-card class="q-mb-md">
     <q-card-section>
-      <image-picker
-        :is-enabled="true"
-        class="q-mb-sm"
-        :images.sync="question_list.images"
-      />
       <q-input
         v-model="question_list.name"
         rounded
@@ -19,6 +14,10 @@
         :rules="[(val) => (val && val.length > 0) || 'Harus diisi']"
       >
       </q-input>
+      <div class="row q-mb-md">
+        <image-picker :is-enabled="true" :images.sync="question_list.images" />
+      </div>
+
       <div class="row justify-end q-gutter-sm">
         <div class="" v-if="question_list.audio">
           <q-btn

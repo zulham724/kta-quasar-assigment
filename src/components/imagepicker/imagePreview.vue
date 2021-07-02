@@ -27,9 +27,10 @@ export default {
       type: Boolean,
       default: true,
     },
-    file: [File, Object, String],
+    file: [Object, Blob, String],
     index: Number,
   },
+  // props: ["isEnabled", "file", "index"],
   data() {
     return {
       preview: null,
@@ -40,7 +41,12 @@ export default {
       this.$emit("removeFile", this.index);
     },
     isFile(obj) {
-      return obj instanceof File;
+      console.log("isFile", obj instanceof Blob);
+      return (
+        obj instanceof File ||
+        obj instanceof Blob ||
+        Object.prototype.toString.call(obj) === "[object File]"
+      );
     },
   },
   // check apakah instance dri File
