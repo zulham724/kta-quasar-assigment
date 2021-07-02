@@ -10,6 +10,7 @@
       />
       <div class="col-1">
         <q-btn
+          flat
           round
           @click="addImage"
           :disable="!isEnabled"
